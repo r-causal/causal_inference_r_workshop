@@ -50,3 +50,5 @@ boot_estimate <- ____(____, ____) %>%
   filter(term == ____)
 ```
 
+
+Stretch goal: Do the same for a model using matching.

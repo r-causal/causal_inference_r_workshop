@@ -238,7 +238,7 @@ class: inverse
 
 ## Your Turn
 
-`r countdown::countdown(minutes = 5)`
+`r countdown::countdown(minutes = 7)`
 
 1. Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame `df`
 
