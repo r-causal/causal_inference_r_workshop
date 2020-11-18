@@ -230,9 +230,10 @@ boot_estimate <- int_t(ipw_results, results) %>%  #<<
 
 ## Your Turn
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `qsmk` and `wt82_71`
 
 2. Using the `bootstraps()` and `int_t()` functions to estimate the final effect.
+
 
