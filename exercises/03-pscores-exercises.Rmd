@@ -1,0 +1,84 @@
+---
+title: "Propensity Scores"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(broom)
+library(cidata)
+library(ggdag)
+```
+
+Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
+
+Below is a proposed DAG of the relationship between 4 confounders: `sex`, `age`, `smokeyrs` and `wt71` and the exposure and outcome. 
+
+_Knit this document to see the DAG or refer to the slides_.
+
+```{r}
+set.seed(1234)
+# set up DAG
+smk_wt_dag <- dagify(
+  # specify causes of quitting smoking and weight gain:
+  qsmk ~ sex + age + smokeyrs + wt71,
+  wt82_71 ~ sex + age + smokeyrs + wt71,
+  # specify causal question:
+  exposure = "qsmk", 
+  outcome = "wt82_71",
+  # set up labels:
+  # here, I'll use the same variable names as the data set, but I'll label them
+  # with clearer names
+  labels = c(
+    # causal question
+    "qsmk" = "quit\nsmoking (qsmk)",
+    "wt82_71" = "change in\nweight",
+    
+    # demographics
+    "age" = "age",
+    "sex" = "sex",
+    
+    # health
+    "wt71" = "baseline\nweight (wt71)",
+    
+    # smoking history
+    "smokeyrs" = "yrs of\nsmoking (smokeyrs)"
+  )
+) %>% 
+  tidy_dagitty()
+
+smk_wt_dag %>% 
+  ggdag(text = FALSE, use_labels = "label") 
+```
+
+## Your Turn
+
+_After updating the code chunks below, change `eval = TRUE` before knitting._
+
+Fit a propensity score model for `qsmk` using the above proposed confounders.
+
+```{r, eval = FALSE}
+propensity_model <- ___(
+  ___ ~ ___,
+  data = nhefs_complete,
+  family = _____
+)
+```
+
+Add the propensity scores to the `nhefs_complete` data set, call this new dataset `df`.
+
+```{r, eval = FALSE}
+df <- propensity_model %>%
+  ____(type.predict = ____, data = ____)
+```
+
+
+Stretch Goal 1: 
+
+Examine two histograms of the propensity scores, one for those that quit smoking (`qsmk == 1`) and one for those that did not (`qsmk == 0`). How do these compare?
+
+```{r}
+
+```
+

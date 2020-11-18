@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Causal Modeling in R: Whole Game</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Causal Modeling in R: Whole Game
+### 2020-07-29 (updated: 2020-07-28)
+
+---
+
+
+class: inverse
+
+
+
+# Broad strokes
+1. Specify causal question
+2. Draw assumptions (causal diagram)
+3. Model assumptions (propensity score)
+4. Analyze propensities (diagnostics)
+5. Estimate causal effects (IPW) 
+
+---
+
+class: middle, center, inverse
+
+# **Do people who quit smoking gain weight?**
+
+---
+
+
+```r
+library(cidata)
+nhefs_complete_uc &lt;- nhefs_complete %&gt;% 
+  filter(censored == 0)
+nhefs_complete_uc
+```
+
+```
+## # A tibble: 1,566 x 67
+##     seqn  qsmk death yrdth modth dadth   sbp   dbp sex  
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+##  1   233     0     0    NA    NA    NA   175    96 0    
+##  2   235     0     0    NA    NA    NA   123    80 0    
+##  3   244     0     0    NA    NA    NA   115    75 1    
+##  4   245     0     1    85     2    14   148    78 0    
+##  5   252     0     0    NA    NA    NA   118    77 0    
+##  6   257     0     0    NA    NA    NA   141    83 1    
+##  7   262     0     0    NA    NA    NA   132    69 1    
+##  8   266     0     0    NA    NA    NA   100    53 1    
+##  9   419     0     1    84    10    13   163    79 0    
+## 10   420     0     1    86    10    17   184   106 0    
+## # … with 1,556 more rows, and 58 more variables: age &lt;dbl&gt;,
+## #   race &lt;fct&gt;, income &lt;dbl&gt;, marital &lt;dbl&gt;, school &lt;dbl&gt;,
+## #   education &lt;fct&gt;, …
+```
+
+---
+
+## Did those who quit smoking gain weight?
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Did those who quit smoking gain weight?
+
+
+```r
+# ~2.5 lbs gained for quit vs. not quit
+nhefs_complete_uc %&gt;% 
+  group_by(qsmk) %&gt;% 
+  summarize(
+    mean_weight_change = mean(wt82_71), 
+    sd = sd(wt82_71),
+    .groups = "drop"
+  )
+```
+
+```
+## # A tibble: 2 x 3
+##    qsmk mean_weight_change    sd
+##   &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt;
+*## 1     0               1.98  7.45
+*## 2     1               4.53  8.75
+```
+
+---
+
+class: inverse, center, middle
+
+# **draw your assumptions**
+
+---
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class:  center, middle
+
+# What do I need to control for?
+
+---
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Multivariable regression: what's the association?
+
+
+```r
+*lm(
+* wt82_71~ qsmk + sex +
+*   race + age + I(age^2) + education +
+*   smokeintensity + I(smokeintensity^2) +
+*   smokeyrs + I(smokeyrs^2) + exercise + active +
+*   wt71 + I(wt71^2),
+* data = nhefs_complete_uc
+*) %&gt;%
+  tidy(conf.int = TRUE) %&gt;% 
+  filter(term == "qsmk")
+```
+
+---
+
+## Multivariable regression: what's the association?
+
+
+```r
+lm( 
+  wt82_71~ qsmk + sex +  
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete_uc 
+) %&gt;% 
+  tidy(conf.int = TRUE) %&gt;% 
+  filter(term == "qsmk")
+```
+
+```
+## # A tibble: 1 x 7
+##   term  estimate std.error statistic  p.value conf.low
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+*## 1 qsmk      3.46     0.438      7.90 5.36e-15     2.60
+## # … with 1 more variable: conf.high &lt;dbl&gt;
+```
+
+---
+
+class: inverse, center, middle
+
+# **model your assumptions**
+
+---
+
+class: center, middle
+
+# counterfactual: what if &lt;u&gt;everyone&lt;/u&gt; quit smoking vs. what if &lt;u&gt;no one&lt;/u&gt; quit smoking
+
+---
+
+## Fit propensity score model
+
+
+```r
+*propensity_model &lt;- glm(
+* qsmk ~ sex +
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete_uc
+)
+```
+
+---
+
+## Calculate inverse probability weights
+
+
+```r
+nhefs_complete_uc &lt;- propensity_model %&gt;% 
+  # predict whether quit smoking
+* augment(type.predict = "response", data = nhefs_complete_uc) %&gt;%
+  # calculate inverse probability
+* mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+```
+
+---
+
+class: inverse, center, middle
+
+# **diagnose your model assumptions**
+
+---
+
+## What's the distribution of weights?
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center, middle
+
+# **estimate the causal effects**
+
+---
+
+## Estimate causal effect with IPW
+
+
+```r
+*ipw_model &lt;- lm(
+* wt82_71 ~ qsmk,
+  data = nhefs_complete_uc, 
+* weights = wts
+) 
+
+ipw_estimate &lt;- ipw_model %&gt;% 
+  tidy(conf.int = TRUE) %&gt;% 
+  filter(term == "qsmk")
+```
+
+---
+
+## Estimate causal effect with IPW
+
+
+```r
+ipw_estimate
+```
+
+```
+## # A tibble: 1 x 7
+##   term  estimate std.error statistic  p.value conf.low
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+*## 1 qsmk      3.44     0.408      8.43 7.47e-17     2.64
+## # … with 1 more variable: conf.high &lt;dbl&gt;
+```
+
+---
+
+## Let's fix our confidence intervals with the bootstrap!
+
+--
+
+
+```r
+# fit ipw model for a single bootstrap sample
+fit_ipw_not_quite_rightly &lt;- function(split, ...) { 
+  # get bootstrapped data sample with `rsample::analysis()`
+  .df &lt;- analysis(split)
+  
+  # fit ipw model
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;% 
+    tidy()
+}
+```
+
+---
+
+
+```r
+fit_ipw &lt;- function(split, ...) {
+  .df &lt;- analysis(split)
+  
+  # fit propensity score model
+  propensity_model &lt;- glm(
+    qsmk ~ sex + 
+      race + age + I(age^2) + education + 
+      smokeintensity + I(smokeintensity^2) + 
+      smokeyrs + I(smokeyrs^2) + exercise + active + 
+      wt71 + I(wt71^2), 
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df &lt;- propensity_model %&gt;% 
+    augment(type.predict = "response", data = .df) %&gt;% 
+    mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;% 
+    tidy()
+}
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+--
+
+
+```r
+# fit ipw model to bootstrapped samples
+*ipw_results &lt;- bootstraps(nhefs_complete, 1000, apparent = TRUE) %&gt;%
+* mutate(results = map(splits, fit_ipw))
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+
+```r
+# get t-statistic-based CIs
+*boot_estimate &lt;- int_t(ipw_results, results) %&gt;%
+  filter(term == "qsmk")
+
+boot_estimate
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+
+```r
+# get t-statistic-based CIs
+boot_estimate &lt;- int_t(ipw_results, results) %&gt;% 
+  filter(term == "qsmk")
+
+boot_estimate
+```
+
+```
+## # A tibble: 1 x 6
+##   term  .lower .estimate .upper .alpha .method  
+##   &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
+*## 1 qsmk    2.49      3.45   4.37   0.05 student-t
+```
+
+---
+
+class: middle
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, inverse, middle
+
+# *Our causal effect estimate: **3.5 lbs (95% CI 2.4 lbs, 4.4 lbs)***
+
+---
+
+class: center, inverse, middle
+
+# **Review the R Markdown file... later!**
+
+---
+class: inverse, center
+
+# Resources
+## [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
+## [Causal Inference Notebook](http://causalinferencebookr.netlify.com): R code to go along with Causal Inference
+## [Bootstrap confidence intervals with {rsample}](https://rsample.tidymodels.org/articles/Applications/Intervals.html)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

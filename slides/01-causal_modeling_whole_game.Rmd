@@ -1,0 +1,468 @@
+---
+title: "Causal Modeling in R: Whole Game"
+date: "2020-07-29 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      
+---
+
+class: inverse
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
+library(tidyverse)
+library(broom)
+library(rsample)
+library(ggdag)
+library(cidata)
+library(survey)
+library(tableone)
+```
+
+# Broad strokes
+1. Specify causal question
+2. Draw assumptions (causal diagram)
+3. Model assumptions (propensity score)
+4. Analyze propensities (diagnostics)
+5. Estimate causal effects (IPW) 
+
+---
+
+class: middle, center, inverse
+
+# **Do people who quit smoking gain weight?**
+
+---
+
+```{r}
+library(cidata)
+nhefs_complete_uc <- nhefs_complete %>% 
+  filter(censored == 0)
+nhefs_complete_uc
+```
+
+---
+
+## Did those who quit smoking gain weight?
+
+```{r, echo = FALSE}
+colors <- c("#E69F00", "#56B4E9")
+
+nhefs_complete_uc %>%
+  ggplot(aes(wt82_71, fill = factor(qsmk))) + 
+  geom_vline(xintercept = 0, color = "grey60", size = 1) +
+  geom_density(color = "white", alpha = .75, size = .5) +
+  scale_fill_manual(values = colors) + 
+  theme_minimal() +
+  theme(legend.position = "bottom") + 
+  labs(
+    x = "change in weight (lbs)",
+    fill = "quit smoking (1 = yes)"
+  )
+```
+
+---
+
+## Did those who quit smoking gain weight?
+
+```{r, highlight.output = 4:5}
+# ~2.5 lbs gained for quit vs. not quit
+nhefs_complete_uc %>% 
+  group_by(qsmk) %>% 
+  summarize(
+    mean_weight_change = mean(wt82_71), 
+    sd = sd(wt82_71),
+    .groups = "drop"
+  )
+```
+
+---
+
+class: inverse, center, middle
+
+# **draw your assumptions**
+
+---
+
+```{r, echo = FALSE, fig.height=5.5}
+library(ggdag)
+set.seed(1234)
+# set up DAG
+smk_wt_dag <- dagify(
+  # specify causes of quitting smoking and weight gain:
+  qsmk ~ sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  wt82_71 ~ qsmk + sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  # specify causal question:
+  exposure = "qsmk", 
+  outcome = "wt82_71",
+  # set up labels:
+  # here, I'll use the same variable names as the data set, but I'll label them
+  # with clearer names
+  labels = c(
+    # causal question
+    "qsmk" = "quit\nsmoking",
+    "wt82_71" = "change in\nweight",
+    
+    # demographics
+    "age" = "age",
+    "sex" = "sex",
+    "race" = "race",
+    "education" = "education",
+    
+    # health
+    "wt71" = "baseline\nweight",
+    "active" = "daily\nactivity\nlevel",
+    "exercise" = "exercise",
+    
+    # smoking history
+    "smokeintensity" = "smoking\nintensity",
+    "smokeyrs" = "yrs of\nsmoking"
+  )
+) %>% 
+  tidy_dagitty()
+
+smk_wt_dag %>% 
+  filter(name %in% c("qsmk", "wt82_71")) %>% 
+  ggdag(text = FALSE, use_labels = "label") +
+  ylim(6, 9.5) +
+  xlim(1.5, 5)
+```
+
+---
+
+```{r, echo = FALSE, fig.height=5.5}
+smk_wt_dag %>% 
+  ggdag(text = FALSE, use_labels = "label") +
+  ylim(6, 9.5) +
+  xlim(1.5, 5)
+```
+
+---
+
+class:  center, middle
+
+# What do I need to control for?
+
+---
+
+```{r, echo = FALSE, fig.height = 5.5}
+smk_wt_dag %>% 
+  ggdag_adjustment_set(text = FALSE, use_labels = "label", node_size = 8)
+```
+
+---
+
+## Multivariable regression: what's the association?
+
+```{r, eval = FALSE}
+lm( #<<
+  wt82_71~ qsmk + sex +  #<<
+    race + age + I(age^2) + education + #<<
+    smokeintensity + I(smokeintensity^2) + #<<
+    smokeyrs + I(smokeyrs^2) + exercise + active + #<<
+    wt71 + I(wt71^2), #<<
+  data = nhefs_complete_uc #<<
+) %>% #<<
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "qsmk")
+```
+
+---
+
+## Multivariable regression: what's the association?
+
+```{r, highlight.output = 4}
+lm( 
+  wt82_71~ qsmk + sex +  
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete_uc 
+) %>% 
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "qsmk")
+```
+
+---
+
+class: inverse, center, middle
+
+# **model your assumptions**
+
+---
+
+class: center, middle
+
+# counterfactual: what if <u>everyone</u> quit smoking vs. what if <u>no one</u> quit smoking
+
+---
+
+## Fit propensity score model
+
+```{r}
+propensity_model <- glm( #<<
+  qsmk ~ sex +  #<<
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete_uc
+)
+```
+
+---
+
+## Calculate inverse probability weights
+
+```{r}
+nhefs_complete_uc <- propensity_model %>% 
+  # predict whether quit smoking
+  augment(type.predict = "response", data = nhefs_complete_uc) %>% #<<
+  # calculate inverse probability
+  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted)) #<<
+```
+
+---
+
+class: inverse, center, middle
+
+# **diagnose your model assumptions**
+
+---
+
+## What's the distribution of weights?
+
+```{r, echo = FALSE}
+ggplot(nhefs_complete_uc, aes(wts)) +
+  geom_density(col = "#E69F00", fill = "#E69F0095", size = .8) + 
+  #  use a log scale for the x axis
+  scale_x_log10() + 
+  theme_minimal(base_size = 20) + 
+  xlab("Weights")
+```
+
+
+---
+
+```{r, echo=FALSE, fig.height=5.5}
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = nhefs_complete_uc,
+  weights = ~ wts)
+
+smd_table_unweighted <- CreateTableOne(
+  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+           "exercise", "active", "wt71"),
+  strata = "qsmk",
+  data = nhefs_complete_uc,
+  test = FALSE)
+
+smd_table <- svyCreateTableOne(
+  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+           "exercise", "active", "wt71"),
+  strata = "qsmk",
+  data = svy_des,
+  test = FALSE)
+
+plot_df <- data.frame(
+  var = rownames(ExtractSmd(smd_table)),                        
+  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
+  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
+  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+```
+
+
+```{r, echo=FALSE, fig.height=5.5}
+ggplot(
+  data = plot_df %>% filter(Method == "Unadjusted"),
+  mapping = aes(x = var, y = SMD, group = Method, color = Method)
+) +
+  geom_line() +
+  geom_point() + 
+  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
+  coord_flip() +
+  theme_minimal() +
+  ylim(0, .3)
+```
+
+---
+
+```{r, echo=FALSE, fig.height=5.5}
+ggplot(
+  data = plot_df,
+  mapping = aes(x = var, y = SMD, group = Method, color = Method)
+) +
+  geom_line() +
+  geom_point() + 
+  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
+  coord_flip() +
+  theme_minimal() +
+  scale_color_manual(values = c("grey85", "#00BFC4")) +
+  ylim(0, .3)
+```
+
+---
+class: inverse, center, middle
+
+# **estimate the causal effects**
+
+---
+
+## Estimate causal effect with IPW
+
+```{r}
+ipw_model <- lm( #<<
+  wt82_71 ~ qsmk, #<<
+  data = nhefs_complete_uc, 
+  weights = wts #<<
+) 
+
+ipw_estimate <- ipw_model %>% 
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "qsmk")
+```
+
+---
+
+## Estimate causal effect with IPW
+
+```{r, highlight.output = 4}
+ipw_estimate
+```
+
+---
+
+## Let's fix our confidence intervals with the bootstrap!
+
+--
+
+```{r}
+# fit ipw model for a single bootstrap sample
+fit_ipw_not_quite_rightly <- function(split, ...) { 
+  # get bootstrapped data sample with `rsample::analysis()`
+  .df <- analysis(split)
+  
+  # fit ipw model
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %>% 
+    tidy()
+}
+```
+
+---
+
+```{r}
+fit_ipw <- function(split, ...) {
+  .df <- analysis(split)
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    qsmk ~ sex + 
+      race + age + I(age^2) + education + 
+      smokeintensity + I(smokeintensity^2) + 
+      smokeyrs + I(smokeyrs^2) + exercise + active + 
+      wt71 + I(wt71^2), 
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df <- propensity_model %>% 
+    augment(type.predict = "response", data = .df) %>% 
+    mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %>% 
+    tidy()
+}
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+--
+
+```{r boot_cache, cache = TRUE}
+# fit ipw model to bootstrapped samples
+ipw_results <- bootstraps(nhefs_complete, 1000, apparent = TRUE) %>% #<<
+  mutate(results = map(splits, fit_ipw)) #<<
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+```{r, eval = FALSE}
+# get t-statistic-based CIs
+boot_estimate <- int_t(ipw_results, results) %>%  #<<
+  filter(term == "qsmk")
+
+boot_estimate
+```
+
+---
+
+## Using {rsample} to bootstrap our causal effect
+
+```{r, highlight.output = 4}
+# get t-statistic-based CIs
+boot_estimate <- int_t(ipw_results, results) %>% 
+  filter(term == "qsmk")
+
+boot_estimate
+```
+
+---
+
+class: middle
+
+```{r, echo = FALSE}
+bind_rows(
+  ipw_estimate %>% 
+    select(estimate, conf.low, conf.high) %>% 
+    mutate(type = "ols"),
+  boot_estimate %>% 
+    select(estimate = .estimate, conf.low = .lower, conf.high = .upper) %>% 
+    mutate(type = "bootstrap")
+) %>% 
+  #  calculate CI width to sort by it
+  mutate(width = conf.high - conf.low) %>% 
+  arrange(width) %>% 
+  #  fix the order of the model types for the plot  
+  mutate(type = fct_inorder(type)) %>% 
+  ggplot(aes(x = type, y = estimate, ymin = conf.low, ymax = conf.high)) + 
+    geom_pointrange(color = "#0172B1", size = 1, fatten = 3) +
+    coord_flip() +
+    theme_minimal(base_size = 20)
+```
+
+---
+
+class: center, inverse, middle
+
+# *Our causal effect estimate: **3.5 lbs (95% CI 2.4 lbs, 4.4 lbs)***
+
+---
+
+class: center, inverse, middle
+
+# **Review the R Markdown file... later!**
+
+---
+class: inverse, center
+
+# Resources
+## [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
+## [Causal Inference Notebook](http://causalinferencebookr.netlify.com): R code to go along with Causal Inference
+## [Bootstrap confidence intervals with {rsample}](https://rsample.tidymodels.org/articles/Applications/Intervals.html)

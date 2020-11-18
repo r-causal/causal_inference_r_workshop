@@ -1,0 +1,31 @@
+---
+title: "Causal Inference in R Slides"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    seal: false
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320)
+library(tidyverse)
+```
+
+class: inverse, center, middle
+
+###[00-intro](00-intro.html)
+###[01-causal_modeling_whole_game](01-causal_modeling_whole_game.html)
+###[02-dags](02-dags.html)
+###[03-pscores](03-pscores.html)
+###[04-using-pscores](04-pscore-weighting.html)
+###[05-pscore-diagnostics](05-pscore-diagnostics.html)
+###[06-outcome-model](06-outcome-model.html)
+
+

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Propensity Scores</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lucy D’Agostino McGowan" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/countdown-0.3.5/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.3.5/countdown.js"></script>
+    <link rel="stylesheet" href="theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Propensity Scores
+### Lucy D’Agostino McGowan
+### Wake Forest University
+### 2020-07-29 (updated: 2020-07-29)
+
+---
+
+
+
+
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies-2.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized-2.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+![](img/obs-studies-3.png)
+
+---
+class: inverse
+
+![](img/trt.png)
+
+---
+class: inverse
+
+![](img/trt-conf.png)
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-2.png)
+
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-3.png)
+
+---
+
+## Propensity scores
+
+Rosenbaum and Rubin showed in observational studies, conditioning on **propensity scores** can lead to unbiased estimates of the exposure effect
+
+1. There are no unmeasured confounders
+2. Every subject has a nonzero probability of receiving either exposure
+
+---
+
+## Propensity scores
+
+* Fit a **logistic regression** predicting exposure using known covariates
+
+`$$Pr(exposure = 1) = \frac{1}{1+\exp(-X\beta)}$$`
+
+* Each individuals' predicted values are the **propensity scores**
+
+---
+
+## Propensity scores
+
+
+```r
+library(tidyverse)
+library(broom)
+```
+
+---
+
+## Propensity scores
+
+
+```r
+glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+    data = df,
+    family = binomial())
+```
+
+---
+
+## Propensity scores
+
+
+```r
+glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+    data = df,
+    family = binomial()) %&gt;%
+  augment(type.predict = "response", data = df) 
+```
+
+---
+
+## Propensity scores
+
+
+```r
+glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+    data = df,
+    family = binomial()) %&gt;%
+* augment(type.predict = "response", data = df)
+```
+
+---
+class: inverse
+
+## Propensity scores
+
+![](img/pscores.png)
+
+---
+
+&lt;img src="03-pscores_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse
+
+## Your turn
+
+<div class="countdown" id="timer_5f218f59" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+1. Using the **confounders** identified in the previous DAG, fit a propensity score model for `qsmk`
+2. Stretch: Create two histograms, one of the propensity scores for those that quit smoking and one for those that do not
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

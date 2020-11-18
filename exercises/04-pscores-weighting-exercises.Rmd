@@ -1,0 +1,72 @@
+---
+title: "Propensity Score Weighting"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(broom)
+library(cidata)
+```
+
+Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
+
+Below is the propensity score model you created in the previous exercise.
+
+```{r, eval = FALSE}
+propensity_model <- glm(
+  qsmk ~ age + sex + wt71 + smokeyrs,
+  data = nhefs_complete,
+  family = binomial()
+)
+
+df <- propensity_model %>%
+  augment(type.predict = "response", data = nhefs_complete)
+```
+
+## Your Turn
+
+_After updating the code chunks below, change `eval = TRUE` before knitting._
+
+Add the ATE weights to the data frame, `df`
+
+```{r, eval = FALSE}
+df <- df %>%
+  mutate(w_ate = ___)
+```
+
+
+Stretch Goal 1: 
+
+Add ATT weights to the data frame, `df`
+
+```{r, eval = FALSE}
+df <- df %>%
+  mutate(w_att = ___)
+```
+
+Stretch Goal 2: 
+
+Update the code below to examine the distribution of the weighted sample. **HINT** the part that needs to be updated is the `weight` parameter in two of the `geom_histogram()` calls.
+
+```{r, eval = FALSE}
+d <- df %>%
+  tidyr::spread(qsmk, .fitted, sep = "_p")
+```
+
+
+```{r, eval = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = ____), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = ____, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +
+  theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white") 

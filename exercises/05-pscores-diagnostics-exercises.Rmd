@@ -1,0 +1,121 @@
+---
+title: "Propensity Score Diagnostics"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(survey)
+library(tableone)
+library(broom)
+library(cidata)
+```
+
+Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
+
+Below is the propensity score model and weights you created in the previous exercise.
+
+```{r, eval = FALSE}
+propensity_model <- glm(
+  qsmk ~ age + sex + wt71 + smokeyrs,
+  data = nhefs_complete,
+  family = binomial()
+)
+
+df <- propensity_model %>%
+  augment(type.predict = "response", data = nhefs_complete) %>%
+  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+```
+
+## Your Turn 1
+
+_After updating the code chunks below, change `eval = TRUE` before knitting._
+
+Create the survey design object to incorporate the weights.
+
+```{r, eval = FALSE}
+svy_des <- ____(
+  ids = ~ 1,
+  data = ___,
+  weights = ___
+)
+```
+
+Create the **unweighted** standardized mean differences data frame
+
+```{r, eval = FALSE}
+smd_table_unweighted <- ____(
+  vars = _____,
+  strata = _____,
+  data = ____,
+  test = FALSE)
+```
+
+Create the **weighted** standardized mean differences data frame
+
+```{r, eval = FALSE}
+smd_table <- ____(
+  vars = _____,
+  strata = _____,
+  data = ____,
+  test = FALSE)
+```
+
+Create a data frame that merges `smd_table_unweighted` and `smd_table` and pivots it to prepare for plotting
+
+```{r, eval = FALSE}
+plot_df <- data.frame(
+  var = rownames(____),                        
+  Unadjusted = _____,                      
+  Weighted = _____) %>%
+  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+```
+
+Create the Love Plot using ggplot
+
+```{r, eval = FALSE}
+ggplot(data = _____, 
+       mapping = aes(x = ____, y = ____, group = ____, color = ____)) +
+  geom_line() +
+  geom_point() + 
+  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
+  coord_flip()
+```
+
+
+
+## Your Turn 2
+
+Create an unweighted ECDF for `smokeyrs` by those who quit smoking and those who did not.
+
+```{r, eval = FALSE}
+ggplot(df, aes(x = ____, group = ____, color = factor(____))) +
+  ____() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab(____) + 
+  ylab("Proportion <= x") 
+```
+
+
+Create an weighted ECDF for `smokeyrs` by those who quit smoking and those who did not.
+
+```{r, eval = FALSE}
+ecdf_1 <- df %>%
+  filter(____) %>%
+  arrange(____) %>%
+  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
+
+ecdf_0 <- df %>%
+  filter(____) %>%
+  arrange(____) %>%
+  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
+
+ggplot(ecdf_1, aes(x = _____, y = cum_pct)) +
+  geom_line(color = "#5DB854") +
+  geom_line(data = ecdf_0, aes(x = ____, y = cum_pct), color = "#5154B8") + 
+  xlab(____) + 
+  ylab("Proportion <= x") 
+```
+

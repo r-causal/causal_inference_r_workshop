@@ -1,0 +1,52 @@
+---
+title: "Outcome Model"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(survey)
+library(tableone)
+library(broom)
+library(cidata)
+library(rsample)
+```
+
+Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
+
+## Your turn
+
+_After updating the code chunks below, change `eval = TRUE` before knitting._
+
+Create a function called `ipw_fit` that fits the propensity score model from Exercise 03, incorporates the ATE weights calculated in Exercise 04, and fits a weighted outcome model.
+
+```{r, eval = FALSE}
+it_ipw <- function(split, ...) { 
+  .df <-____
+  
+  # fit propensity score model
+  
+  # calculate ATE weights
+
+  # fit correctly bootsrapped ipw model 
+  lm(___ ~ ___, data = .df, weights = ___) %>% 
+    tidy() 
+}
+```
+
+Bootstrap this result 1000 times.
+
+```{r, eval = FALSE}
+ipw_results <- ____(___, 1000, apparent = TRUE) %>% 
+  mutate(results = map(splits, _____)) 
+```
+
+
+Calculate the confidence interval
+
+```{r, eval = FALSE}
+boot_estimate <- ____(____, ____) %>% 
+  filter(term == ____)
+```
+

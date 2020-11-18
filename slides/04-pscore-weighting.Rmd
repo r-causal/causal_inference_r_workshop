@@ -1,0 +1,245 @@
+---
+title: "Propensity Score Weighting"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2020-07-29 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
+```
+
+class: inverse
+
+## Propensity scores
+
+* Weighting
+* Matching
+* Stratification
+* Direct Adjustment
+* ...
+
+---
+class: inverse
+
+## Propensity scores
+
+* **Weighting**
+* Matching
+* Stratification
+* Direct Adjustment
+* ...
+
+---
+class: inverse
+
+## Target estimands
+
+### Average Treatment Effect (ATE)
+
+$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
+
+---
+class: inverse
+
+## Target estimands
+
+### Average Treatment Effect Among the Treated (ATT)
+$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
+--
+
+### Average Treatment Effect Among the Controls (ATC)
+$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
+
+---
+class: inverse
+
+## Target estimands
+
+### Average Treatment Effect Among the Evenly Matchable (ATM)
+$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{z_ip_i + (1-Z_i)(1-p_i)}$$
+--
+
+### Average Treatment Effect Among the Overlap Population
+$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
+
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(broom)
+library(cidata)
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete
+)
+
+df <- propensity_model %>% 
+  augment(type.predict = "response", data = nhefs_complete) %>% 
+  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted),
+    w_ate = (qsmk / .fitted) + 
+      ((1 - qsmk) / (1 - .fitted)),
+    w_att = ((.fitted * qsmk) / .fitted) + 
+      ((.fitted * (1 - qsmk)) / (1 - .fitted)),
+    w_atc = (((1 - .fitted) * qsmk) / .fitted) + 
+      (((1 - .fitted) * (1 - qsmk)) / (1 - .fitted)),
+    w_atm = pmin(.fitted, 1 - .fitted) / 
+      (qsmk * .fitted + (1 - qsmk) * (1 - .fitted)),
+    w_ato = (1 - .fitted) * qsmk + 
+      .fitted * (1 - qsmk)
+  )
+
+d <- df %>%
+  tidyr::spread(qsmk, .fitted, sep = "_p")
+```
+
+## Histogram of propensity scores
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) + 
+  geom_histogram(bins = 50, aes(qsmk_p1)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, y = -..count..)) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) 
+```
+
+---
+
+## ATE
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ate), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ate, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +
+    theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
+   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+```
+
+---
+
+## ATT
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_att), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_att, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +
+    theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
+   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+```
+
+
+---
+
+## ATC
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atc), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atc, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +
+    theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
+   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+```
+
+---
+
+## ATM
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atm), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atm, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +  theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
+   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+```
+
+---
+
+## ATO
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(d) +
+  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
+  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ato), fill = "green", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ato, y = -..count..), fill = "blue", alpha = 0.5) + 
+  ylab("count") + xlab("p") +
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  scale_y_continuous(label = abs) +
+  theme_minimal() + 
+  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
+  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
+   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
+  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+```
+
+
+---
+
+## ATE in R
+
+* Average Treatment Effect (ATE)
+  * $w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
+  
+```{r}
+df <- propensity_model %>% 
+  augment(type.predict = "response", data = nhefs_complete) %>% 
+  mutate(w_ate = (qsmk / .fitted) +  ((1 - qsmk) / (1 - .fitted))) #<<
+```
+
+---
+class: inverse
+
+## Your Turn
+
+`r countdown::countdown(minutes = 5)`
+
+1. Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame `df`
+
+2. Stretch: Using the same propensity scores, create ATT weights
