@@ -1,43 +1,50 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## user2020\! Causal Inference in R Workshop
+## Causal Inference in R Workshop
 
 ### Slides
 
-  - [00 Intro](https://user2020.lucymcgowan.com/00-intro.html)
+  - [00
+    Intro](https://causal-inference-r-workshop.netlify.app/00-intro.html)
   - [01 Whole
-    Game](https://user2020.lucymcgowan.com/01-causal_modeling_whole_game.html)
-  - [02 Causal Diagrams](https://user2020.lucymcgowan.com/02-dags.html)
+    Game](https://causal-inference-r-workshop.netlify.app/01-causal_modeling_whole_game.html)
+  - [02 Causal
+    Diagrams](https://causal-inference-r-workshop.netlify.app/02-dags.html)
   - [03 Introduction to Propensity
-    Scores](https://user2020.lucymcgowan.com/03-pscores.html)
+    Scores](https://causal-inference-r-workshop.netlify.app/03-pscores.html)
   - [04 Using Propensity
-    Scores](https://user2020.lucymcgowan.com/04-pscore-weighting.html)
+    Scores](https://causal-inference-r-workshop.netlify.app/04-pscore-weighting.html)
   - [05 Checking Propensity
-    Scores](https://user2020.lucymcgowan.com/05-pscore-diagnostics.html)
+    Scores](https://causal-inference-r-workshop.netlify.app/05-pscore-diagnostics.html)
   - [06 Fitting the outcome
-    model](https://user2020.lucymcgowan.com/06-outcome-model.html)
+    model](https://causal-inference-r-workshop.netlify.app/06-outcome-model.html)
 
 ### Installing materials locally
 
 We will be using RStudio Cloud for the workshop, but if you would like
 to install the required packages and course materials, we have an R
 package called
-{[useRcausal2020](https://github.com/malcolmbarrett/useRcausal2020)} to
+{[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)} to
 help you do that\! You can install
-{[useRcausal2020](https://github.com/malcolmbarrett/useRcausal2020)}
+{[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)}
 from GitHub with:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("malcolmbarrett/useRcausal2020")
+remotes::install_github("malcolmbarrett/causalworkshop")
 ```
 
 Once you’ve installed the package, install the workshop with
 
 ``` r
-useRcausal2020::install_workshop("path/to/your/computer")
+causalworkshop::install_workshop()
 ```
 
-Replace “path/to/your/computer” with where on your computer you want the
-workshop installed.
+By default, this package downloads the materials to a conspicuous place
+like your Desktop. You can also tell `install_workshop()` exactly where
+to put the materials:
+
+``` r
+causalworkshop::install_workshop("a/path/on/your/computer")
+```
