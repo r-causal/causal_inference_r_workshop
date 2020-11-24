@@ -24,7 +24,7 @@ class: inverse, center, middle
 ###[01-causal_modeling_whole_game](01-causal_modeling_whole_game.html)
 ###[02-dags](02-dags.html)
 ###[03-pscores](03-pscores.html)
-###[04-using-pscores](04-pscore-weighting.html)
+###[04-using-pscores](04-using-pscores.html)
 ###[05-pscore-diagnostics](05-pscore-diagnostics.html)
 ###[06-outcome-model](06-outcome-model.html)
 

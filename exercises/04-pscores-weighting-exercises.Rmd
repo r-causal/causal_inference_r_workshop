@@ -25,7 +25,25 @@ df <- propensity_model %>%
   augment(type.predict = "response", data = nhefs_complete)
 ```
 
-## Your Turn
+## Your Turn (Matching)
+
+_After updating the code chunks below, change `eval = TRUE` before knitting._
+
+Create at "matched" data set using the same propensity score model as above and a caliper of 0.2.
+
+```{r, eval = FALSE}
+library(MatchIt)
+m <- matchit(___,
+        data = nhefs_complete,
+        ___,
+        ___
+        )
+matched_df <- ___(m)
+```
+
+
+
+## Your Turn (Weighting)
 
 _After updating the code chunks below, change `eval = TRUE` before knitting._
 
@@ -39,11 +57,11 @@ df <- df %>%
 
 Stretch Goal 1: 
 
-Add ATT weights to the data frame, `df`
+Add ATM weights to the data frame, `df`
 
 ```{r, eval = FALSE}
 df <- df %>%
-  mutate(w_att = ___)
+  mutate(w_atm = ___)
 ```
 
 Stretch Goal 2: 
