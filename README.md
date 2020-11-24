@@ -14,7 +14,7 @@
   - [03 Introduction to Propensity
     Scores](https://causal-inference-r-workshop.netlify.app/03-pscores.html)
   - [04 Using Propensity
-    Scores](https://causal-inference-r-workshop.netlify.app/04-pscore-weighting.html)
+    Scores](https://causal-inference-r-workshop.netlify.app/04-using-pscores.html)
   - [05 Checking Propensity
     Scores](https://causal-inference-r-workshop.netlify.app/05-pscore-diagnostics.html)
   - [06 Fitting the outcome

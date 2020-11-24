@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 * [01 Whole Game](https://causal-inference-r-workshop.netlify.app/01-causal_modeling_whole_game.html)
 * [02 Causal Diagrams](https://causal-inference-r-workshop.netlify.app/02-dags.html)
 * [03 Introduction to Propensity Scores](https://causal-inference-r-workshop.netlify.app/03-pscores.html)
-* [04 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/04-pscore-weighting.html)
+* [04 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/04-using-pscores.html)
 * [05 Checking Propensity Scores](https://causal-inference-r-workshop.netlify.app/05-pscore-diagnostics.html)
 * [06 Fitting the outcome model](https://causal-inference-r-workshop.netlify.app/06-outcome-model.html)
 
