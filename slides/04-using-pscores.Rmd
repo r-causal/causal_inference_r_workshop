@@ -279,7 +279,7 @@ class: inverse
 ## Target estimands
 
 ### Average Treatment Effect Among the Evenly Matchable (ATM)
-$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{z_ip_i + (1-Z_i)(1-p_i)}$$
+$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
 --
 
 ### Average Treatment Effect Among the Overlap Population
