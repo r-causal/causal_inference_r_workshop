@@ -2,7 +2,7 @@
 title: "Propensity Score Diagnostics"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: ["default", "theme.css"]
@@ -350,7 +350,7 @@ ggplot(
 
 ## Your turn 1
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Create a Love Plot for the propensity score weighting you created in the previous exercise
 
@@ -629,7 +629,7 @@ ggplot(ecdf_1, aes(x = wt71, y = cum_pct)) +
 
 ## Your turn 2
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Create an unweighted ECDF examining the `smokeyrs` confounder for those that quit smoking and those that did not
 3. Create a weighted ECDF examining the `smokeyrs` confounder

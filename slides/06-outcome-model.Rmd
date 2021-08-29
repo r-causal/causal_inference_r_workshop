@@ -2,7 +2,7 @@
 title: "Fitting the outcome model"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: ["default", "theme.css"]
@@ -230,7 +230,7 @@ boot_estimate <- int_t(ipw_results, results) %>%  #<<
 
 ## Your Turn
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 12)`
 
 1. Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `qsmk` and `wt82_71`
 

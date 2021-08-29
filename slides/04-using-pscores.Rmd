@@ -2,7 +2,7 @@
 title: "Using Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2020-12-02 (updated: `r Sys.Date()`)"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: ["default", "theme.css"]
@@ -236,7 +236,7 @@ class: inverse
 
 ## Your Turn
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
 
@@ -438,7 +438,7 @@ class: inverse
 
 ## Your Turn
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame `df`
 

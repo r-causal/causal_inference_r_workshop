@@ -2,7 +2,7 @@
 title: "Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: ["default", "theme.css"]
@@ -193,7 +193,7 @@ class: inverse
 
 ## Your turn
 
-`r countdown::countdown(minutes = 7)`
+`r countdown::countdown(minutes = 10)`
 
 1. Using the **confounders** identified in the previous DAG, fit a propensity score model for `qsmk`
 2. Stretch: Create two histograms, one of the propensity scores for those that quit smoking and one for those that do not
