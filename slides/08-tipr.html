@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # Tipping Point Sensitivity Analyses
 ### Lucy D’Agostino McGowan
 ### Wake Forest University
-### 2021-09-01 (updated: 2021-08-30)
+### 2021-09-01 (updated: 2021-08-31)
 
 ---
 
@@ -251,12 +251,10 @@ lm_tip(data.frame(conf.low = 2.4,
 
 ```
 ## # A tibble: 1 × 5
-##   observed_lb observed_ub
-##         &lt;dbl&gt;       &lt;dbl&gt;
-## 1         2.4         4.4
-##     smd outcome_associat… n_unmeasured_conf…
-##   &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;
-## 1   0.3                 8                  1
+##   observed_lb observed_ub   smd outcome_association
+##         &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;               &lt;dbl&gt;
+## 1         2.4         4.4   0.3                   8
+## # … with 1 more variable: n_unmeasured_confounders &lt;dbl&gt;
 ```
 
 --
@@ -272,7 +270,7 @@ with the following specifications:
 
 ## Your turn
 
-<div class="countdown" id="timer_612d9936" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_612e3ef2" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -284,7 +282,10 @@ with the following specifications:
 "highlightStyle": "github",
 "highlightLines": true,
 "highlightSpans": true,
-"countIncrementalSlides": false
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

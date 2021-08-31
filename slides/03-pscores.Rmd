@@ -12,6 +12,8 @@ output:
       highlightLines: true
       highlightSpans: true
       countIncrementalSlides: false
+      navigation:
+        scroll: false 
 ---
 
 ```{r, include = FALSE}

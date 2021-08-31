@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # Causal Diagrams in R
 ### Malcolm Barrett
 ### Teladoc Health
-### 2021-09-01 (updated: 2021-08-30)
+### 2021-09-01 (updated: 2021-08-31)
 
 ---
 
@@ -117,7 +117,7 @@ dagify(
 # Step 1: Specify your DAG
 
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -137,7 +137,7 @@ dagify(
 # Step 1: Specify your DAG
 
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -147,7 +147,7 @@ dagify(
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
 
-<div class="countdown" id="timer_612d9b32" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_612e3e87" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -180,7 +180,7 @@ coffee_cancer_dag &lt;- dagify(
 ggdag(coffee_cancer_dag)
 ```
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -219,7 +219,7 @@ ggdag_paths(smk_wt_dag)
 
 ---
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -228,7 +228,7 @@ ggdag_paths(smk_wt_dag)
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
 
-<div class="countdown" id="timer_612d99ca" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_612e3cf8" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -269,7 +269,7 @@ coffee_cancer_dag %&gt;%
   ggdag_paths()
 ```
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -304,7 +304,7 @@ ggdag_adjustment_set(smk_wt_dag)
 
 ---
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -315,7 +315,7 @@ ggdag_adjustment_set(smk_wt_dag)
 #### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 #### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-<div class="countdown" id="timer_612d9a07" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_612e3c3d" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -334,7 +334,7 @@ ggdag_adjustment_set(
 
 ---
 
-&lt;img src="02-dags_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-dags_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -360,7 +360,10 @@ class: inverse
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": false
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
