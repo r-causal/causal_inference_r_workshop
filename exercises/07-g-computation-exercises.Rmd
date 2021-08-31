@@ -1,0 +1,179 @@
+---
+title: "The Parametric G-Formula"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(broom)
+library(cidata)
+```
+
+# Your Turn 1
+
+For the parametric G-formula, we'll use a single model to fit a causal model of `qsmk` on `wt82_71` where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
+
+First, let's fit the model. 
+
+1.Use `lm()`. We'll also create an interaction term with `smokeintensity`. 
+2. Save the model as `standardized_model`
+
+```{r}
+_______ ___ _______(
+  wt82_71 ~ _______ + I(_______ * smokeintensity) + smokeintensity + 
+    I(smokeintensity^2) + sex + race + age + I(age^2) + education + smokeyrs + 
+    I(smokeyrs^2) + exercise + active + wt71 + I(wt71^2), 
+  data = nhefs_complete
+)
+```
+
+
+# Your Turn 2
+
+Now that we've fit a model, we need to clone our data set. To do this, we'll simply mutate it so that in one set, all participants have `qsmk` set to 0 and in another, all participants have `qsmk` set to 1.
+
+1. Create the cloned data sets, called `kept_smoking` and `quit_smoking`.
+2. For both data sets, use `standardized_model` and `augment()` to get the predicted values. Use the `newdata` argument in `augment()` with the relevant cloned data set. Then, select only the fitted value. Rename `.fitted` to either `kept_smoking` or `quit_smoking` (use the pattern `select(new_name = old_name)`).
+3. Save the predicted data sets as`predicted_kept_smoking` and `predicted_quit_smoking`.
+
+```{r}
+_______ <- nhefs_complete %>% 
+  _______
+
+_______ <- nhefs_complete %>% 
+  _______
+
+predicted_kept_smoking <- standardized_model %>% 
+  _______(newdata = _______) %>%
+  _______
+
+predicted_quit_smoking <- standardized_model %>% 
+  _______(newdata = _______) %>%
+  _______
+```
+
+# Your Turn 3
+
+Finally, we'll get the mean differences between the values. 
+
+1. Bind `predicted_kept_smoking` and  `predicted_quit_smoking` using `bind_cols()`
+2. Summarize the predicted values to create three new variables: `mean_quit_smoking`, `mean_kept_smoking`, and `difference`. The first two should be the means of `quit_smoking` and `kept_smoking`. `difference` should be `mean_quit_smoking` minus `mean_kept_smoking`.
+
+```{r}
+_______ %>% 
+  _______(
+    mean_quit_smoking = _______,
+    mean_kept_smoking = _______,
+    difference = _______
+  )
+```
+
+That's it! `difference` is our effect estimate. To get confidence intervals, however, we would need to use the bootstrap method. See the link below for a full example.
+
+## Stretch goal: Boostrapped intervals
+
+Like propensity-based models, we need to do a little more work to get correct standard errors and confidence intervals. In this stretch goal, use rsample to bootstrap the estimates we got from the G-computation model. 
+
+Remember, you need to bootstrap the entire modeling process, including the regression model, cloning the data sets, and calculating the effects.
+
+```{r}
+library(rsample)
+
+
+```
+
+# Your Turn 4
+
+1. Take a look at how many participants were lost to follow up in `nhefs`, called `censored` in this data set. You don't need to change anything in this code.
+
+```{r}
+nhefs_censored <- nhefs %>%
+  drop_na(
+    qsmk, sex, race, age, school, smokeintensity, smokeyrs, exercise,
+    active, wt71
+  )
+
+nhefs_censored %>% 
+  count(censored = as.factor(censored)) %>% 
+  ggplot(aes(censored, n)) + 
+  geom_col()
+```
+
+2. Create a logistic regression model that predicts whether or not someone is censored. 
+
+```{r}
+cens_model <- ___(
+  ______ ~ qsmk + sex + race + age + I(age^2) + education +
+    smokeintensity + I(smokeintensity^2) +
+    smokeyrs + I(smokeyrs^2) + exercise + active +
+    wt71 + I(wt71^2),
+  data = nhefs_censored, 
+  family = binomial()
+)
+```
+
+# Your Turn 5
+
+1. Use the logistic model you just fit to create inverse probability of censoring weights
+2. Calculate the weights using `.fitted`
+3. Join `cens` to `nhefs_censored` so that you have the weights in your dataset
+4. Fit a linear regression model of `wt82_71` weighted by `cens_wts`. We'll use this model as the basis for our G-computation
+
+```{r}
+cens <- _______ %>%
+  augment(type.predict = "response", data = nhefs_censored) %>%
+  mutate(cens_wts = 1 / ifelse(censored == 0, 1 - ______, 1)) %>%
+  select(id, cens_wts)
+
+#  join all the weights data from above
+nhefs_censored_wts <- _______ %>%
+  left_join(_____, by = "id")
+
+cens_model <- lm(
+  ______ ~ qsmk + I(qsmk * smokeintensity) + smokeintensity +
+    I(smokeintensity^2) + sex + race + age + I(age^2) + education + smokeyrs +
+    I(smokeyrs^2) + exercise + active + wt71 + I(wt71^2),
+  data = nhefs_censored_wts,
+  weights = ______
+)
+```
+
+# Your Turn 6
+
+1. Next, we usually need to clone our datasets, but we can use `kept_smoking` and `quit_smoking` that we created in the first section
+2. Use the outcome model, `cens_model`, to make predictions for `kept_smoking` and `quit_smoking`
+3. Calculate the differences between the mean values of `kept_smoking` and `quit_smoking`
+
+```{r}
+predicted_kept_smoking <- _______ %>%
+  augment(newdata = _______) %>%
+  select(kept_smoking = .fitted)
+
+predicted_quit_smoking <- _______ %>%
+  augment(newdata = _______) %>%
+  select(quit_smoking = .fitted)
+
+#  summarize the mean difference
+bind_cols(predicted_kept_smoking, predicted_quit_smoking) %>%
+  summarise(
+    
+  )
+```
+
+## Stretch goal: Boostrapped intervals
+
+Finish early? Try bootstrapping the G-computation model with censoring weights
+
+Remember, you need to bootstrap the entire modeling process, including fitting both regression models, cloning the data sets, and calculating the effects.
+
+```{r}
+
+```
+
+***
+
+# Take aways
+
+* To fit the parametric G-formula, fit a standardized model with all covariates. Then, use cloned data sets with values set to each level of the exposure you want to study. 
+* Use the model to predict the values for that level of the exposure and compute the effect estimate you want
+* If loss to follow-up is potentially related to your study question, inverse probability of censoring weights can help mitigate the bias.
