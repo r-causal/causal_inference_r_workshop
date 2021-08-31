@@ -99,7 +99,7 @@ class: inverse, middle
 
 class: inverse, middle, center
 
-# Let's head to RStudio Cloud: https://bit.ly/causalcloud
+# RStudio Cloud: https://bit.ly/causal-r-cloud
 
 ---
 
