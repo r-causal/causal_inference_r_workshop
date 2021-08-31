@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 * [04 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/04-using-pscores.html)
 * [05 Checking Propensity Scores](https://causal-inference-r-workshop.netlify.app/05-pscore-diagnostics.html)
 * [06 Fitting the outcome model](https://causal-inference-r-workshop.netlify.app/06-outcome-model.html)
+* [07 G-Computation](https://causal-inference-r-workshop.netlify.app/07-g-computation.html)
+* [08 Tipping Point Sensitivity Analyses](https://causal-inference-r-workshop.netlify.app/08-tipr.html)
 
 ### Installing materials locally
 
