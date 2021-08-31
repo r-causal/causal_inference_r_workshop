@@ -3,6 +3,7 @@
   <head>
     <title>Causal Modeling in R: Whole Game</title>
     <meta charset="utf-8" />
+    <meta name="author" content="Malcolm Barrett" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="theme.css" type="text/css" />
@@ -12,7 +13,9 @@
 class: center, middle, inverse, title-slide
 
 # Causal Modeling in R: Whole Game
-### 2020-07-29 (updated: 2020-12-01)
+### Malcolm Barrett
+### Teladoc Health
+### 2021-09-01 (updated: 2021-08-30)
 
 ---
 
@@ -45,7 +48,7 @@ nhefs_complete_uc
 ```
 
 ```
-## # A tibble: 1,566 x 67
+## # A tibble: 1,566 × 67
 ##     seqn  qsmk death yrdth modth dadth   sbp   dbp sex  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
 ##  1   233     0     0    NA    NA    NA   175    96 0    
@@ -67,7 +70,7 @@ nhefs_complete_uc
 
 ## Did those who quit smoking gain weight?
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -86,7 +89,7 @@ nhefs_complete_uc %&gt;%
 ```
 
 ```
-## # A tibble: 2 x 3
+## # A tibble: 2 × 3
 ##    qsmk mean_weight_change    sd
 ##   &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt;
 *## 1     0               1.98  7.45
@@ -101,11 +104,11 @@ class: inverse, center, middle
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -115,7 +118,7 @@ class:  center, middle
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -154,7 +157,7 @@ lm(
 ```
 
 ```
-## # A tibble: 1 x 7
+## # A tibble: 1 × 7
 ##   term  estimate std.error statistic  p.value conf.low
 ##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
 *## 1 qsmk      3.46     0.438      7.90 5.36e-15     2.60
@@ -213,7 +216,7 @@ class: inverse, center, middle
 
 ## What's the distribution of weights?
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -221,11 +224,11 @@ class: inverse, center, middle
 
 
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -259,7 +262,7 @@ ipw_estimate
 ```
 
 ```
-## # A tibble: 1 x 7
+## # A tibble: 1 × 7
 ##   term  estimate std.error statistic  p.value conf.low
 ##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
 *## 1 qsmk      3.44     0.408      8.43 7.47e-17     2.64
@@ -354,7 +357,7 @@ boot_estimate
 ```
 
 ```
-## # A tibble: 1 x 6
+## # A tibble: 1 × 6
 ##   term  .lower .estimate .upper .alpha .method  
 ##   &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
 *## 1 qsmk    2.49      3.45   4.37   0.05 student-t
@@ -364,7 +367,7 @@ boot_estimate
 
 class: middle
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Causal Modeling in R: Whole Game"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
+author: "Malcolm Barrett"
+institute: "Teladoc Health"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: ["default", "theme.css"]
