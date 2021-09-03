@@ -79,7 +79,36 @@ Remember, you need to bootstrap the entire modeling process, including the regre
 ```{r}
 library(rsample)
 
+fit_gcomp <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit outcome model. remember to model using `.df` instead of `nhefs_complete`
+  
+  
+  # clone datasets. remember to clone `.df` instead of `nhefs_complete`
+  
+  
+  # predict change in weight for each cloned dataset
 
+  
+  # calculate ATE
+  bind_cols(predicted_kept_smoking, predicted_quit_smoking) %>% 
+    summarize(
+      mean_quit_smoking = mean(quit_smoking),
+      mean_kept_smoking = mean(kept_smoking),
+      difference = mean_quit_smoking - mean_kept_smoking
+    ) %>% 
+    # rsample expects a `term` and `estimate` column
+    pivot_longer(everything(), names_to = "term", values_to = "estimate")
+}
+
+gcomp_results <- bootstraps(nhefs_complete, 1000, apparent = TRUE) %>% 
+  mutate(results = map(splits, ______))
+
+# using bias-corrected confidence intervals
+boot_estimate <- int_bca(_______, results, .fn = fit_gcomp)
+
+boot_estimate
 ```
 
 # Your Turn 4
@@ -167,7 +196,39 @@ Finish early? Try bootstrapping the G-computation model with censoring weights
 Remember, you need to bootstrap the entire modeling process, including fitting both regression models, cloning the data sets, and calculating the effects.
 
 ```{r}
+fit_gcomp_cens <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit the censoring model. remember to model using `.df` instead of `nhefs_censored`
 
+    # calculate the inverse probability of censoring weights. remember to predict `.df` instead of `nhefs_censored`
+  
+  #  join all the weights data from above to .df
+  
+  # fit outcome model. remember to model using `nhefs_censored_wts` instead of `nhefs_censored` or `.df`
+  
+  # clone datasets. remember to clone `.df` instead of `nhefs_censored`
+  
+  # predict change in weight for each cloned dataset
+  
+  # calculate ATE
+  bind_cols(predicted_kept_smoking, predicted_quit_smoking) %>% 
+    summarize(
+      mean_quit_smoking = mean(quit_smoking),
+      mean_kept_smoking = mean(kept_smoking),
+      difference = mean_quit_smoking - mean_kept_smoking
+    ) %>% 
+    # rsample expects a `term` and `estimate` column
+    pivot_longer(everything(), names_to = "term", values_to = "estimate")
+}
+
+gcomp_cens_results <- bootstraps(nhefs_censored, 1000, apparent = TRUE) %>% 
+  mutate(results = map(splits, ______))
+
+# using bias-corrected confidence intervals
+boot_estimate_cens <- int_bca(_______, results, .fn = fit_gcomp_cens)
+
+boot_estimate_cens
 ```
 
 ***
