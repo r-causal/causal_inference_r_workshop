@@ -45,7 +45,7 @@ class: inverse
 ```{r, include = FALSE}
 library(tidyverse)
 library(broom)
-library(cidata)
+library(causaldata)
 propensity_model <- glm(
   qsmk ~ sex + 
     race + age + I(age^2) + education + 

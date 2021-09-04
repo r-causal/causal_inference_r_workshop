@@ -7,7 +7,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(broom)
-library(cidata)
+library(causaldata)
 library(ggdag)
 ```
 

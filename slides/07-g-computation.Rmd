@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 library(broom)
-library(cidata)
+library(causaldata)
 
 set.seed(1000)
 ```
