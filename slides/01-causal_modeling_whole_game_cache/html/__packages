@@ -11,7 +11,7 @@ forcats
 broom
 rsample
 ggdag
-cidata
+causaldata
 Matrix
 survival
 survey
