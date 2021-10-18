@@ -44,7 +44,7 @@ smds <- df %>%
         weighted = ~_____(.x, qsmk, w = ___)$estimate
       )
     )
-  
+  )
 ```
 
 Pivot `smds` so that it is in tidy format with the columns "SMD", "variable", and "Method".
