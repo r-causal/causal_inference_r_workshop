@@ -192,7 +192,7 @@ The main goal here is to *break* the non-causal associations between quitting sm
 
 Standardized mean differences (SMD) are a simple measurement of differences that work across variable types. In general, the closer to 0 we are, the better job we have done eliminating the non-causal relationships we drew in our DAG. Note that low SMDs for everything we adjust for does *not* mean that there is not something else that might confound our study. Unmeasured confounders or misspecified DAGs can still distort our effects, even if our SMDs look great!
 
-We'll use the {smd}t package to calculate the SMDs, then visualize them.
+We'll use the {smd} package to calculate the SMDs, then visualize them.
 
 ```{r}
 vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
