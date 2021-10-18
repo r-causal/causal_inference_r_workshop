@@ -25,7 +25,7 @@ library(tidyverse)
 library(broom)
 library(rsample)
 library(ggdag)
-library(cidata)
+library(causaldata)
 library(survey)
 library(tableone)
 ```
@@ -46,7 +46,7 @@ class: middle, center, inverse
 ---
 
 ```{r}
-library(cidata)
+library(causaldata)
 nhefs_complete_uc <- nhefs_complete %>% 
   filter(censored == 0)
 nhefs_complete_uc

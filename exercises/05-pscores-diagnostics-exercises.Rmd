@@ -9,7 +9,7 @@ library(tidyverse)
 library(survey)
 library(tableone)
 library(broom)
-library(cidata)
+library(causaldata)
 ```
 
 Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
