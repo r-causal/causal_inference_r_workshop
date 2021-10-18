@@ -22,12 +22,11 @@ class: inverse
 options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
 library(tidyverse)
+library(smd)
 library(broom)
 library(rsample)
 library(ggdag)
 library(causaldata)
-library(survey)
-library(tableone)
 ```
 
 # Broad strokes
@@ -260,44 +259,38 @@ ggplot(nhefs_complete_uc, aes(wts)) +
 ---
 
 ```{r, echo=FALSE, fig.height=5.5}
-svy_des <- svydesign(
-  ids = ~ 1,
-  data = nhefs_complete_uc,
-  weights = ~ wts)
+vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+          "exercise", "active", "wt71")
 
-smd_table_unweighted <- CreateTableOne(
-  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-           "exercise", "active", "wt71"),
-  strata = "qsmk",
-  data = nhefs_complete_uc,
-  test = FALSE)
-
-smd_table <- svyCreateTableOne(
-  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-           "exercise", "active", "wt71"),
-  strata = "qsmk",
-  data = svy_des,
-  test = FALSE)
-
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+plot_df <- nhefs_complete_uc %>% 
+  summarise(
+    across(
+      all_of(vars), 
+      list(
+        unweighted = ~smd(.x, qsmk)$estimate, 
+        weighted = ~smd(.x, qsmk, wts)$estimate
+      )
+    )
+  ) %>% 
+  pivot_longer(
+    everything(), 
+    values_to = "SMD", 
+    names_to = c("variable", "Method"),
+    names_sep = "_"
+  )
 ```
 
 
 ```{r, echo=FALSE, fig.height=5.5}
 ggplot(
-  data = plot_df %>% filter(Method == "Unadjusted"),
-  mapping = aes(x = var, y = SMD, group = Method, color = Method)
+  data = plot_df %>% filter(Method == "unweighted"),
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
 ) +
-  geom_line() +
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip() +
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1) +
   theme_minimal() +
-  ylim(0, .3)
+  xlim(0, .3)
 ```
 
 ---
@@ -305,15 +298,14 @@ ggplot(
 ```{r, echo=FALSE, fig.height=5.5}
 ggplot(
   data = plot_df,
-  mapping = aes(x = var, y = SMD, group = Method, color = Method)
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
 ) +
-  geom_line() +
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip() +
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1) +
   theme_minimal() +
   scale_color_manual(values = c("grey85", "#00BFC4")) +
-  ylim(0, .3)
+  xlim(0, .3)
 ```
 
 ---
