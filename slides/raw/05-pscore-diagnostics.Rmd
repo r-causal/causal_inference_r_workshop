@@ -42,179 +42,139 @@ $$\LARGE d = \frac{\bar{x}_{treatment}-\bar{x}_{control}}{\sqrt{\frac{s^2_{treat
 
 ## SMD in R
 
-<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a "design object" to incorporate the weights </h3> 
-
 ```{r, message = FALSE, warning = FALSE}
-library(survey)
+library(smd)
+library(tidyverse)
 
-svy_des <- svydesign(
-  ids = ~ 1,
-  data = df,
-  weights = ~ wts
-)
+df %>% 
+  # w is optional
+  summarise(smd = smd(z, x, w = wts))
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate the unweighted standardized mean differences </h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tableone)
-library(tidyverse)
-
-smd_table_unweighted <- CreateTableOne(
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-  data = df,
-  test = FALSE)
+smds <- df %>% 
+  summarise( 
+    across( 
+      z1, z2, z3, 
+      list(
+        unweighted = ~smd(.x, x)$estimate, 
+        weighted = ~smd(.x, x, wts)$estimate 
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate the weighted standardized mean differences </h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
 
-```{r}
-smd_table <- svyCreateTableOne(
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-  data = svy_des, 
-  test = FALSE)
+
+```{r,  message = FALSE, warning = FALSE}
+smds <- df %>% 
+  summarise( #<<
+    across( #<<
+      z1, z2, z3, #<<
+      list(
+        unweighted = ~smd(.x, x)$estimate, 
+        weighted = ~smd(.x, x, wts)$estimate 
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate the weighted standardized mean differences </h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
 
-```{r}
-smd_table <- svyCreateTableOne( #<<
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-  data = svy_des, #<<
-  test = FALSE)
+
+```{r,  message = FALSE, warning = FALSE}
+smds <- df %>% 
+  summarise(
+    across(
+      z1, z2, z3,
+      list(
+        unweighted = ~smd(.x, x)$estimate, #<<
+        weighted = ~smd(.x, x, wts)$estimate #<<
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Stick these together in a data frame </h3> 
-
+<span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pivot the SMDs into tidy format </h3> 
 
 ```{r}
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+plot_df <- smds %>% 
+  pivot_longer( 
+    everything(),
+    values_to = "SMD", 
+    names_to = c("variable", "Method"), 
+    names_sep = "_"
+  )
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Stick these together in a data frame </h3> 
-
+<span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pivot the SMDs into tidy format </h3> 
 
 ```{r}
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)), #<<                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-rownames(EXtractSMD(smd_table))
-#> [1] "confounder_1"  "confounder_2"
+plot_df <- smds %>% 
+  pivot_longer( #<<
+    everything(), #<<
+    values_to = "SMD", 
+    names_to = c("variable", "Method"), #<<
+    names_sep = "_"
+  )
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Stick these together in a data frame </h3> 
+<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
 
 
 ```{r}
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),  #<<                    
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-as.numeric(ExtractSmd(smd_table_unweighted))
-#> [1] 0.160 0.177
-```
-
----
-
-## SMD in R
-
-<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Stick these together in a data frame </h3> 
-
-
-```{r}
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                    
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>% #<<
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-as.numeric(ExtractSmd(smd_table))
-#> [1] 0.002 0.007
-```
-
----
-
-## SMD in R
-
-<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Stick these together in a data frame </h3> 
-
-
-```{r}
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                    
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD") #<<
-
-```
-
----
-
-## SMD in R
-
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
-
-
-```{r}
-ggplot(data = plot_df, 
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) +
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +  
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
 
 ## SMD in R
 
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
 
 
 ```{r}
-ggplot(data = plot_df, #<<
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + #<<
-  geom_line() +
+ggplot(
+  data = plot_df, #<<
+  aes(x = abs(SMD), y = variable, group = Method, color = Method) #<<
+) +  
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
@@ -222,16 +182,17 @@ ggplot(data = plot_df, #<<
 
 ## SMD in R
 
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
 
 
 ```{r}
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-  geom_line() + #<<
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +  
+  geom_line(orientation = "y") + #<<
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
@@ -239,16 +200,17 @@ ggplot(data = plot_df,
 
 ## SMD in R
 
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
 
 
 ```{r}
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +
+  geom_line(orientation = "y") +
   geom_point() + #<<
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 
@@ -257,33 +219,17 @@ ggplot(data = plot_df,
 
 ## SMD in R
 
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+<span class = "num">4</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
 
 
 ```{r}
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  #<<
-  coord_flip()
-```
-
-
----
-
-
-## SMD in R
-
-
-<span class = "num">5</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
-
-```{r}
-ggplot(data = plot_df, mapping = aes(x = var, y = SMD, group = Method, color = Method)) +
-  geom_line() +
-  geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip() #<<
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1) #<<
 ```
 
 ---
@@ -291,8 +237,7 @@ ggplot(data = plot_df, mapping = aes(x = var, y = SMD, group = Method, color = M
 ## Love plot
 
 ```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
-library(survey)
-library(tableone)
+library(smd)
 library(tidyverse)
 library(broom)
 library(causaldata)
@@ -311,40 +256,33 @@ df <- propensity_model %>%
   augment(type.predict = "response", data = nhefs_complete) %>% 
   mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
 
-svy_des <- svydesign(
-  ids = ~ 1,
-  data = df,
-  weights = ~ w_ate)
+vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+          "exercise", "active", "wt71")
 
-smd_table_unweighted <- CreateTableOne(
-  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-           "exercise", "active", "wt71"),
-  strata = "qsmk",
-  data = df,
-  test = FALSE)
-
-smd_table <- svyCreateTableOne(
-  vars = c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-           "exercise", "active", "wt71"),
-  strata = "qsmk",
-  data = svy_des,
-  test = FALSE)
-
-
-plot_df <- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+plot_df <- df %>% 
+  summarise(
+    across(
+      all_of(vars), 
+      list(
+        unweighted = ~smd(.x, qsmk)$estimate, 
+        weighted = ~smd(.x, qsmk, w_ate)$estimate
+      )
+    )
+  ) %>% 
+  pivot_longer(
+    everything(), 
+    values_to = "SMD", 
+    names_to = c("variable", "Method"),
+    names_sep = "_"
+  )
 
 ggplot(
   data = plot_df,
-  mapping = aes(x = var, y = SMD, group = Method, color = Method)
+  mapping = aes(x = abs(SMD), y = variable, group = Method, color = Method)
 ) +
-  geom_line() +
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
@@ -634,3 +572,57 @@ ggplot(ecdf_1, aes(x = wt71, y = cum_pct)) +
 
 1. Create an unweighted ECDF examining the `smokeyrs` confounder for those that quit smoking and those that did not
 3. Create a weighted ECDF examining the `smokeyrs` confounder
+
+
+---
+
+class: middle, center, inverse
+
+## *Bonus!* Weighted Tables in R
+
+
+---
+
+## Weighted Tables in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a "design object" to incorporate the weights </h3> 
+
+```{r, message = FALSE, warning = FALSE}
+library(survey)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df,
+  weights = ~ wts,
+  strata = ~ x
+)
+```
+
+---
+
+## Weighted Tables in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pass to `gtsummary::tbl_svysummary()` </h3> 
+
+```{r,  message = FALSE, warning = FALSE}
+library(gtsummary)
+tbl_svysummary(svy_des, by = x) %>% 
+  add_difference(everything() ~ "smd")
+```
+
+---
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, echo = FALSE}
+library(survey)
+library(gtsummary)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df %>% select(wt71, race, age, sex, smokeintensity, smokeyrs, exercise, active, w_ate, qsmk),
+  weights = ~ w_ate
+)
+theme_gtsummary_compact()
+
+tbl_svysummary(svy_des, by = qsmk) %>% 
+  add_difference(everything() ~ "smd")
+```
