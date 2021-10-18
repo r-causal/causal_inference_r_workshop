@@ -8,8 +8,7 @@ library(tidyverse)
 library(broom)
 library(rsample)
 library(ggdag)
-# remotes::install_github("malcolmbarrett/cidata")
-library(cidata)
+library(causaldata)
 library(survey)
 library(tableone)
 ```
@@ -20,7 +19,7 @@ In this guided exercise, we'll attempt to answer a causal question: does quittin
 
 To answer this question, we'll use causal inference methods to examine the relationship between quitting smoking and gaining weight. First, we'll draw our assumptions with a causal diagram (a directed acyclic graph, or DAG), which will guide our model. Then, we'll use a modeling approach called inverse probability weighting--one of many causal modeling techniques--to estimate the causal effect we're interested in.
 
-We'll use data from NHEFS to try to estimate the causal effect of quitting smoking on weight game. NHEFS is a longitudinal, observational study that has many of the variables we'll need. Take a look at `nhefs_codebook` if you want to know more about the variables in this data set. These data are included in the {cidata} package. We'll use the `nhefs_complete` data set, but we'll remove people who were lost to follow-up.
+We'll use data from NHEFS to try to estimate the causal effect of quitting smoking on weight game. NHEFS is a longitudinal, observational study that has many of the variables we'll need. Take a look at `nhefs_codebook` if you want to know more about the variables in this data set. These data are included in the {causaldata} package. We'll use the `nhefs_complete` data set, but we'll remove people who were lost to follow-up.
 
 ```{r}
 nhefs_complete_uc <- nhefs_complete %>% 

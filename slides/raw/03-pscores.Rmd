@@ -153,7 +153,7 @@ class: inverse
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 5.5}
-library(cidata)
+library(causaldata)
 library(ggdag)
 set.seed(1234)
 # set up DAG

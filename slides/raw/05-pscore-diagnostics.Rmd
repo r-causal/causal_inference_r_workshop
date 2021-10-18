@@ -295,8 +295,7 @@ library(survey)
 library(tableone)
 library(tidyverse)
 library(broom)
-# remotes::install_github("malcolmbarrett/cidata")
-library(cidata)
+library(causaldata)
 
 propensity_model <- glm(
   qsmk ~ sex + 

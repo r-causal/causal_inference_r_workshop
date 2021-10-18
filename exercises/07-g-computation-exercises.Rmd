@@ -6,7 +6,7 @@ output: html_document
 ```{r setup}
 library(tidyverse)
 library(broom)
-library(cidata)
+library(causaldata)
 ```
 
 # Your Turn 1
