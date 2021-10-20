@@ -4,10 +4,10 @@
     <title>Propensity Score Diagnostics</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/countdown/countdown.css" rel="stylesheet" />
-    <script src="libs/countdown/countdown.js"></script>
+    <script src="libs/header-attrs-2.11.3/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/countdown-0.3.5/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.3.5/countdown.js"></script>
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # Propensity Score Diagnostics
 ### Lucy D’Agostino McGowan
 ### Wake Forest University
-### 2021-09-01 (updated: 2021-08-31)
+### 2021-09-01 (updated: 2021-10-20)
 
 ---
 
@@ -44,189 +44,147 @@ class: inverse
 
 ## SMD in R
 
-&lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Create a "design object" to incorporate the weights &lt;/h3&gt; 
-
 
 ```r
-library(survey)
-
-svy_des &lt;- svydesign(
-  ids = ~ 1,
-  data = df,
-  weights = ~ wts
-)
-```
-
----
-
-## SMD in R
-
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate the unweighted standardized mean differences &lt;/h3&gt; 
-
-
-
-```r
-library(tableone)
+library(smd)
 library(tidyverse)
 
-smd_table_unweighted &lt;- CreateTableOne(
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-  data = df,
-  test = FALSE)
+df %&gt;% 
+  # w is optional
+  summarise(smd = smd(confounder_1, exposure, w = wts)$estimate)
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate the weighted standardized mean differences &lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate standardized mean differences &lt;/h3&gt; 
+
 
 
 ```r
-smd_table &lt;- svyCreateTableOne(
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-  data = svy_des, 
-  test = FALSE)
+smds &lt;- df %&gt;% 
+  summarise( 
+    across( 
+      c(confounder_1, confounder_2, ...), 
+      list(
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate the weighted standardized mean differences &lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate standardized mean differences &lt;/h3&gt; 
+
 
 
 ```r
-*smd_table &lt;- svyCreateTableOne(
-  vars = c("confounder_1", "confounder_1", ...),
-  strata = "exposure",
-* data = svy_des,
-  test = FALSE)
+smds &lt;- df %&gt;% 
+* summarise(
+*   across(
+*     c(confounder_1, confounder_2, ...),
+      list(
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Stick these together in a data frame &lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Calculate standardized mean differences &lt;/h3&gt; 
 
 
 
 ```r
-plot_df &lt;- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %&gt;%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+smds &lt;- df %&gt;% 
+  summarise(
+    across(
+      c(confounder_1, confounder_2, ...),
+      list(
+*       unweighted = ~smd(.x, exposure)$estimate,
+*       weighted = ~smd(.x, exposure, wts)$estimate
+      )
+    )
+  )
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Stick these together in a data frame &lt;/h3&gt; 
-
+&lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Pivot the SMDs into tidy format &lt;/h3&gt; 
 
 
 ```r
-plot_df &lt;- data.frame(
-* var = rownames(ExtractSmd(smd_table)),
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                      
-  Weighted = as.numeric(ExtractSmd(smd_table))) %&gt;%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-rownames(EXtractSMD(smd_table))
-#&gt; [1] "confounder_1"  "confounder_2"
+plot_df &lt;- smds %&gt;% 
+  pivot_longer( 
+    everything(),
+    values_to = "SMD", 
+    names_to = c("variable", "Method"), 
+    names_sep = "_"
+  )
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Stick these together in a data frame &lt;/h3&gt; 
-
+&lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Pivot the SMDs into tidy format &lt;/h3&gt; 
 
 
 ```r
-plot_df &lt;- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-* Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),
-  Weighted = as.numeric(ExtractSmd(smd_table))) %&gt;%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-as.numeric(ExtractSmd(smd_table_unweighted))
-#&gt; [1] 0.160 0.177
+plot_df &lt;- smds %&gt;% 
+* pivot_longer(
+*   everything(),
+    values_to = "SMD", 
+*   names_to = c("variable", "Method"),
+    names_sep = "_"
+  )
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Stick these together in a data frame &lt;/h3&gt; 
+&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
 
 
 
 ```r
-plot_df &lt;- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                    
-* Weighted = as.numeric(ExtractSmd(smd_table))) %&gt;%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
-
-as.numeric(ExtractSmd(smd_table))
-#&gt; [1] 0.002 0.007
-```
-
----
-
-## SMD in R
-
-&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Stick these together in a data frame &lt;/h3&gt; 
-
-
-
-```r
-plot_df &lt;- data.frame(
-  var = rownames(ExtractSmd(smd_table)),                        
-  Unadjusted = as.numeric(ExtractSmd(smd_table_unweighted)),                    
-  Weighted = as.numeric(ExtractSmd(smd_table))) %&gt;%
-* pivot_longer(-var, names_to = "Method", values_to = "SMD")
-```
-
----
-
-## SMD in R
-
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
-
-
-
-```r
-ggplot(data = plot_df, 
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) +
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +  
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
 
 ## SMD in R
 
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
+&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
 
 
 
 ```r
-*ggplot(data = plot_df,
-*      mapping = aes(x = var, y = SMD, group = Method, color = Method)) +
-  geom_line() +
+ggplot(
+* data = plot_df,
+* aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +  
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
@@ -234,17 +192,18 @@ ggplot(data = plot_df,
 
 ## SMD in R
 
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
+&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
 
 
 
 ```r
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-* geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +  
+* geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
@@ -252,17 +211,18 @@ ggplot(data = plot_df,
 
 ## SMD in R
 
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
+&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
 
 
 
 ```r
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +
+  geom_line(orientation = "y") +
 * geom_point() +
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 
@@ -271,48 +231,31 @@ ggplot(data = plot_df,
 
 ## SMD in R
 
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
+&lt;span class = "num"&gt;4&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
 
 
 
 ```r
-ggplot(data = plot_df,
-       mapping = aes(x = var, y = SMD, group = Method, color = Method)) + 
-  geom_line() +
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+) +
+  geom_line(orientation = "y") +
   geom_point() + 
-* geom_hline(yintercept = 0.1, color = "black", size = 0.1) +
-  coord_flip()
-```
-
-
----
-
-
-## SMD in R
-
-
-&lt;span class = "num"&gt;5&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
-
-
-```r
-ggplot(data = plot_df, mapping = aes(x = var, y = SMD, group = Method, color = Method)) +
-  geom_line() +
-  geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-* coord_flip()
+* geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 ---
 
 ## Love plot
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 1
 
-<div class="countdown" id="timer_612e3e2c" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61702ef0" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -324,7 +267,7 @@ ggplot(data = plot_df, mapping = aes(x = var, y = SMD, group = Method, color = M
 
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -373,7 +316,7 @@ ggplot(df, aes(x = wt71, group = qsmk, color = factor(qsmk))) +
 
 ## Unweighted ECDF
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -568,18 +511,508 @@ ggplot(ecdf_1, aes(x = wt71, y = cum_pct)) +
 
 ## Weighted  ECDF 
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 2
 
-<div class="countdown" id="timer_612e3e89" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61702e7b" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 1. Create an unweighted ECDF examining the `smokeyrs` confounder for those that quit smoking and those that did not
 3. Create a weighted ECDF examining the `smokeyrs` confounder
+
+
+---
+
+class: middle, center, inverse
+
+## *Bonus!* Weighted Tables in R
+
+
+---
+
+## Weighted Tables in R
+
+&lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Create a "design object" to incorporate the weights &lt;/h3&gt; 
+
+
+```r
+library(survey)
+
+svy_des &lt;- svydesign(
+  ids = ~ 1,
+  data = df,
+  weights = ~ wts,
+  strata = ~ x
+)
+```
+
+---
+
+## Weighted Tables in R
+
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; Pass to `gtsummary::tbl_svysummary()` &lt;/h3&gt; 
+
+
+```r
+library(gtsummary)
+tbl_svysummary(svy_des, by = x) %&gt;% 
+  add_difference(everything() ~ "smd")
+  # modify_column_hide(ci) to hide CI column
+```
+
+---
+
+<div id="flrrnmxftz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#flrrnmxftz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: small;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#flrrnmxftz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#flrrnmxftz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#flrrnmxftz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#flrrnmxftz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#flrrnmxftz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#flrrnmxftz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#flrrnmxftz .gt_group_heading {
+  padding: 1px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#flrrnmxftz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#flrrnmxftz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#flrrnmxftz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#flrrnmxftz .gt_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#flrrnmxftz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#flrrnmxftz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#flrrnmxftz .gt_first_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#flrrnmxftz .gt_first_grand_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#flrrnmxftz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 1px;
+}
+
+#flrrnmxftz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#flrrnmxftz .gt_sourcenote {
+  font-size: 90%;
+  padding: 1px;
+}
+
+#flrrnmxftz .gt_left {
+  text-align: left;
+}
+
+#flrrnmxftz .gt_center {
+  text-align: center;
+}
+
+#flrrnmxftz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#flrrnmxftz .gt_font_normal {
+  font-weight: normal;
+}
+
+#flrrnmxftz .gt_font_bold {
+  font-weight: bold;
+}
+
+#flrrnmxftz .gt_font_italic {
+  font-style: italic;
+}
+
+#flrrnmxftz .gt_super {
+  font-size: 65%;
+}
+
+#flrrnmxftz .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 65%;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>0</strong>, N = 1,565<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>1</strong>, N = 1,561<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>Difference</strong><sup class="gt_footnote_marks">2</sup></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left">WEIGHT IN KILOGRAMS  IN 1971</td>
+<td class="gt_row gt_center">69 (60, 80)</td>
+<td class="gt_row gt_center">69 (59, 79)</td>
+<td class="gt_row gt_center">0.01</td></tr>
+    <tr><td class="gt_row gt_left">0: WHITE 1: BLACK OR OTHER IN 1971</td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center">0.01</td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+<td class="gt_row gt_center">1,359 (87%)</td>
+<td class="gt_row gt_center">1,352 (87%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+<td class="gt_row gt_center">206 (13%)</td>
+<td class="gt_row gt_center">209 (13%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left">AGE IN 1971</td>
+<td class="gt_row gt_center">43 (33, 52)</td>
+<td class="gt_row gt_center">43 (33, 53)</td>
+<td class="gt_row gt_center">-0.01</td></tr>
+    <tr><td class="gt_row gt_left">0: MALE 1: FEMALE</td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center">0.00</td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+<td class="gt_row gt_center">764 (49%)</td>
+<td class="gt_row gt_center">764 (49%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+<td class="gt_row gt_center">802 (51%)</td>
+<td class="gt_row gt_center">797 (51%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left">NUMBER OF CIGARETTES SMOKED PER DAY IN 1971</td>
+<td class="gt_row gt_center">20 (10, 25)</td>
+<td class="gt_row gt_center">20 (10, 30)</td>
+<td class="gt_row gt_center">0.02</td></tr>
+    <tr><td class="gt_row gt_left">YEARS OF SMOKING</td>
+<td class="gt_row gt_center">24 (15, 33)</td>
+<td class="gt_row gt_center">24 (14, 33)</td>
+<td class="gt_row gt_center">0.00</td></tr>
+    <tr><td class="gt_row gt_left">IN RECREATION, HOW MUCH EXERCISE? IN 1971, 0:much exercise,1:moderate exercise,2:little or no exercise</td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center">0.04</td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+<td class="gt_row gt_center">302 (19%)</td>
+<td class="gt_row gt_center">294 (19%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+<td class="gt_row gt_center">665 (42%)</td>
+<td class="gt_row gt_center">691 (44%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+<td class="gt_row gt_center">599 (38%)</td>
+<td class="gt_row gt_center">576 (37%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left">IN YOUR USUAL DAY, HOW ACTIVE ARE YOU? IN 1971, 0:very active, 1:moderately active, 2:inactive</td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center"></td>
+<td class="gt_row gt_center">0.03</td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+<td class="gt_row gt_center">700 (45%)</td>
+<td class="gt_row gt_center">684 (44%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+<td class="gt_row gt_center">718 (46%)</td>
+<td class="gt_row gt_center">738 (47%)</td>
+<td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+<td class="gt_row gt_center">147 (9.4%)</td>
+<td class="gt_row gt_center">138 (8.9%)</td>
+<td class="gt_row gt_center"></td></tr>
+  </tbody>
+  
+  <tfoot>
+    <tr class="gt_footnotes">
+      <td colspan="4">
+        <p class="gt_footnote">
+          <sup class="gt_footnote_marks">
+            <em>1</em>
+          </sup>
+           
+          Median (IQR); n (%)
+          <br />
+        </p>
+        <p class="gt_footnote">
+          <sup class="gt_footnote_marks">
+            <em>2</em>
+          </sup>
+           
+          Standardized Mean Difference
+          <br />
+        </p>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+</div>
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 # Causal Modeling in R: Whole Game
 ### Malcolm Barrett
 ### Teladoc Health
-### 2021-09-01 (updated: 2021-08-31)
+### 2021-09-01 (updated: 2021-10-18)
 
 ---
 
@@ -29,7 +29,7 @@ class: inverse
 2. Draw assumptions (causal diagram)
 3. Model assumptions (propensity score)
 4. Analyze propensities (diagnostics)
-5. Estimate causal effects (IPW)
+5. Estimate causal effects (IPW) 
 
 ---
 
@@ -42,25 +42,25 @@ class: middle, center, inverse
 
 ```r
 library(causaldata)
-nhefs_complete_uc &lt;- nhefs_complete %&gt;%
+nhefs_complete_uc &lt;- nhefs_complete %&gt;% 
   filter(censored == 0)
 nhefs_complete_uc
 ```
 
 ```
 ## # A tibble: 1,566 × 67
-##     seqn  qsmk death yrdth modth dadth   sbp   dbp sex
+##     seqn  qsmk death yrdth modth dadth   sbp   dbp sex  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
-##  1   233     0     0    NA    NA    NA   175    96 0
-##  2   235     0     0    NA    NA    NA   123    80 0
-##  3   244     0     0    NA    NA    NA   115    75 1
-##  4   245     0     1    85     2    14   148    78 0
-##  5   252     0     0    NA    NA    NA   118    77 0
-##  6   257     0     0    NA    NA    NA   141    83 1
-##  7   262     0     0    NA    NA    NA   132    69 1
-##  8   266     0     0    NA    NA    NA   100    53 1
-##  9   419     0     1    84    10    13   163    79 0
-## 10   420     0     1    86    10    17   184   106 0
+##  1   233     0     0    NA    NA    NA   175    96 0    
+##  2   235     0     0    NA    NA    NA   123    80 0    
+##  3   244     0     0    NA    NA    NA   115    75 1    
+##  4   245     0     1    85     2    14   148    78 0    
+##  5   252     0     0    NA    NA    NA   118    77 0    
+##  6   257     0     0    NA    NA    NA   141    83 1    
+##  7   262     0     0    NA    NA    NA   132    69 1    
+##  8   266     0     0    NA    NA    NA   100    53 1    
+##  9   419     0     1    84    10    13   163    79 0    
+## 10   420     0     1    86    10    17   184   106 0    
 ## # … with 1,556 more rows, and 58 more variables: age &lt;dbl&gt;,
 ## #   race &lt;fct&gt;, income &lt;dbl&gt;, marital &lt;dbl&gt;, school &lt;dbl&gt;,
 ## #   education &lt;fct&gt;, …
@@ -79,10 +79,10 @@ nhefs_complete_uc
 
 ```r
 # ~2.5 lbs gained for quit vs. not quit
-nhefs_complete_uc %&gt;%
-  group_by(qsmk) %&gt;%
+nhefs_complete_uc %&gt;% 
+  group_by(qsmk) %&gt;% 
   summarize(
-    mean_weight_change = mean(wt82_71),
+    mean_weight_change = mean(wt82_71), 
     sd = sd(wt82_71),
     .groups = "drop"
   )
@@ -134,7 +134,7 @@ class:  center, middle
 *   wt71 + I(wt71^2),
 * data = nhefs_complete_uc
 *) %&gt;%
-  tidy(conf.int = TRUE) %&gt;%
+  tidy(conf.int = TRUE) %&gt;% 
   filter(term == "qsmk")
 ```
 
@@ -144,15 +144,15 @@ class:  center, middle
 
 
 ```r
-lm(
-  wt82_71~ qsmk + sex +
-    race + age + I(age^2) + education +
-    smokeintensity + I(smokeintensity^2) +
-    smokeyrs + I(smokeyrs^2) + exercise + active +
-    wt71 + I(wt71^2),
-  data = nhefs_complete_uc
-) %&gt;%
-  tidy(conf.int = TRUE) %&gt;%
+lm( 
+  wt82_71~ qsmk + sex +  
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete_uc 
+) %&gt;% 
+  tidy(conf.int = TRUE) %&gt;% 
   filter(term == "qsmk")
 ```
 
@@ -184,11 +184,11 @@ class: center, middle
 ```r
 *propensity_model &lt;- glm(
 * qsmk ~ sex +
-    race + age + I(age^2) + education +
-    smokeintensity + I(smokeintensity^2) +
-    smokeyrs + I(smokeyrs^2) + exercise + active +
-    wt71 + I(wt71^2),
-  family = binomial(),
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
   data = nhefs_complete_uc
 )
 ```
@@ -199,7 +199,7 @@ class: center, middle
 
 
 ```r
-nhefs_complete_uc &lt;- propensity_model %&gt;%
+nhefs_complete_uc &lt;- propensity_model %&gt;% 
   # predict whether quit smoking
 * augment(type.predict = "response", data = nhefs_complete_uc) %&gt;%
   # calculate inverse probability
@@ -243,12 +243,12 @@ class: inverse, center, middle
 ```r
 *ipw_model &lt;- lm(
 * wt82_71 ~ qsmk,
-  data = nhefs_complete_uc,
+  data = nhefs_complete_uc, 
 * weights = wts
-)
+) 
 
-ipw_estimate &lt;- ipw_model %&gt;%
-  tidy(conf.int = TRUE) %&gt;%
+ipw_estimate &lt;- ipw_model %&gt;% 
+  tidy(conf.int = TRUE) %&gt;% 
   filter(term == "qsmk")
 ```
 
@@ -278,12 +278,12 @@ ipw_estimate
 
 ```r
 # fit ipw model for a single bootstrap sample
-fit_ipw_not_quite_rightly &lt;- function(split, ...) {
+fit_ipw_not_quite_rightly &lt;- function(split, ...) { 
   # get bootstrapped data sample with `rsample::analysis()`
   .df &lt;- analysis(split)
-
+  
   # fit ipw model
-  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;%
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;% 
     tidy()
 }
 ```
@@ -294,25 +294,25 @@ fit_ipw_not_quite_rightly &lt;- function(split, ...) {
 ```r
 fit_ipw &lt;- function(split, ...) {
   .df &lt;- analysis(split)
-
+  
   # fit propensity score model
   propensity_model &lt;- glm(
-    qsmk ~ sex +
-      race + age + I(age^2) + education +
-      smokeintensity + I(smokeintensity^2) +
-      smokeyrs + I(smokeyrs^2) + exercise + active +
-      wt71 + I(wt71^2),
-    family = binomial(),
+    qsmk ~ sex + 
+      race + age + I(age^2) + education + 
+      smokeintensity + I(smokeintensity^2) + 
+      smokeyrs + I(smokeyrs^2) + exercise + active + 
+      wt71 + I(wt71^2), 
+    family = binomial(), 
     data = .df
   )
-
+  
   # calculate inverse probability weights
-  .df &lt;- propensity_model %&gt;%
-    augment(type.predict = "response", data = .df) %&gt;%
+  .df &lt;- propensity_model %&gt;% 
+    augment(type.predict = "response", data = .df) %&gt;% 
     mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
-
+  
   # fit correctly bootsrapped ipw model
-  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;%
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) %&gt;% 
     tidy()
 }
 ```
@@ -350,7 +350,7 @@ boot_estimate
 
 ```r
 # get t-statistic-based CIs
-boot_estimate &lt;- int_t(ipw_results, results) %&gt;%
+boot_estimate &lt;- int_t(ipw_results, results) %&gt;% 
   filter(term == "qsmk")
 
 boot_estimate
@@ -358,9 +358,9 @@ boot_estimate
 
 ```
 ## # A tibble: 1 × 6
-##   term  .lower .estimate .upper .alpha .method
-##   &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
-*## 1 qsmk    2.49      3.45   4.37   0.05 student-t
+##   term  .lower .estimate .upper .alpha .method  
+##   &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
+*## 1 qsmk    2.48      3.45   4.39   0.05 student-t
 ```
 
 ---

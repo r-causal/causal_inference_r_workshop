@@ -6,9 +6,8 @@ output: html_document
 
 ```{r}
 library(tidyverse)
-library(survey)
-library(tableone)
 library(broom)
+library(smd)
 library(causaldata)
 ```
 
@@ -32,55 +31,46 @@ df <- propensity_model %>%
 
 _After updating the code chunks below, change `eval = TRUE` before knitting._
 
-Create the survey design object to incorporate the weights.
+Calculate the standardized mean differences with and without weights
 
 ```{r, eval = FALSE}
-svy_des <- ____(
-  ids = ~ 1,
-  data = ___,
-  weights = ___
-)
+smds <- df %>% 
+  summarise(
+    across(
+      # variables to calculate SMD for
+      ________, 
+      list(
+        unweighted = ~_____(.x, qsmk)$estimate, 
+        weighted = ~_____(.x, qsmk, w = ___)$estimate
+      )
+    )
+  )
 ```
 
-Create the **unweighted** standardized mean differences data frame
+Pivot `smds` so that it is in tidy format with the columns "SMD", "variable", and "Method".
 
 ```{r, eval = FALSE}
-smd_table_unweighted <- ____(
-  vars = _____,
-  strata = _____,
-  data = ____,
-  test = FALSE)
-```
-
-Create the **weighted** standardized mean differences data frame
-
-```{r, eval = FALSE}
-smd_table <- ____(
-  vars = _____,
-  strata = _____,
-  data = ____,
-  test = FALSE)
-```
-
-Create a data frame that merges `smd_table_unweighted` and `smd_table` and pivots it to prepare for plotting
-
-```{r, eval = FALSE}
-plot_df <- data.frame(
-  var = rownames(____),                        
-  Unadjusted = _____,                      
-  Weighted = _____) %>%
-  pivot_longer(-var, names_to = "Method", values_to = "SMD")
+plot_df <- smds %>% 
+  pivot_longer(
+    _______, 
+    values_to = "___", 
+    names_to = c("___", "___"),
+    
+    # don't change this one. We really mean _!
+    names_sep = "_"
+  )
 ```
 
 Create the Love Plot using ggplot
 
 ```{r, eval = FALSE}
-ggplot(data = _____, 
-       mapping = aes(x = ____, y = ____, group = ____, color = ____)) +
-  geom_line() +
+ggplot(
+  data = ____,
+  aes(x = abs(____), y = ____, group = ____, color = ____)
+) +
+  geom_line(orientation = "y") +
   geom_point() + 
-  geom_hline(yintercept = 0.1, color = "black", size = 0.1) +  
-  coord_flip()
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 
