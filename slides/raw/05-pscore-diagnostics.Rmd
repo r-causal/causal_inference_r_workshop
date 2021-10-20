@@ -608,6 +608,7 @@ svy_des <- svydesign(
 library(gtsummary)
 tbl_svysummary(svy_des, by = x) %>% 
   add_difference(everything() ~ "smd")
+  # modify_column_hide(ci) to hide CI column
 ```
 
 ---
@@ -624,5 +625,6 @@ svy_des <- svydesign(
 theme_gtsummary_compact()
 
 tbl_svysummary(svy_des, by = qsmk) %>% 
-  add_difference(everything() ~ "smd")
+  add_difference(everything() ~ "smd") %>% 
+  modify_column_hide(ci)
 ```
