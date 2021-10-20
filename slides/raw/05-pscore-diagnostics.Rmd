@@ -48,7 +48,7 @@ library(tidyverse)
 
 df %>% 
   # w is optional
-  summarise(smd = smd(z, x, w = wts))
+  summarise(smd = smd(confounder_1, exposure, w = wts)$estimate)
 ```
 
 ---
@@ -62,10 +62,10 @@ df %>%
 smds <- df %>% 
   summarise( 
     across( 
-      z1, z2, z3, 
+      c(confounder_1, confounder_2, ...), 
       list(
-        unweighted = ~smd(.x, x)$estimate, 
-        weighted = ~smd(.x, x, wts)$estimate 
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
       )
     )
   )
@@ -82,10 +82,10 @@ smds <- df %>%
 smds <- df %>% 
   summarise( #<<
     across( #<<
-      z1, z2, z3, #<<
+      c(confounder_1, confounder_2, ...), #<<
       list(
-        unweighted = ~smd(.x, x)$estimate, 
-        weighted = ~smd(.x, x, wts)$estimate 
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
       )
     )
   )
@@ -102,10 +102,10 @@ smds <- df %>%
 smds <- df %>% 
   summarise(
     across(
-      z1, z2, z3,
+      c(confounder_1, confounder_2, ...),
       list(
-        unweighted = ~smd(.x, x)$estimate, #<<
-        weighted = ~smd(.x, x, wts)$estimate #<<
+        unweighted = ~smd(.x, exposure)$estimate, #<<
+        weighted = ~smd(.x, exposure, wts)$estimate #<<
       )
     )
   )

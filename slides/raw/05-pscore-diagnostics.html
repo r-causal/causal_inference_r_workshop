@@ -51,7 +51,7 @@ library(tidyverse)
 
 df %&gt;% 
   # w is optional
-  summarise(smd = smd(z, x, w = wts))
+  summarise(smd = smd(confounder_1, exposure, w = wts)$estimate)
 ```
 
 ---
@@ -66,10 +66,10 @@ df %&gt;%
 smds &lt;- df %&gt;% 
   summarise( 
     across( 
-      z1, z2, z3, 
+      c(confounder_1, confounder_2, ...), 
       list(
-        unweighted = ~smd(.x, x)$estimate, 
-        weighted = ~smd(.x, x, wts)$estimate 
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
       )
     )
   )
@@ -87,10 +87,10 @@ smds &lt;- df %&gt;%
 smds &lt;- df %&gt;% 
 * summarise(
 *   across(
-*     z1, z2, z3,
+*     c(confounder_1, confounder_2, ...),
       list(
-        unweighted = ~smd(.x, x)$estimate, 
-        weighted = ~smd(.x, x, wts)$estimate 
+        unweighted = ~smd(.x, exposure)$estimate, 
+        weighted = ~smd(.x, exposure, wts)$estimate 
       )
     )
   )
@@ -108,10 +108,10 @@ smds &lt;- df %&gt;%
 smds &lt;- df %&gt;% 
   summarise(
     across(
-      z1, z2, z3,
+      c(confounder_1, confounder_2, ...),
       list(
-*       unweighted = ~smd(.x, x)$estimate,
-*       weighted = ~smd(.x, x, wts)$estimate
+*       unweighted = ~smd(.x, exposure)$estimate,
+*       weighted = ~smd(.x, exposure, wts)$estimate
       )
     )
   )
@@ -249,13 +249,13 @@ ggplot(
 
 ## Love plot
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 1
 
-<div class="countdown" id="timer_61702db8" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61702ef0" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -267,7 +267,7 @@ ggplot(
 
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -316,7 +316,7 @@ ggplot(df, aes(x = wt71, group = qsmk, color = factor(qsmk))) +
 
 ## Unweighted ECDF
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -511,13 +511,13 @@ ggplot(ecdf_1, aes(x = wt71, y = cum_pct)) +
 
 ## Weighted  ECDF 
 
-&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="05-pscore-diagnostics_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 2
 
-<div class="countdown" id="timer_61702f9e" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61702e7b" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -566,12 +566,12 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 
 ---
 
-<div id="qoqknhvurl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="flrrnmxftz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#qoqknhvurl .gt_table {
+#flrrnmxftz .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -596,7 +596,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_heading {
+#flrrnmxftz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -608,7 +608,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_title {
+#flrrnmxftz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -618,7 +618,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-bottom-width: 0;
 }
 
-#qoqknhvurl .gt_subtitle {
+#flrrnmxftz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -628,13 +628,13 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-top-width: 0;
 }
 
-#qoqknhvurl .gt_bottom_border {
+#flrrnmxftz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_col_headings {
+#flrrnmxftz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -649,7 +649,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_col_heading {
+#flrrnmxftz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -669,7 +669,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   overflow-x: hidden;
 }
 
-#qoqknhvurl .gt_column_spanner_outer {
+#flrrnmxftz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -681,15 +681,15 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   padding-right: 4px;
 }
 
-#qoqknhvurl .gt_column_spanner_outer:first-child {
+#flrrnmxftz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qoqknhvurl .gt_column_spanner_outer:last-child {
+#flrrnmxftz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qoqknhvurl .gt_column_spanner {
+#flrrnmxftz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -701,7 +701,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   width: 100%;
 }
 
-#qoqknhvurl .gt_group_heading {
+#flrrnmxftz .gt_group_heading {
   padding: 1px;
   color: #333333;
   background-color: #FFFFFF;
@@ -723,7 +723,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   vertical-align: middle;
 }
 
-#qoqknhvurl .gt_empty_group_heading {
+#flrrnmxftz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -738,15 +738,15 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   vertical-align: middle;
 }
 
-#qoqknhvurl .gt_from_md > :first-child {
+#flrrnmxftz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qoqknhvurl .gt_from_md > :last-child {
+#flrrnmxftz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qoqknhvurl .gt_row {
+#flrrnmxftz .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -765,7 +765,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   overflow-x: hidden;
 }
 
-#qoqknhvurl .gt_stub {
+#flrrnmxftz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -777,7 +777,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   padding-left: 12px;
 }
 
-#qoqknhvurl .gt_summary_row {
+#flrrnmxftz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -787,7 +787,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   padding-right: 5px;
 }
 
-#qoqknhvurl .gt_first_summary_row {
+#flrrnmxftz .gt_first_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -797,7 +797,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_grand_summary_row {
+#flrrnmxftz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -807,7 +807,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   padding-right: 5px;
 }
 
-#qoqknhvurl .gt_first_grand_summary_row {
+#flrrnmxftz .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -817,11 +817,11 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_striped {
+#flrrnmxftz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qoqknhvurl .gt_table_body {
+#flrrnmxftz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -830,7 +830,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_footnotes {
+#flrrnmxftz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -844,13 +844,13 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_footnote {
+#flrrnmxftz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 1px;
 }
 
-#qoqknhvurl .gt_sourcenotes {
+#flrrnmxftz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -864,41 +864,41 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#qoqknhvurl .gt_sourcenote {
+#flrrnmxftz .gt_sourcenote {
   font-size: 90%;
   padding: 1px;
 }
 
-#qoqknhvurl .gt_left {
+#flrrnmxftz .gt_left {
   text-align: left;
 }
 
-#qoqknhvurl .gt_center {
+#flrrnmxftz .gt_center {
   text-align: center;
 }
 
-#qoqknhvurl .gt_right {
+#flrrnmxftz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qoqknhvurl .gt_font_normal {
+#flrrnmxftz .gt_font_normal {
   font-weight: normal;
 }
 
-#qoqknhvurl .gt_font_bold {
+#flrrnmxftz .gt_font_bold {
   font-weight: bold;
 }
 
-#qoqknhvurl .gt_font_italic {
+#flrrnmxftz .gt_font_italic {
   font-style: italic;
 }
 
-#qoqknhvurl .gt_super {
+#flrrnmxftz .gt_super {
   font-size: 65%;
 }
 
-#qoqknhvurl .gt_footnote_marks {
+#flrrnmxftz .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
