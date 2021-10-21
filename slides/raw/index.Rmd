@@ -18,14 +18,16 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dp
 library(tidyverse)
 ```
 
-class: inverse, center, middle
+class: inverse, center, middle, large
 
-###[00-intro](00-intro.html)
-###[01-causal_modeling_whole_game](01-causal_modeling_whole_game.html)
-###[02-dags](02-dags.html)
-###[03-pscores](03-pscores.html)
-###[04-using-pscores](04-using-pscores.html)
-###[05-pscore-diagnostics](05-pscore-diagnostics.html)
-###[06-outcome-model](06-outcome-model.html)
+#### [00-intro](00-intro.html)
+#### [01-causal_modeling_whole_game](01-causal_modeling_whole_game.html)
+#### [02-dags](02-dags.html)
+#### [03-pscores](03-pscores.html)
+#### [04-using-pscores](04-using-pscores.html)
+#### [05-pscore-diagnostics](05-pscore-diagnostics.html)
+#### [06-outcome-model](06-outcome-model.html)
+#### [07-g-computation](07-g-computation.html)
+#### [08-tipr](08-tipr.html)
 
 

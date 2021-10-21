@@ -16,8 +16,8 @@ class: center, middle, inverse, title-slide
 
 # Causal Diagrams in R
 ### Malcolm Barrett
-### Teladoc Health
-### 2021-09-01 (updated: 2021-10-18)
+### Apple
+### 2021-09-01 (updated: 2021-10-21)
 
 ---
 
@@ -147,7 +147,7 @@ dagify(
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
 
-<div class="countdown" id="timer_616df331" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_617183e9" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -228,7 +228,7 @@ ggdag_paths(smk_wt_dag)
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
 
-<div class="countdown" id="timer_616df359" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_617182b5" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -315,7 +315,7 @@ ggdag_adjustment_set(smk_wt_dag)
 #### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 #### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-<div class="countdown" id="timer_616df414" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61718479" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
