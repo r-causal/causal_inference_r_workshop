@@ -4,20 +4,28 @@
     <title>Tipping Point Sensitivity Analyses</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/countdown/countdown.css" rel="stylesheet" />
-    <script src="libs/countdown/countdown.js"></script>
+    <script src="libs/header-attrs-2.14/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/countdown-0.3.5/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.3.5/countdown.js"></script>
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Tipping Point Sensitivity Analyses
+]
+.author[
 ### Lucy D’Agostino McGowan
+]
+.institute[
 ### Wake Forest University
-### 2021-09-01 (updated: 2021-10-21)
+]
+.date[
+### 2021-09-01 (updated: 2022-06-07)
+]
 
 ---
 
@@ -164,9 +172,9 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
-* `d`: a data frame that includes the observed confidence bounds
+* `effect`: observed exposure - outcome effect 
 ---
 
 
@@ -181,7 +189,7 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 * `smd`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
 
 
@@ -200,7 +208,7 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 * `outcome_association`: association between the unmeasured confounder and outcome
 
 ---
@@ -216,16 +224,16 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
-* `d`
+* `effect`
 * `smd`
 * `outcome_association`
 ---
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
 ### **specify** one, it will **estimate** the other
 
@@ -244,17 +252,15 @@ class: inverse, center, middle
 
 ```r
 library(tipr)
-lm_tip(data.frame(conf.low = 2.4,
-                  conf.high = 4.4),
-       smd = 0.3)
+tip_coef(effect = 2.4,
+         smd = 0.3)
 ```
 
 ```
-## # A tibble: 1 × 5
-##   observed_lb observed_ub   smd outcome_association
-##         &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;               &lt;dbl&gt;
-## 1         2.4         4.4   0.3                   8
-## # … with 1 more variable: n_unmeasured_confounders &lt;dbl&gt;
+## # A tibble: 1 × 4
+##   observed_effect   smd outcome_association n_unmeasured_confounders
+##             &lt;dbl&gt; &lt;dbl&gt;               &lt;dbl&gt;                    &lt;dbl&gt;
+## 1             2.4   0.3                   8                        1
 ```
 
 --
@@ -262,19 +268,19 @@ lm_tip(data.frame(conf.low = 2.4,
 The observed effect (2.4, 4.4) WOULD be tipped by 1 unmeasured confounder
 with the following specifications:
 
-  *estimated standardized mean difference between the unmeasured confounder
-    in the exposed population and unexposed population: 0.3*  
-    
-  *estimated association between the unmeasured confounder and the outcome: 8*
+*estimated standardized mean difference between the unmeasured confounder
+in the exposed population and unexposed population: 0.3*  
+
+*estimated association between the unmeasured confounder and the outcome: 8*
 ---
 
 ## Your turn
 
-<div class="countdown" id="timer_61718391" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_629fa62c" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
-1. Use the `lm_tip()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
+1. Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
@@ -326,6 +332,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

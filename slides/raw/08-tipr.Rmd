@@ -162,9 +162,9 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
-* `d`: a data frame that includes the observed confidence bounds
+* `effect`: observed exposure - outcome effect 
 ---
 
 
@@ -179,7 +179,7 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 * `smd`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
 
 
@@ -198,7 +198,7 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 * `outcome_association`: association between the unmeasured confounder and outcome
 
 ---
@@ -214,16 +214,16 @@ class: inverse, center, middle
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
-* `d`
+* `effect`
 * `smd`
 * `outcome_association`
 ---
 
 ## Main function
 
-# `lm_tip()`
+# `tip_coef()`
 
 ### **specify** one, it will **estimate** the other
 
@@ -241,9 +241,8 @@ class: inverse, center, middle
 
 ```{r, eval = TRUE}
 library(tipr)
-lm_tip(data.frame(conf.low = 2.4,
-                  conf.high = 4.4),
-       smd = 0.3)
+tip_coef(effect = 2.4,
+         smd = 0.3)
 ```
 
 --
@@ -251,14 +250,14 @@ lm_tip(data.frame(conf.low = 2.4,
 The observed effect (2.4, 4.4) WOULD be tipped by 1 unmeasured confounder
 with the following specifications:
 
-  *estimated standardized mean difference between the unmeasured confounder
-    in the exposed population and unexposed population: 0.3*  
-    
-  *estimated association between the unmeasured confounder and the outcome: 8*
+*estimated standardized mean difference between the unmeasured confounder
+in the exposed population and unexposed population: 0.3*  
+
+*estimated association between the unmeasured confounder and the outcome: 8*
 ---
 
 ## Your turn
 
 `r countdown::countdown(minutes = 10)`
 
-1. Use the `lm_tip()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
+1. Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.

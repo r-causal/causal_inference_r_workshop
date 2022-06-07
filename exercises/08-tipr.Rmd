@@ -12,7 +12,7 @@ Using the National Health and Nutrition Examination Survey Data (`nhefs_complete
 
 ## Your turn
 
-Use the `lm_tip()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
+Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
 
 ```{r}
 
