@@ -20,7 +20,7 @@ _After updating the code chunks below, change `eval = TRUE` before knitting._
 Create a function called `ipw_fit` that fits the propensity score model from Exercise 03, incorporates the ATE weights calculated in Exercise 04, and fits a weighted outcome model.
 
 ```{r, eval = FALSE}
-it_ipw <- function(split, ...) { 
+fit_ipw <- function(split, ...) { 
   .df <-____
   
   # fit propensity score model
