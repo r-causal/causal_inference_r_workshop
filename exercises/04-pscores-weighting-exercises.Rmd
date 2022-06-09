@@ -70,21 +70,25 @@ Update the code below to examine the distribution of the weighted sample. **HINT
 
 ```{r, eval = FALSE}
 d <- df %>%
-  tidyr::spread(qsmk, .fitted, sep = "_p")
+  tidyr::pivot_wider(names_from = qsmk, 
+                     values_from = .fitted, 
+                     names_prefix = "qsmk_p")
 ```
 
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, warning = FALSE}
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = ____), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = ____, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = - stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = ____, y = - stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
   theme_minimal() + 
   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
+  annotate("text", x = 0.975, y = 50, label = "trt", angle = 270, color = "white") + 
   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white") 
+  annotate("text", x = 0.975, y = -50, label = "control", angle = 270, color = "white")
+
+```
