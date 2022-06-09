@@ -14,10 +14,18 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Propensity Score Diagnostics
+]
+.author[
 ### Lucy D’Agostino McGowan
+]
+.institute[
 ### Wake Forest University
-### 2021-09-01 (updated: 2021-10-21)
+]
+.date[
+### 2021-09-01 (updated: 2022-06-07)
+]
 
 ---
 
@@ -255,7 +263,7 @@ ggplot(
 
 ## Your turn 1
 
-<div class="countdown" id="timer_61718356" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_629fe3cc" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -517,7 +525,7 @@ ggplot(ecdf_1, aes(x = wt71, y = cum_pct)) +
 
 ## Your turn 2
 
-<div class="countdown" id="timer_61718614" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_629fe3d3" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -577,7 +585,7 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: small;
+  font-size: 13px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -614,6 +622,8 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
@@ -624,6 +634,8 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
@@ -702,7 +714,10 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 }
 
 #ydcnsslvza .gt_group_heading {
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -774,7 +789,26 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydcnsslvza .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ydcnsslvza .gt_row_group_first td {
+  border-top-width: 2px;
 }
 
 #ydcnsslvza .gt_summary_row {
@@ -788,13 +822,22 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 }
 
 #ydcnsslvza .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ydcnsslvza .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ydcnsslvza .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
 }
 
 #ydcnsslvza .gt_grand_summary_row {
@@ -847,7 +890,10 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 #ydcnsslvza .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #ydcnsslvza .gt_sourcenotes {
@@ -866,7 +912,10 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 
 #ydcnsslvza .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #ydcnsslvza .gt_left {
@@ -898,10 +947,43 @@ tbl_svysummary(svy_des, by = x) %&gt;%
   font-size: 65%;
 }
 
+#ydcnsslvza .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
 #ydcnsslvza .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#ydcnsslvza .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ydcnsslvza .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#ydcnsslvza .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#ydcnsslvza .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
 }
 </style>
 <table class="gt_table">
@@ -987,28 +1069,18 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 <td class="gt_row gt_center">147 (9.4%)</td>
 <td class="gt_row gt_center">138 (8.9%)</td>
 <td class="gt_row gt_center"></td></tr>
+    <tr><td class="gt_row gt_left">w_ate</td>
+<td class="gt_row gt_center">1.31 (1.21, 1.48)</td>
+<td class="gt_row gt_center">4.22 (3.19, 5.59)</td>
+<td class="gt_row gt_center">-1.8</td></tr>
   </tbody>
   
-  <tfoot>
-    <tr class="gt_footnotes">
-      <td colspan="4">
-        <p class="gt_footnote">
-          <sup class="gt_footnote_marks">
-            <em>1</em>
-          </sup>
-           
-          Median (IQR); n (%)
-          <br />
-        </p>
-        <p class="gt_footnote">
-          <sup class="gt_footnote_marks">
-            <em>2</em>
-          </sup>
-           
-          Standardized Mean Difference
-          <br />
-        </p>
-      </td>
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="4"><sup class="gt_footnote_marks">1</sup> Median (IQR); n (%)</td>
+    </tr>
+    <tr>
+      <td class="gt_footnote" colspan="4"><sup class="gt_footnote_marks">2</sup> Standardized Mean Difference</td>
     </tr>
   </tfoot>
 </table>
@@ -1064,6 +1136,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
