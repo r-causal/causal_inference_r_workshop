@@ -7,8 +7,9 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(broom)
-library(smd)
+library(tidysmd)
 library(causaldata)
+library(ggecdf)
 ```
 
 Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
@@ -34,31 +35,12 @@ _After updating the code chunks below, change `eval = TRUE` before knitting._
 Calculate the standardized mean differences with and without weights
 
 ```{r, eval = FALSE}
-smds <- df %>% 
-  summarise(
-    across(
-      # variables to calculate SMD for
-      ________, 
-      list(
-        unweighted = ~_____(.x, qsmk)$estimate, 
-        weighted = ~_____(.x, qsmk, w = ___)$estimate
-      )
-    )
-  )
-```
-
-Pivot `smds` so that it is in tidy format with the columns "SMD", "variable", and "Method".
-
-```{r, eval = FALSE}
-plot_df <- smds %>% 
-  pivot_longer(
-    _______, 
-    values_to = "___", 
-    names_to = c("___", "___"),
-    
-    # don't change this one. We really mean _!
-    names_sep = "_"
-  )
+smds <- tidy_smd(
+  df, 
+  .vars = ____,
+  .group = ____,
+  .wts = ____
+)
 ```
 
 Create the Love Plot using ggplot
@@ -92,20 +74,11 @@ ggplot(df, aes(x = ____, group = ____, color = factor(____))) +
 Create an weighted ECDF for `smokeyrs` by those who quit smoking and those who did not.
 
 ```{r, eval = FALSE}
-ecdf_1 <- df %>%
-  filter(____) %>%
-  arrange(____) %>%
-  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
-
-ecdf_0 <- df %>%
-  filter(____) %>%
-  arrange(____) %>%
-  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
-
-ggplot(ecdf_1, aes(x = _____, y = cum_pct)) +
-  geom_line(color = "#5DB854") +
-  geom_line(data = ecdf_0, aes(x = ____, y = cum_pct), color = "#5154B8") + 
-  xlab(____) + 
-  ylab("Proportion <= x") 
+ggplot(df, aes(x = ____, color = factor(____))) +
+  ____(aes(weights = ____)) + 
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) +
+  xlab(____) +
+  ylab("Proportion <= x (Weighted)")
 ```
 
