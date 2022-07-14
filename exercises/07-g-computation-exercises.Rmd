@@ -6,48 +6,49 @@ output: html_document
 ```{r setup}
 library(tidyverse)
 library(broom)
-library(causaldata)
+library(touringplans)
+
+seven_dwarfs <- seven_dwarfs_train_2018 %>%
+  filter(hour == 17)
 ```
 
 # Your Turn 1
 
-For the parametric G-formula, we'll use a single model to fit a causal model of `qsmk` on `wt82_71` where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
+For the parametric G-formula, we'll use a single model to fit a causal model of Extra Magic Hours (`extra_magic_morning`) on Observed Waiting Times (`avg_sactmin`) where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
 
 First, let's fit the model. 
 
-1.Use `lm()`. We'll also create an interaction term with `smokeintensity`. 
+1.Use `lm()` to create a model with the outcome, exposure, and confounders.
 2. Save the model as `standardized_model`
 
 ```{r}
 _______ ___ _______(
-  wt82_71 ~ _______ + I(_______ * smokeintensity) + smokeintensity + 
-    I(smokeintensity^2) + sex + race + age + I(age^2) + education + smokeyrs + 
-    I(smokeyrs^2) + exercise + active + wt71 + I(wt71^2), 
-  data = nhefs_complete
+  avg_sactmin ~ _______ + wdw_ticket_season + close + weather_wdwhigh, 
+  data = seven_dwarfs
 )
 ```
 
 
 # Your Turn 2
 
-Now that we've fit a model, we need to clone our data set. To do this, we'll simply mutate it so that in one set, all participants have `qsmk` set to 0 and in another, all participants have `qsmk` set to 1.
+Now that we've fit a model, we need to clone our data set. To do this, we'll simply mutate it so that in one set, all participants have `extra_magic_morning` set to 0 and in another, all participants have `extra_magic_morning` set to 1.
 
-1. Create the cloned data sets, called `kept_smoking` and `quit_smoking`.
-2. For both data sets, use `standardized_model` and `augment()` to get the predicted values. Use the `newdata` argument in `augment()` with the relevant cloned data set. Then, select only the fitted value. Rename `.fitted` to either `kept_smoking` or `quit_smoking` (use the pattern `select(new_name = old_name)`).
-3. Save the predicted data sets as`predicted_kept_smoking` and `predicted_quit_smoking`.
+1. Create the cloned data sets, called `yes` and `no`.
+2. For both data sets, use `standardized_model` and `augment()` to get the predicted values. Use the `newdata` argument in `augment()` with the relevant cloned data set. Then, select only the fitted value. Rename `.fitted` to either `yes_extra_hours` or `no_extra_hours` (use the pattern `select(new_name = old_name)`).
+3. Save the predicted data sets as`predicted_yes` and `predicted_no`.
 
 ```{r}
-_______ <- nhefs_complete %>% 
+_______ <- seven_dwarfs %>% 
   _______
 
-_______ <- nhefs_complete %>% 
+_______ <- seven_dwarfs %>% 
   _______
 
-predicted_kept_smoking <- standardized_model %>% 
+predicted_yes <- standardized_model %>% 
   _______(newdata = _______) %>%
   _______
 
-predicted_quit_smoking <- standardized_model %>% 
+predicted_no <- standardized_model %>% 
   _______(newdata = _______) %>%
   _______
 ```
@@ -56,14 +57,14 @@ predicted_quit_smoking <- standardized_model %>%
 
 Finally, we'll get the mean differences between the values. 
 
-1. Bind `predicted_kept_smoking` and  `predicted_quit_smoking` using `bind_cols()`
-2. Summarize the predicted values to create three new variables: `mean_quit_smoking`, `mean_kept_smoking`, and `difference`. The first two should be the means of `quit_smoking` and `kept_smoking`. `difference` should be `mean_quit_smoking` minus `mean_kept_smoking`.
+1. Bind `predicted_yes` and  `predicted_no` using `bind_cols()`
+2. Summarize the predicted values to create three new variables: `mean_yes`, `mean_no`, and `difference`. The first two should be the means of `mean_yes` and `mean_no`. `difference` should be `mean_yes` minus `mean_no`.
 
 ```{r}
 _______ %>% 
   _______(
-    mean_quit_smoking = _______,
-    mean_kept_smoking = _______,
+    mean_yes = _______,
+    mean_no = _______,
     difference = _______
   )
 ```
@@ -82,27 +83,27 @@ library(rsample)
 fit_gcomp <- function(split, ...) { 
   .df <- analysis(split) 
   
-  # fit outcome model. remember to model using `.df` instead of `nhefs_complete`
+  # fit outcome model. remember to model using `.df` instead of `seven_dwarfs`
   
   
-  # clone datasets. remember to clone `.df` instead of `nhefs_complete`
+  # clone datasets. remember to clone `.df` instead of `seven_dwarfs`
   
   
-  # predict change in weight for each cloned dataset
+  # predict wait time for each cloned dataset
 
   
   # calculate ATE
-  bind_cols(predicted_kept_smoking, predicted_quit_smoking) %>% 
+  bind_cols(predicted_yes, predicted_no) %>% 
     summarize(
-      mean_quit_smoking = mean(quit_smoking),
-      mean_kept_smoking = mean(kept_smoking),
-      difference = mean_quit_smoking - mean_kept_smoking
+      mean_yes = mean(yes_extra_hours),
+      mean_no = mean(no_extra_hours),
+      difference = mean_yes - mean_no
     ) %>% 
     # rsample expects a `term` and `estimate` column
     pivot_longer(everything(), names_to = "term", values_to = "estimate")
 }
 
-gcomp_results <- bootstraps(nhefs_complete, 1000, apparent = TRUE) %>% 
+gcomp_results <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) %>% 
   mutate(results = map(splits, ______))
 
 # using bias-corrected confidence intervals
