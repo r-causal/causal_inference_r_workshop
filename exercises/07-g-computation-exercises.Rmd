@@ -78,6 +78,7 @@ Like propensity-based models, we need to do a little more work to get correct st
 Remember, you need to bootstrap the entire modeling process, including the regression model, cloning the data sets, and calculating the effects.
 
 ```{r}
+set.seed(1234)
 library(rsample)
 
 fit_gcomp <- function(split, ...) { 

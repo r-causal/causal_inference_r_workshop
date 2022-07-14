@@ -39,6 +39,8 @@ fit_ipw <- function(split, ...) {
 Bootstrap this result 1000 times.
 
 ```{r, eval = FALSE}
+set.seed(1234)
+
 ipw_results <- ____(___, 1000, apparent = TRUE) %>% 
   mutate(results = map(splits, _____)) 
 ```
