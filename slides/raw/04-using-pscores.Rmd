@@ -314,7 +314,7 @@ d <- df %>%
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(d) + 
   geom_histogram(bins = 50, aes(qsmk_p1)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, y = -..count..)) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, y = -after_stat(count))) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) 
@@ -328,8 +328,8 @@ ggplot(d) +
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ate), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ate, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ate, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
@@ -340,7 +340,6 @@ ggplot(d) +
   geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
 ```
 
----
 
 ## ATT
 
@@ -349,8 +348,8 @@ ggplot(d) +
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = w_att), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_att, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_att, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
@@ -370,8 +369,8 @@ ggplot(d) +
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atc), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atc, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atc, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
@@ -390,8 +389,8 @@ ggplot(d) +
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atm), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atm, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atm, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +  theme_minimal() + 
@@ -409,8 +408,8 @@ ggplot(d) +
 ggplot(d) +
   geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ato), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -..count..)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ato, y = -..count..), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ato, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
