@@ -81,8 +81,8 @@ d <- df %>%
 ggplot(d) +
   geom_histogram(bins = 50, aes(extra_magic_morning_p1), alpha = 0.5) + 
   geom_histogram(bins = 50, aes(extra_magic_morning_p1, weight = ____), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = extra_magic_morning_p0, y = - stat(count))) + 
-  geom_histogram(bins = 50, aes(x = extra_magic_morning_p0, weight = ____, y = - stat(count)), fill = "blue", alpha = 0.5) + 
+  geom_histogram(bins = 50, alpha = 0.5, aes(x = extra_magic_morning_p0, y = -after_stat(count))) + 
+  geom_histogram(bins = 50, aes(x = extra_magic_morning_p0, weight = ____, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
   ylab("count") + xlab("p") +
   geom_hline(yintercept = 0, lwd = 0.5) +
   scale_y_continuous(label = abs) +
