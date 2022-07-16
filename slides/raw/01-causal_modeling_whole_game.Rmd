@@ -66,7 +66,7 @@ nhefs_complete_uc %>%
   theme_minimal() +
   theme(legend.position = "bottom") + 
   labs(
-    x = "change in weight (lbs)",
+    x = "change in weight (kg)",
     fill = "quit smoking (1 = yes)"
   )
 ```
@@ -76,7 +76,7 @@ nhefs_complete_uc %>%
 ## Did those who quit smoking gain weight?
 
 ```{r, highlight.output = 4:5}
-# ~2.5 lbs gained for quit vs. not quit
+# ~2.5 KGs gained for quit vs. not quit
 nhefs_complete_uc %>% 
   group_by(qsmk) %>% 
   summarize(
@@ -447,7 +447,7 @@ bind_rows(
 
 class: center, inverse, middle
 
-# *Our causal effect estimate: **3.5 lbs (95% CI 2.4 lbs, 4.4 lbs)***
+# *Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
 
 ---
 

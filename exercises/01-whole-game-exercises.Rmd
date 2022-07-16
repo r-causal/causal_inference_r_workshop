@@ -38,7 +38,7 @@ nhefs_complete_uc %>%
   theme_minimal() +
   theme(legend.position = "bottom") + 
   labs(
-    x = "change in weight (lbs)",
+    x = "change in weight (kg)",
     fill = "quit smoking (1 = yes)"
   )
 ```
@@ -46,7 +46,7 @@ nhefs_complete_uc %>%
 There's a difference--former smokers do seemed to have gained a bit more weight--but there's also a lot of variation. Let's look at the numeric summaries.
 
 ```{r}
-# ~2.5 lbs gained for quit vs. not quit
+# ~2.5 kg gained for quit vs. not quit
 nhefs_complete_uc %>% 
   group_by(qsmk) %>% 
   summarize(
@@ -59,7 +59,7 @@ nhefs_complete_uc %>%
 ---
 
 ```{r}
-# ~2.5 lbs gained for quit vs. not quit
+# ~2.5 kg gained for quit vs. not quit
 nhefs_complete_uc %>% 
   group_by(qsmk) %>% 
   summarize(
@@ -69,7 +69,7 @@ nhefs_complete_uc %>%
   )
 ```
 
-Here, it looks like those who quit smoking gained, on average, 2.5 lbs. But is there something else that could explain these results? There are many factors associated with both quitting smoking and gaining weight; could one of those factors explain away the results we're seeing here?
+Here, it looks like those who quit smoking gained, on average, 2.5 kg. But is there something else that could explain these results? There are many factors associated with both quitting smoking and gaining weight; could one of those factors explain away the results we're seeing here?
 
 To truly answer this question, we need to specify a causal diagram based on domain knowledge. Sadly, for most circumstances, there is no data-driven approach that consistently identify confounders. Only our causal assumptions can help us identify them. Causal diagrams are a visual expression of those assumptions linked to rigorous mathematics that allow us to understand what we need to account for in our model.
 
@@ -147,7 +147,7 @@ lm(
   filter(term == "qsmk")
 ```
 
-When we adjust for the variables in our DAG, we get an estimate of about 3.5 lbs--people who quit smoking gained about this amount of weight. However, we are trying to answer a specific causal question: how much weight would a person gain if the quit smoking vs. if the same person did not quit smoking? Let's use an inverse probability weighting model to try to estimate that effect at the population level (what if *everyone* quit smoking vs what if *no one* quit smoking).
+When we adjust for the variables in our DAG, we get an estimate of about 3.5 kg--people who quit smoking gained about this amount of weight. However, we are trying to answer a specific causal question: how much weight would a person gain if the quit smoking vs. if the same person did not quit smoking? Let's use an inverse probability weighting model to try to estimate that effect at the population level (what if *everyone* quit smoking vs what if *no one* quit smoking).
 
 For a simple IPW model, we have two modeling steps. First, we fit a propensity score model, which predicts the probability that you received a treatment or exposure (here, that a participant quit smoking). We use this model to calculate inverse probability weights--1 / your probability of treatment. Then, in the second step, we use this weights in the outcome model, which estimates the effect of exposure on the outcome (here, the effect of quitting smoking on gaining weight).
 
@@ -329,7 +329,7 @@ bind_rows(
 
 Our bootstrapped confidence intervals are wider, which is expected; remember that they were artificially narrow in the naive OLS model!
 
-So, we have a final estimate for our causal effect: on average, a person who quits smoking will gain 3.5 lbs (95% CI 2.4 lbs, 4.4 lbs) versus if they had not quit smoking. What do you think? Is this estimate reliable? Did we do a good job addressing the assumptions we need to make for a causal effect, particularly that there is no confounding? How might you criticize this model, and what would you do differently? 
+So, we have a final estimate for our causal effect: on average, a person who quits smoking will gain 3.5 kg (95% CI 2.4 kg, 4.4 kg) versus if they had not quit smoking. What do you think? Is this estimate reliable? Did we do a good job addressing the assumptions we need to make for a causal effect, particularly that there is no confounding? How might you criticize this model, and what would you do differently? 
 
 ***
 

@@ -235,7 +235,7 @@ class: inverse, center, middle
 
 ## Example
 
-*Our causal effect estimate: **3.5 lbs (95% CI 2.4 lbs, 4.4 lbs)***
+*Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
 
 --
 
