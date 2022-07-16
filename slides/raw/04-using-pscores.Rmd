@@ -306,7 +306,7 @@ df <- propensity_model %>%
   )
 
 d <- df %>%
-  tidyr::spread(qsmk, .fitted, sep = "_p")
+  pivot_wider(names_from = qsmk, values_from = .fitted, sep = "_p")
 ```
 
 ## Histogram of propensity scores

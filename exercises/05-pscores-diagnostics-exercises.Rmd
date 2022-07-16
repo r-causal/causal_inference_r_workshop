@@ -8,24 +8,27 @@ output: html_document
 library(tidyverse)
 library(broom)
 library(tidysmd)
-library(causaldata)
+library(touringplans)
 library(ggecdf)
 ```
 
-Using the National Health and Nutrition Examination Survey Data (`nhefs_complete`), we are interested in the relationship between the **exposure**, `qsmk`: whether the participant quit smoking, and the **outcome**, `wt82_71`: their weight change in kilograms.
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**.
 
 Below is the propensity score model and weights you created in the previous exercise.
 
 ```{r, eval = FALSE}
+seven_dwarfs <- seven_dwarfs_train_2018 %>%
+  filter(hour == 17)
+
 propensity_model <- glm(
-  qsmk ~ age + sex + wt71 + smokeyrs,
-  data = nhefs_complete,
+  extra_magic_morning ~ wdw_ticket_season + close + weather_wdwhigh,
+  data = seven_dwarfs,
   family = binomial()
 )
 
 df <- propensity_model %>%
-  augment(type.predict = "response", data = nhefs_complete) %>%
-  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  augment(type.predict = "response", data = seven_dwarfs) %>% 
+  mutate(w_ate = 1 / ifelse(extra_magic_morning == 0, 1 - .fitted, .fitted))
 ```
 
 ## Your Turn 1
@@ -35,8 +38,9 @@ _After updating the code chunks below, change `eval = TRUE` before knitting._
 Calculate the standardized mean differences with and without weights
 
 ```{r, eval = FALSE}
-smds <- tidy_smd(
-  df, 
+smds <- df %>% 
+  mutate(close = as.numeric(close)) %>% 
+  tidy_smd(
   .vars = ____,
   .group = ____,
   .wts = ____
@@ -59,24 +63,24 @@ ggplot(
 
 ## Your Turn 2
 
-Create an unweighted ECDF for `smokeyrs` by those who quit smoking and those who did not.
+Create an unweighted ECDF for `weather_wdwhigh` by whether or not the day had Extra Magic Hours.
 
 ```{r, eval = FALSE}
 ggplot(df, aes(x = ____, group = ____, color = factor(____))) +
   ____() +
-  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+  scale_color_manual("Extra Magic Hours", values = c("#5154B8", "#5DB854"),
                      labels = c("Yes", "No")) + 
   xlab(____) + 
   ylab("Proportion <= x") 
 ```
 
 
-Create an weighted ECDF for `smokeyrs` by those who quit smoking and those who did not.
+Create an weighted ECDF for `weather_wdwhigh` by whether or not the day had Extra Magic Hours.
 
 ```{r, eval = FALSE}
 ggplot(df, aes(x = ____, color = factor(____))) +
   ____(aes(weights = ____)) + 
-  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+  scale_color_manual("Extra Magic Hours", values = c("#5154B8", "#5DB854"),
                      labels = c("Yes", "No")) +
   xlab(____) +
   ylab("Proportion <= x (Weighted)")
