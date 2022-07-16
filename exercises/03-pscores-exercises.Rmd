@@ -72,7 +72,7 @@ seven_dwarfs <- seven_dwarfs_train_2018 %>%
 
 Here's a data dictionary of the variables we need in the `seven_dwarfs` data set:
 
-| Variable                       | Column in \`seven_dwarfs |
+| Variable                       | Column in `seven_dwarfs` |
 |--------------------------------|--------------------------|
 | Wait Time (outcome)            | `avg_sactmin`            |
 | Extra Magic Morning (exposure) | `extra_magic_morning`    |
