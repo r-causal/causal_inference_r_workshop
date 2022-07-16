@@ -427,6 +427,8 @@ svy_des <- svydesign(
 
 ---
 
+class: gtsummary
+
 ## Weighted Tables in R
 
 <span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pass to `gtsummary::tbl_svysummary()` </h3> 
@@ -440,6 +442,8 @@ tbl_svysummary(svy_des, by = x) %>%
 
 ---
 
+class: gtsummary
+
 ```{r, message = FALSE, warning = FALSE, eval = TRUE, echo = FALSE}
 library(survey)
 library(gtsummary)
@@ -451,7 +455,7 @@ svy_des <- svydesign(
 )
 theme_gtsummary_compact()
 
-tbl_svysummary(svy_des, by = qsmk) %>% 
+tbl_svysummary(svy_des, by = qsmk, include = -w_ate) %>% 
   add_difference(everything() ~ "smd") %>% 
   modify_column_hide(ci)
 ```

@@ -15,7 +15,7 @@ strong {
 }
 
 em {
-  color: #56B4E9;  
+  color: #56B4E9;
   font-style: normal;
   font-weight: bold;
 }
@@ -24,6 +24,16 @@ del {
   color: #E5E5E5;
   text-decoration: none;
   font-weight: bold;
+}
+
+.gtsummary strong {
+  color: #474747;
+  font-weight: bold;
+}
+
+.gtsummary em {
+  color: #474747;
+  font-style: italic;
 }
 
 .remark-code {
