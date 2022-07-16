@@ -19,10 +19,10 @@ class: center, middle, inverse, title-slide
 ### Malcolm Barrett
 ]
 .institute[
-### Apple
+### RStudio, PBC
 ]
 .date[
-### 2021-09-01 (updated: 2022-06-07)
+### 2021-09-01 (updated: 2022-07-16)
 ]
 
 ---
@@ -86,7 +86,7 @@ nhefs_complete_uc
 
 
 ```r
-# ~2.5 lbs gained for quit vs. not quit
+# ~2.5 KGs gained for quit vs. not quit
 nhefs_complete_uc %&gt;% 
   group_by(qsmk) %&gt;% 
   summarize(
@@ -279,6 +279,45 @@ ipw_estimate
 
 ---
 
+## Let's fix our confidence intervals with robust SEs!
+
+--
+
+
+```r
+# also see robustbase, survey, gee, and others
+library(estimatr)
+*ipw_model_robust &lt;- lm_robust(
+* wt82_71 ~ qsmk,
+  data = nhefs_complete_uc, 
+* weights = wts
+) 
+
+ipw_estimate_robust &lt;- ipw_model_robust %&gt;% 
+  tidy(conf.int = TRUE) %&gt;% 
+  filter(term == "qsmk")
+```
+
+---
+
+## Let's fix our confidence intervals with robust SEs!
+
+
+```r
+as_tibble(ipw_estimate_robust)
+```
+
+```
+## # A tibble: 1 × 9
+##   term  estimate std.error statistic  p.value conf.low
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+*## 1 qsmk      3.44     0.526      6.54 8.57e-11     2.41
+## # … with 3 more variables: conf.high &lt;dbl&gt;, df &lt;dbl&gt;,
+## #   outcome &lt;chr&gt;
+```
+
+---
+
 ## Let's fix our confidence intervals with the bootstrap!
 
 --
@@ -375,13 +414,13 @@ boot_estimate
 
 class: middle
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 class: center, inverse, middle
 
-# *Our causal effect estimate: **3.5 lbs (95% CI 2.4 lbs, 4.4 lbs)***
+# *Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
 
 ---
 
