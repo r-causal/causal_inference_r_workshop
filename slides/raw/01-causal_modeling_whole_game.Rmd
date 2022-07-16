@@ -1,7 +1,7 @@
 ---
 title: "Causal Modeling in R: Whole Game"
 author: "Malcolm Barrett"
-institute: "Apple"
+institute: "RStudio, PBC"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
