@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Propensity scores for continuous exposures</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Malcolm Barrett" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Propensity scores for continuous exposures
+]
+.author[
+### Malcolm Barrett
+]
+.institute[
+### RStudio, PBC
+]
+.date[
+### 2022-07-20 (updated: 2022-07-22)
+]
+
+---
+
+class: middle, center, inverse, 
+
+
+
+# **The story so far**
+
+---
+
+class: inverse
+# Propensity score weighting
+
+1. Fit a propensity model predicting exposure `x`, `x + z` where z is all covariates
+2. Calculate weights 
+3. Fit an outcome model estimating the effect of `x` on `y` weighted by the propensity score
+
+---
+
+class: inverse
+
+# Continous exposures
+
+1. Use a model like `lm(x ~ z)` for the propensity score model
+2. Scale weights to probability-like scale using `dnorm(true_value, fitted_value, estimated_sd)`
+3. Apply the weights to the outcome model as normal!
+
+---
+
+class: inverse
+
+# Alternative: quantile binning
+
+1. Bin the continuous exposure into quantiles and use categorical regression like a multinomial model to calculate probabilities.
+2. Calculate the weights where the propensity score is the probability you fall into the quantile you actually fell into. Same as the binary ATE!
+3. Same workflow for the outcome model
+
+---
+
+## 1. Fit a model for `exposure ~ confounders`
+
+
+```r
+model &lt;- lm(
+  exposure ~ confounder_1 + confounder_2,
+  data = df
+)
+```
+
+---
+
+## 2. Calculate the weights with `dnorm()`
+
+
+```r
+model %&gt;%
+  augment(data = df) %&gt;% 
+* mutate(denominator = dnorm(
+*   exposure,
+*   mean = .fitted,
+*   sd = mean(.sigma, na.rm = TRUE)
+* ))
+```
+
+---
+
+## Does change in smoking intensity (`smkintensity82_71`) affect weight gain among lighter smokers?
+
+
+```r
+nhefs_light_smokers &lt;- nhefs_complete %&gt;% 
+  filter(smokeintensity &lt;= 25)
+```
+
+---
+
+## 1. Fit a model for `exposure ~ confounders`
+
+
+```r
+*nhefs_denominator_model &lt;- lm(
+* smkintensity82_71 ~ sex + race + age + I(age^2) +
+    education + smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_light_smokers
+)
+```
+
+---
+
+## 2. Calculate the weights with `dnorm()`
+
+
+```r
+nhefs_denominators &lt;- nhefs_denominator_model %&gt;% 
+  augment(data = nhefs_light_smokers) %&gt;% 
+* mutate(denominator = dnorm(
+*   smkintensity82_71,
+*   .fitted,
+*   mean(.sigma, na.rm = TRUE)
+  )) %&gt;% 
+  select(id, denominator)
+```
+
+---
+
+## 2. Calculate the weights with `dnorm()`
+
+
+```r
+nhefs_denominators
+```
+
+```
+## # A tibble: 1,162 × 2
+##       id denominator
+##    &lt;int&gt;       &lt;dbl&gt;
+##  1     2      0.0265
+##  2     3      0.0275
+##  3     4      0.0314
+##  4     5      0.0371
+##  5     6      0.0262
+##  6     7      0.0364
+##  7     8      0.0381
+##  8     9      0.0386
+##  9    10      0.0129
+## 10    13      0.0386
+## # … with 1,152 more rows
+```
+
+---
+
+## Do *posted* wait times at 8 am affect *actual* wait times at 9 am?
+
+&lt;img src="09-continuous-exposures_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Your Turn 1
+
+### Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
+### Use `augment()` to add model predictions to the data frame
+### In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
+
+<div class="countdown" id="timer_62db00c4" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+## Your Turn 1
+
+
+
+
+```r
+denominator_model &lt;- lm(
+  avg_spostmin ~
+*   close + extra_magic_morning +
+*   weather_wdwhigh + wdw_ticket_season,
+  data = wait_times
+)
+```
+
+---
+
+## Your Turn 1
+
+
+```r
+denominators &lt;- denominator_model %&gt;% 
+  augment(data = wait_times) %&gt;% 
+  mutate(
+    denominator = dnorm(
+      avg_spostmin, .fitted, mean(.sigma, na.rm = TRUE)
+    )
+  ) %&gt;% 
+  select(date, denominator)
+```
+
+---
+
+## Stabilizing extreme weights
+
+&lt;img src="09-continuous-exposures_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse
+
+## Stabilizing extreme weights
+
+1. Fit an intercept-only model (e.g. `lm(x ~ 1)`)
+2. Calculate weights from this model
+3. Divide these weights by the propensity score weights 
+
+---
+
+#  Fit an intercept-only model
+
+
+```r
+nhefs_numerator_model &lt;- lm(
+* smkintensity82_71 ~ 1,
+  data = nhefs_light_smokers
+)
+```
+
+---
+
+# Calculate weights from this model
+
+
+```r
+*nhefs_numerators &lt;- nhefs_numerator_model %&gt;%
+  augment(data = nhefs_light_smokers) %&gt;% 
+  mutate(numerator = dnorm(
+    smkintensity82_71, 
+    mean = .fitted, 
+    sd = mean(.sigma, na.rm = TRUE))
+  ) %&gt;% 
+  select(id, numerator)
+```
+
+---
+
+# Divide these weights by the propensity score weights 
+
+
+```r
+nhefs_light_smokers &lt;- nhefs_light_smokers %&gt;% 
+  left_join(nhefs_numerators, by = "id") %&gt;% 
+  left_join(nhefs_denominators, by = "id") %&gt;% 
+* mutate(swts = numerator / denominator)
+```
+
+---
+
+## Stabilizing extreme weights
+
+&lt;img src="09-continuous-exposures_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Your Turn 2
+
+### Fit an intercept-only model of posted weight times to use as the numerator model
+### Calculate the numerator weights using `dnorm()` as above.
+### Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
+
+<div class="countdown" id="timer_62dafd33" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+## Your Turn 2
+
+
+```r
+numerator_model &lt;- lm(
+* avg_spostmin ~ 1,
+  data = wait_times
+)
+```
+
+---
+
+## Your Turn 2
+
+
+```r
+*numerators &lt;- numerator_model %&gt;%
+  augment(data = wait_times) %&gt;% 
+  mutate(
+    numerator = dnorm(
+      avg_spostmin, .fitted, mean(.sigma, na.rm = TRUE)
+    )
+  ) %&gt;% 
+  select(date, numerator)
+
+wait_times_wts &lt;- wait_times %&gt;% 
+  left_join(numerators, by = "date") %&gt;% 
+  left_join(denominators, by = "date") %&gt;% 
+* mutate(swts = numerator / denominator)
+```
+
+---
+
+class: inverse
+
+# Fitting the outcome model
+
+1. Use the stabilized weights in the outcome model. Nothing new here!
+
+---
+
+
+```r
+lm(
+  wt82_71 ~ smkintensity82_71, 
+* weights = swts,
+  data = nhefs_light_smokers
+) %&gt;% 
+  tidy() %&gt;% 
+  filter(term == "smkintensity82_71") %&gt;% 
+* mutate(estimate = estimate * -10)
+```
+
+```
+## # A tibble: 1 × 5
+##   term              estimate std.error statistic    p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 smkintensity82_71    0.960    0.0210     -4.58 0.00000519
+```
+
+---
+
+## Your Turn 3
+
+### Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created. 
+
+<div class="countdown" id="timer_62db00b8" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+## Your Turn 3
+
+
+```r
+lm(
+  avg_sactmin ~ avg_spostmin, 
+  weights = swts, 
+  data = wait_times_wts
+) %&gt;% 
+  tidy() %&gt;% 
+  filter(term == "avg_spostmin") %&gt;% 
+  mutate(estimate = estimate * 10)
+```
+
+```
+## # A tibble: 1 × 5
+##   term         estimate std.error statistic p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 avg_spostmin    -2.63    0.0807     -3.26 0.00162
+```
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

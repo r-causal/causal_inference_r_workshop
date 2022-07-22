@@ -24,7 +24,7 @@ coord_dag <- list(
 labels <- c(
   extra = "Extra Magic Morning",
   x = "Average posted wait ",
-  y = "Average acutal wait",
+  y = "Average actual wait",
   Season = "Ticket Season",
   weather = "Historic high temperature",
   close = "Time park closed"
@@ -71,7 +71,7 @@ wait_times <- eight %>%
 First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `avg_spostmin` with our covariates, then use the fitted predictions of `avg_spostmin` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
 
 1. Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
-2. Use `augment()` to add model predictions to 
+2. Use `augment()` to add model predictions to the data frame
 3. In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
 
 ```{r}
@@ -161,7 +161,8 @@ Now, let's fit the outcome model!
 ```{r}
 lm(___ ~ ___, weights = ___, data = wait_times_wts) %>% 
   tidy() %>% 
-  filter(term == "avg_spostmin")
+  filter(term == "avg_spostmin") %>% 
+  mutate(estimate = estimate * 10)
 ```
 
 ## Stretch goal: Boostrapped intervals
@@ -195,5 +196,5 @@ boot_estimate
 
 * We can calculate propensity scores for continuous exposures. Here, we use `dnorm(true_value, predicted_value, mean(estimated_sigma, rm.na = TRUE))` to use the normal density to transform predictions to a propensity-like scale. We can also use other approaches like quantile binning of the exposure, calculating probability-based propensity scores using categorical regression models. 
 * Continuous exposures are prone to mispecification and usually need to be stabilized. A simple stabilization is to invert the propensity score by stabilization weights using an intercept-only model such as `lm(exposure ~ 1)`
-* Stabilization is useful for any type of exposure where the weights are unbounded. Weights like the ATO are bounded
+* Stabilization is useful for any type of exposure where the weights are unbounded. Weights like the ATO, making them less susceptible to extreme weights.
 * Using propensity scores for continuous exposures in outcome models is identical to using them with binary exposures.
