@@ -12,7 +12,7 @@ library(touringplans)
 library(ggecdf)
 ```
 
-We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**.
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**).
 
 Below is the propensity score model and weights you created in the previous exercise.
 
