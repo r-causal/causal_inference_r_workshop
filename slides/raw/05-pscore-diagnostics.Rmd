@@ -398,8 +398,8 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 `r countdown::countdown(minutes = 10)`
 
-1. Create an unweighted ECDF examining the `smokeyrs` confounder for those that quit smoking and those that did not
-3. Create a weighted ECDF examining the `smokeyrs` confounder
+1. Create an unweighted ECDF examining the `weather_wdwhigh` confounder by whether or not the day had Extra Magic Hours.
+3. Create a weighted ECDF examining the `weather_wdwhigh` confounder
 
 
 ---
