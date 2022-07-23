@@ -9,6 +9,7 @@ library(broom)
 library(rsample)
 library(ggdag)
 library(causaldata)
+library(tidysmd)
 ```
 
 ## Causal Modeling: Whole Game
@@ -76,7 +77,6 @@ To truly answer this question, we need to specify a causal diagram based on doma
 In R, we can visualize and analyze our DAGs with the {ggdag} package. {ggdag} uses {ggplot2} and {ggraph} to visualize diagrams and {dagitty} to analyze them. Let's set up our assumptions. The `dagify()` function takes formulas, much like `lm()` and friends, to express assumptions. We have two basic causal structures: the causes of quitting smoking and the causes of gaining weight. Here, we're assuming that the set of variables here affect both. Additionally, we're adding `qsmk` as a cause of `wt82_71`, which is our causal question; we also identify these as our outcome and exposure. Finally, we'll add some labels so the diagram is easier to understand. The result is a `dagitty` object, and we can transform it to a `tidy_dagitty` data set with `tidy_dagitty()`.
 
 ```{r}
-library(ggdag)
 # set up DAG
 smk_wt_dag <- dagify(
   # specify causes of quitting smoking and weight gain:
@@ -192,39 +192,29 @@ The main goal here is to *break* the non-causal associations between quitting sm
 
 Standardized mean differences (SMD) are a simple measurement of differences that work across variable types. In general, the closer to 0 we are, the better job we have done eliminating the non-causal relationships we drew in our DAG. Note that low SMDs for everything we adjust for does *not* mean that there is not something else that might confound our study. Unmeasured confounders or misspecified DAGs can still distort our effects, even if our SMDs look great!
 
-We'll use the {smd} package to calculate the SMDs, then visualize them.
+We'll use the {tidysmd} package to calculate the SMDs, then visualize them.
 
 ```{r}
-vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-          "exercise", "active", "wt71")
+vars <- c(
+  "sex", "race", "age", "education", 
+  "smokeintensity", "smokeyrs", 
+  "exercise", "active", "wt71"
+)
 
-plot_df <- nhefs_complete_uc %>% 
-  summarise(
-    across(
-      all_of(vars), 
-      list(
-        unweighted = ~smd(.x, qsmk)$estimate, 
-        weighted = ~smd(.x, qsmk, wts)$estimate
-      )
-    )
-  ) %>% 
-  pivot_longer(
-    everything(), 
-    values_to = "SMD", 
-    names_to = c("variable", "Method"),
-    names_sep = "_"
-  )
+plot_df <- tidy_smd(
+    nhefs_complete_uc,
+    all_of(vars),
+    qsmk,
+    wts
+)
 
 ggplot(
-  data = plot_df,
-  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+    data = plot_df,
+    mapping = aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1) +
-  theme_minimal() +
-  scale_color_manual(values = c("grey85", "#00BFC4")) +
-  xlim(0, .3)
+    geom_line(orientation = "y") +
+    geom_point() + 
+    geom_vline(xintercept = 0.1, color = "black", size = 0.1)
 ```
 
 These look pretty good! Some variables are better than others, but weighting appears to have done a much better job eliminating these differences than an unadjusted analysis.
@@ -245,11 +235,28 @@ ipw_estimate <- ipw_model %>%
 ipw_estimate
 ```
 
-This estimate is pretty similar to what we saw before, if a little smaller. In fact, for simple causal questions, this is often the case: adjusting for confounders directly in your regression model sometimes estimates the same effect as IPWs and other causal techniques. Causal techniques are special, though, in that the use counterfactual modeling, which allows you to deal with many circumstances, such as when you have selection bias or time-dependendent confounding.
+This estimate is pretty similar to what we saw before, if a little smaller. In fact, for simple causal questions, this is often the case: adjusting for confounders directly in your regression model sometimes estimates the same effect as IPWs and other causal techniques. Causal techniques are special, though, in that the use counterfactual modeling, which allows you to deal with many circumstances, such as when you have selection bias or time-dependendent confounding. They also often have variance properties.
 
-But we have other problem that we need to address. While we're just using `lm()` to estimate our IPW model, it doesn't properly account for the weights. That means our standard error is too small, which will artificially narrow confidence intervals and artificially shrink p-values. There are many ways to address this, including robust estimators, but we'll use a simple approach using the bootstrap via the {rsamples} package.
+But we have other problem that we need to address. While we're just using `lm()` to estimate our IPW model, it doesn't properly account for the weights. That means our standard error is too small, which will artificially narrow confidence intervals and artificially shrink p-values. There are many ways to address this, including robust estimators. We'll focus on using the bootstrap via the {rsamples} package in this workshop, but here's one way to do it with robust standard errors:
 
-First, we need to wrap our model in a function so we can call it many times on our bootstrapped data. A function like this might be your instinct; however, it's not quite right.
+
+```{r}
+# also see robustbase, survey, gee, and others
+library(estimatr)
+ipw_model_robust <- lm_robust( #<<
+  wt82_71 ~ qsmk, #<<
+  data = nhefs_complete_uc, 
+  weights = wts #<<
+) 
+
+ipw_estimate_robust <- ipw_model_robust %>% 
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "qsmk")
+
+ipw_estimate_robust
+```
+
+Now let's try the bootstrap. First, we need to wrap our model in a function so we can call it many times on our bootstrapped data. A function like this might be your instinct; however, it's not quite right.
 
 ```{r}
 # fit ipw model for a single bootstrap sample
@@ -312,6 +319,9 @@ bind_rows(
   ipw_estimate %>% 
     select(estimate, conf.low, conf.high) %>% 
     mutate(type = "ols"),
+  ipw_estimate_robust %>% 
+    select(estimate, conf.low, conf.high) %>% 
+    mutate(type = "robust"),
   boot_estimate %>% 
     select(estimate = .estimate, conf.low = .lower, conf.high = .upper) %>% 
     mutate(type = "bootstrap")
@@ -324,7 +334,8 @@ bind_rows(
   ggplot(aes(x = type, y = estimate, ymin = conf.low, ymax = conf.high)) + 
     geom_pointrange(color = "#0172B1", size = 1, fatten = 3) +
     coord_flip() +
-    theme_minimal(base_size = 20)
+    theme_minimal(base_size = 20) +
+    theme(axis.title.y = element_blank())
 ```
 
 Our bootstrapped confidence intervals are wider, which is expected; remember that they were artificially narrow in the naive OLS model!

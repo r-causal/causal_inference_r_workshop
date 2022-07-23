@@ -29,12 +29,12 @@ library(ggdag)
 library(causaldata)
 ```
 
-# Broad strokes
 1. Specify causal question
 2. Draw assumptions (causal diagram)
-3. Model assumptions (propensity score)
+3. Model assumptions (e.g. propensity score)
 4. Analyze propensities (diagnostics)
-5. Estimate causal effects (IPW) 
+5. Estimate causal effects (e.g. IPW) 
+6. Sensitivity analysis (more later!)
 
 ---
 
