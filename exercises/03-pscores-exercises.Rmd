@@ -26,8 +26,8 @@ Below is a proposed DAG for this question.
 set.seed(1234)
 # set up DAG coordinates
 coord_dag <- list(
-  x = c(Season = 0, close = 0, weather = -1, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather = 0.25, x = 0, y = 0)
+  x = c(Season = 0, close = 0, weather_wdwhigh = -1, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather_wdwhigh = 0.25, x = 0, y = 0)
 )
 
 # nicer labels for the nodes
@@ -35,7 +35,7 @@ labels <- c(
   x = "Extra Magic Morning",
   y = "Average wait",
   season = "Ticket Season",
-  weather = "Historic high temperature",
+  weather_wdwhigh = "Historic high temperature",
   close = "Time park closed"
 )
 
