@@ -1,0 +1,73 @@
+---
+title: "Whole Game 2: Malaria and Mosquito Nets"
+author: "Malcolm Barrett"
+institute: "RStudio, PBC"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false 
+      
+---
+
+class: inverse
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
+library(tidyverse)
+library(ggdag)
+```
+
+1. Specify causal question
+2. Draw assumptions (causal diagram)
+3. Model assumptions (e.g. with a propensity score)
+4. Analyze propensities (diagnostics)
+5. Estimate causal effects 
+6. Conduct a sensitivity analysis
+
+---
+
+class: middle, center, inverse
+
+# **Does mosquito bed net use reduce malaria risk?**
+
+---
+
+# The Data
+
+```{r}
+library(causalworkshop)
+net_data
+```
+
+---
+
+# Proposed DAG
+
+```{r, echo = FALSE}
+mosquito_dag <- dagify(mal ~ net + inc + hlth,
+                       net ~ inc + hlth,
+                       hlth ~ inc,
+                       coords = list(x = c(mal = 4, net = 1, inc = 2, hlth = 3),
+                                     y = c(mal = 1, net = 1, inc = 2, hlth = 2)),
+                       exposure = "net",
+                       outcome = "mal")
+
+ggdag_status(mosquito_dag) +
+  guides(color = "none") +
+  theme_dag() +
+  labs(caption = "Thanks to Andrew Heiss for the data!")
+```
+
+---
+
+class: inverse, middle, center
+
+# **Your Turn!**
