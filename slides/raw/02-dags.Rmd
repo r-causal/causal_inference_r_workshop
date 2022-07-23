@@ -410,6 +410,7 @@ cancer ~ coffee + smoking
 
 # Common trip ups
 
+## Using prediction metrics
 ## The 10% rule
 ## Predictors of the outcome, predictors of the exposure 
 ## Selection bias and colliders (more later!)
