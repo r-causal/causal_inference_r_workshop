@@ -139,21 +139,6 @@ $$\Huge \delta(LB_{obs}, \beta_{UO})=\frac{LB_{obs}}{\beta_{UO}}$$
 
 ---
 
-<!-- ## Tipping Point -->
-
-<!-- $$\Huge RR_{UO}(LB_{obs}, \delta)=LB_{obs}^{1/\delta}$$ -->
-
-<!-- ## Tipping Point -->
-
-<!-- $$\Huge \delta(LB_obs, RR_{UO})=\frac{\log(LB_{obs})}{\log(RR_{UO})}$$ -->
-
----
-
-<!-- ## Tipping Point -->
-
-<!-- $$\Huge n(LB_{obs}, RR_{UO}, \delta) = \frac{\log{LB_{obs}}}{\delta\log{RR_{UO}}}$$ -->
----
-
 class: inverse, center, middle
 
 # tipr
@@ -227,7 +212,7 @@ class: inverse, center, middle
 
 ### **specify** one, it will **estimate** the other
 
-* `d`
+* `effect`
 * <span style="color:orange">`smd`</span>
 * <span style="color:orange">`outcome_association` </span>
 
