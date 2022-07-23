@@ -1,0 +1,461 @@
+---
+title: "Propensity Score Diagnostics"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false 
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
+```
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+class: inverse
+
+## Checking balance
+
+* Love plots (Standardized Mean Difference)
+* ECDF plots
+
+---
+class: inverse
+
+## Standardized Mean Difference (SMD)
+
+$$\LARGE d = \frac{\bar{x}_{treatment}-\bar{x}_{control}}{\sqrt{\frac{s^2_{treatment}+s^2_{control}}{2}}}$$
+
+---
+
+## SMD in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
+
+
+```{r,  message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+
+smds <- tidy_smd(
+  df,
+  .vars = c(confounder_1, confounder_2, ...),
+  .group = exposure,
+  .wts = wts # weight is optional
+)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
+
+
+```{r,  message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+
+smds <- tidy_smd( #<<
+  df,
+  .vars = c(confounder_1, confounder_2, ...),
+  .group = exposure,
+  .wts = wts # weight is optional
+)
+```
+---
+
+## SMD in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
+
+
+```{r,  message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+
+smds <- tidy_smd(
+  df,
+  .vars = c(confounder_1, confounder_2, ...), #<<
+  .group = exposure,
+  .wts = wts # weight is optional
+)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
+
+
+```{r,  message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+
+smds <- tidy_smd(
+  df,
+  .vars = c(confounder_1, confounder_2, ...),
+  .group = exposure, #<<
+  .wts = wts # weight is optional
+)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Calculate standardized mean differences </h3> 
+
+
+```{r,  message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+
+smds <- tidy_smd(
+  df,
+  .vars = c(confounder_1, confounder_2, ...),
+  .group = exposure,
+  .wts = wts # weight is optional #<<
+)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+
+
+```{r}
+ggplot(
+  data = smds,
+  aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +  
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+
+
+```{r}
+ggplot(
+  data = smds, #<<
+  aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +  
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+
+
+```{r}
+ggplot(
+  data = smds,
+  aes(x = abs(smd), y = variable, group = weights, color = weights) #<<
+) +  
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+
+
+```{r}
+ggplot(
+  data = smds,
+  aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +  
+  geom_line(orientation = "y") + #<<
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+---
+
+## SMD in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
+
+
+```{r}
+ggplot(
+  data = smds,
+  aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +  
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1) #<<
+```
+
+---
+
+## Love plot
+
+```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
+library(tidysmd)
+library(tidyverse)
+library(broom)
+library(causaldata)
+
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete
+)
+
+df <- propensity_model %>% 
+  augment(type.predict = "response", data = nhefs_complete) %>% 
+  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+
+vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+          "exercise", "active", "wt71")
+
+plot_df <- tidy_smd(
+  df,
+  vars,
+  qsmk,
+  w_ate
+)
+
+ggplot(
+  data = plot_df,
+  mapping = aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+---
+
+## Your turn 1
+
+`r countdown::countdown(minutes = 10)`
+
+1. Create a Love Plot for the propensity score weighting you created in the previous exercise
+
+---
+
+## ECDF
+
+For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, eval = TRUE}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+
+---
+
+## Unweighted ECDF
+
+```{r}
+library(ggecdf) #<<
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+---
+
+## Unweighted ECDF
+
+```{r}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) + #<<
+  geom_ecdf() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+---
+
+## Unweighted ECDF
+
+```{r}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf() + #<<
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+---
+
+## Unweighted ECDF
+
+```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+
+---
+
+## Weighted  ECDF 
+
+```{r, eval = FALSE}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf(aes(weights = w_ate)) +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x (Weighted)") 
+```
+
+---
+
+## Weighted  ECDF 
+
+```{r, eval = FALSE}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf(aes(weights = w_ate)) + #<<
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x (Weighted)") 
+```
+
+
+---
+
+## Weighted  ECDF 
+
+```{r, eval = TRUE, echo = FALSE}
+library(ggecdf)
+
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf(aes(weights = w_ate)) + #<<
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x (Weighted)") 
+```
+---
+
+## Your turn 2
+
+`r countdown::countdown(minutes = 10)`
+
+1. Create an unweighted ECDF examining the `weather_wdwhigh` confounder by whether or not the day had Extra Magic Hours.
+3. Create a weighted ECDF examining the `weather_wdwhigh` confounder
+
+
+---
+
+class: middle, center, inverse
+
+## *Bonus!* Weighted Tables in R
+
+
+---
+
+## Weighted Tables in R
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a "design object" to incorporate the weights </h3> 
+
+```{r, message = FALSE, warning = FALSE}
+library(survey)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df,
+  weights = ~ wts
+)
+```
+
+---
+
+class: gtsummary
+
+## Weighted Tables in R
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pass to `gtsummary::tbl_svysummary()` </h3> 
+
+```{r,  message = FALSE, warning = FALSE}
+library(gtsummary)
+tbl_svysummary(svy_des, by = x) %>% 
+  add_difference(everything() ~ "smd")
+# modify_column_hide(ci) to hide CI column
+```
+
+---
+
+class: gtsummary
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, echo = FALSE}
+library(survey)
+library(gtsummary)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df %>% select(wt71, race, age, sex, smokeintensity, smokeyrs, exercise, active, w_ate, qsmk),
+  weights = ~ w_ate
+)
+theme_gtsummary_compact()
+
+tbl_svysummary(svy_des, by = qsmk, include = -w_ate) %>% 
+  add_difference(everything() ~ "smd") %>% 
+  modify_column_hide(ci)
+```

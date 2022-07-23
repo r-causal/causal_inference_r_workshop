@@ -1,0 +1,241 @@
+---
+title: "Fitting the outcome model"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false 
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## Outcome Model
+
+```{r}
+library(broom)
+
+lm(outcome ~ exposure, data = df, weights = wts) %>% 
+  tidy()
+```
+
+--
+`r emo::ji("check")` This will get us the point estimate  
+--
+
+`r emo::ji("x")` This will get NOT us the correct confidence intervals  
+--
+
+`r emo::ji("package")` {rsample}
+---
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a function to run your analysis once on a sample of your data</h3> 
+
+.small[
+```{r}
+fit_ipw <- function(split, ...) {
+  .df <- analysis(split)
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    exposure ~ confounder_1 + confounder_2 + ...
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df <- propensity_model %>% 
+    augment(type.predict = "response", data = .df) %>% 
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(outcome ~ exposure, data = .df, weights = wts) %>% 
+    tidy()
+}
+```
+]
+
+---
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a function to run your analysis once on a sample of your data</h3> 
+
+.small[
+```{r}
+fit_ipw <- function(split, ...) { #<<
+  .df <- analysis(split) #<<
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    exposure ~ confounder_1 + confounder_2 + ...
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df <- propensity_model %>% 
+    augment(type.predict = "response", data = .df) %>% 
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(outcome ~ exposure, data = .df, weights = wts) %>% 
+    tidy()
+}
+```
+]
+
+---
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a function to run your analysis once on a sample of your data</h3> 
+
+.small[
+```{r}
+fit_ipw <- function(split, ...) {
+  .df <- analysis(split)
+  
+  # fit propensity score model #<<
+  propensity_model <- glm( #<<
+    exposure ~ confounder_1 + confounder_2 + ... #<<
+    family = binomial(),  #<<
+    data = .df #<<
+  ) #<<
+  
+  # calculate inverse probability weights
+  .df <- propensity_model %>% 
+    augment(type.predict = "response", data = .df) %>% 
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(outcome ~ exposure, data = .df, weights = wts) %>% 
+    tidy()
+}
+```
+]
+
+---
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a function to run your analysis once on a sample of your data</h3> 
+
+.small[
+```{r}
+fit_ipw <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    exposure ~ confounder_1 + confounder_2 + ...
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights #<<
+  .df <- propensity_model %>%  #<<
+    augment(type.predict = "response", data = .df) %>%  #<<
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted)) #<<
+  
+  # fit correctly bootsrapped ipw model
+  lm(outcome ~ exposure, data = .df, weights = wts) %>% 
+    tidy() 
+}
+```
+]
+
+---
+
+<span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Create a function to run your analysis once on a sample of your data</h3> 
+
+.small[
+```{r}
+fit_ipw <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    exposure ~ confounder_1 + confounder_2 + ...
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df <- propensity_model %>% 
+    augment(type.predict = "response", data = .df) %>% 
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model #<<
+  lm(outcome ~ exposure, data = .df, weights = wts) %>% #<<
+    tidy() #<<
+}
+```
+]
+
+---
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Use {rsample} to bootstrap our causal effect</h3> 
+
+
+```{r}
+library(rsample)
+
+# fit ipw model to bootstrapped samples
+ipw_results <- bootstraps(df, 1000, apparent = TRUE) %>% 
+  mutate(results = map(splits, fit_ipw)) 
+```
+
+---
+
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Use {rsample} to bootstrap our causal effect</h3> 
+
+
+```{r}
+library(rsample)
+
+# fit ipw model to bootstrapped samples
+ipw_results <- bootstraps(df, 1000, apparent = TRUE) %>%  #<<
+  mutate(results = map(splits, fit_ipw)) 
+```
+
+---
+
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Use {rsample} to bootstrap our causal effect</h3> 
+
+
+```{r}
+library(rsample)
+
+# fit ipw model to bootstrapped samples
+ipw_results <- bootstraps(df, 1000, apparent = TRUE) %>% 
+  mutate(results = map(splits, fit_ipw)) #<<
+```
+
+---
+
+<span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; Pull out the causal effect</h3> 
+
+
+```{r, eval = FALSE}
+# get t-statistic-based CIs
+boot_estimate <- int_t(ipw_results, results) %>%  #<<
+  filter(term == "exposure")
+```
+
+---
+
+## Your Turn
+
+`r countdown::countdown(minutes = 12)`
+
+1. Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `extra_magic_morning` and `avg_spostmin`
+
+2. Using the `bootstraps()` and `int_t()` functions to estimate the final effect.
+
+

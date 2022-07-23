@@ -1,4 +1,3 @@
-base
 tidyverse
 ggplot2
 tibble
@@ -20,3 +19,14 @@ haven
 usethis
 magrittr
 smd
+devtools
+reprex
+fs
+opensky
+shunyata
+pak
+robustbase
+estimatr
+touringplans
+causalworkshop
+tidysmd

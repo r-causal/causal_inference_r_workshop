@@ -22,7 +22,7 @@ class: center, middle, inverse, title-slide
 ### RStudio, PBC
 ]
 .date[
-### 2021-09-01 (updated: 2022-07-16)
+### 2021-09-01 (updated: 2022-07-23)
 ]
 
 ---
@@ -32,12 +32,12 @@ class: inverse
 
 
 
-# Broad strokes
 1. Specify causal question
 2. Draw assumptions (causal diagram)
-3. Model assumptions (propensity score)
+3. Model assumptions (e.g. propensity score)
 4. Analyze propensities (diagnostics)
-5. Estimate causal effects (IPW) 
+5. Estimate causal effects (e.g. IPW) 
+6. Sensitivity analysis (more later!)
 
 ---
 
@@ -78,7 +78,7 @@ nhefs_complete_uc
 
 ## Did those who quit smoking gain weight?
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -112,11 +112,11 @@ class: inverse, center, middle
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -126,7 +126,7 @@ class:  center, middle
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -224,7 +224,7 @@ class: inverse, center, middle
 
 ## What's the distribution of weights?
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -232,11 +232,11 @@ class: inverse, center, middle
 
 
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -407,14 +407,14 @@ boot_estimate
 ## # A tibble: 1 × 6
 ##   term  .lower .estimate .upper .alpha .method  
 ##   &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
-*## 1 qsmk    2.48      3.45   4.39   0.05 student-t
+*## 1 qsmk    2.48      3.45   4.35   0.05 student-t
 ```
 
 ---
 
 class: middle
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
