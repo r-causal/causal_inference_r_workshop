@@ -9,20 +9,27 @@
     Intro](https://causal-inference-r-workshop.netlify.app/00-intro.html)
 -   [01 Whole
     Game](https://causal-inference-r-workshop.netlify.app/01-causal_modeling_whole_game.html)
--   [02 Causal
+-   [02 When Standard Methods
+    Succeed](https://causal-inference-r-workshop.netlify.app/02-when-standard-methods-succeed.html)
+-   [03 Causal Inference with `group_by` and
+    `summarise`](https://causal-inference-r-workshop.netlify.app/03-causal-inference-with-group-by-and-summarise.html)
+-   [04 Causal
     Diagrams](https://causal-inference-r-workshop.netlify.app/02-dags.html)
--   [03 Introduction to Propensity
+-   [05 Introduction to Propensity
     Scores](https://causal-inference-r-workshop.netlify.app/03-pscores.html)
--   [04 Using Propensity
+-   [06 Using Propensity
     Scores](https://causal-inference-r-workshop.netlify.app/04-using-pscores.html)
--   [05 Checking Propensity
+-   [07 Checking Propensity
     Scores](https://causal-inference-r-workshop.netlify.app/05-pscore-diagnostics.html)
--   [06 Fitting the outcome
+-   [08 Fitting the outcome
     model](https://causal-inference-r-workshop.netlify.app/06-outcome-model.html)
--   [07
+-   [09 Continuous
+    Exposures](https://causal-inference-r-workshop.netlify.app/09-continuous-exposures.html)
+-   [10
     G-Computation](https://causal-inference-r-workshop.netlify.app/07-g-computation.html)
--   [08 Tipping Point Sensitivity
+-   [11 Tipping Point Sensitivity
     Analyses](https://causal-inference-r-workshop.netlify.app/08-tipr.html)
+-   [12 Whole Game (Your Turn)]()
 
 ### Installing materials locally
 
