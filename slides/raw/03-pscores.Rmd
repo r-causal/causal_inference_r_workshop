@@ -152,41 +152,63 @@ class: inverse
 
 ---
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 5.5}
-library(causaldata)
+# Example
+
+.pull-left[
+<img src="img/Mickey_and_Walt_Disney.jpg" height="300"></img>
+.small[Photo by Anna [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en)]
+]
+
+.pull-right[
+.small[
+Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during "Extra Magic Hours" during which the park was closed to all other guests.
+
+These extra hours could be in the morning or evening.  
+
+The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these "Extra Magic Hours".
+]
+]
+
+--
+
+**We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm.**
+
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 4}
 library(ggdag)
 set.seed(1234)
-# set up DAG
-smk_wt_dag <- dagify(
-  # specify causes of quitting smoking and weight gain:
-  qsmk ~ sex + age + smokeyrs + wt71,
-  wt82_71 ~ sex + age + smokeyrs + wt71,
-  # specify causal question:
-  exposure = "qsmk", 
-  outcome = "wt82_71",
-  # set up labels:
-  # here, I'll use the same variable names as the data set, but I'll label them
-  # with clearer names
-  labels = c(
-    # causal question
-    "qsmk" = "quit\nsmoking (qsmk)",
-    "wt82_71" = "change in\nweight",
-    
-    # demographics
-    "age" = "age",
-    "sex" = "sex",
-    
-    # health
-    "wt71" = "baseline\nweight (wt71)",
-    
-    # smoking history
-    "smokeyrs" = "yrs of\nsmoking (smokeyrs)"
-  )
-) %>% 
-  tidy_dagitty()
-
-smk_wt_dag %>% 
-  ggdag(text = FALSE, use_labels = "label") 
+# set up DAG coordinates
+coord_dag <- list(
+  x = c(Season = 0, close = 0, weather_wdwhigh = -1, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather_wdwhigh = 0.25, x = 0, y = 0)
+)
+# nicer labels for the nodes
+labels <- c(
+  x = "Extra Magic Morning",
+  y = "Average wait",
+  season = "Ticket Season",
+  weather_wdwhigh = "Historic high temperature",
+  close = "Time park closed"
+)
+# visualize the dag
+dagify(
+  y ~ x + close + season + weather_wdwhigh,
+  x ~ weather_wdwhigh + close + season,
+  coords = coord_dag,
+  labels = labels
+) %>%
+  ggdag(use_labels = "label", text = FALSE) +
+  theme_void() +
+  scale_x_continuous(
+    limits = c(-1.25, 2.25), 
+    breaks = c(-1, 0, 1, 2), 
+    labels = c(
+      "\n(one year ago)", "\n(6 months ago)",
+      "\n(3 months ago)", "5pm - 6pm\n(Today)"
+    )
+  ) +
+  theme(axis.text.x = element_text())
 ```
 
 ---
@@ -197,8 +219,8 @@ class: inverse
 
 `r countdown::countdown(minutes = 10)`
 
-1. Using the **confounders** identified in the previous DAG, fit a propensity score model for `qsmk`
-2. Stretch: Create two histograms, one of the propensity scores for those that quit smoking and one for those that do not
+1. Using the **confounders** identified in the previous DAG, fit a propensity score model for `extra_magic_morning`
+2. Stretch: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without
 
 
 
