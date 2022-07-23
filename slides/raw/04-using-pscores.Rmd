@@ -441,6 +441,6 @@ class: inverse
 
 `r countdown::countdown(minutes = 10)`
 
-1. Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame `df`
+1. Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame
 
 2. Stretch: Using the same propensity scores, create ATM weights
