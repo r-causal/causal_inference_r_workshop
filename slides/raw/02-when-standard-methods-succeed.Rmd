@@ -1,0 +1,259 @@
+---
+title: "When Standard Methods Succeed"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2022-07-05 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false 
+---
+class: middle, center, inverse
+
+# when correlation *is* causation
+---
+
+class: middle, center, inverse
+
+## When you have no confounders and there is a linear relationship between the exposure and the outcome, that *correlation is a causal relationship*
+
+# `r emo::ji("wow")`
+
+---
+class: middle, center, inverse
+
+## When you have no confounders and there is a linear relationship between the *exposure* and the outcome, that correlation is a causal relationship
+
+# `r emo::ji("wow")`
+
+---
+
+class: middle, center, inverse
+
+## When you have no confounders and there is a linear relationship between the exposure and the *outcome*, that correlation is a causal relationship
+
+# `r emo::ji("wow")`
+
+---
+
+
+class: middle, center, inverse
+
+## When you have no *confounders* and there is a linear relationship between the exposure and the outcome, that correlation is a causal relationship
+
+# `r emo::ji("wow")`
+
+---
+
+
+class: middle, center, inverse
+
+# randomized controlled trials
+
+--
+
+# *A/B testing*
+
+---
+
+class: middle, center, inverse
+
+# Even in these cases, using the methods you will learn here can help!
+
+---
+
+1. Adjusting for baseline confounders can make an estimate *more efficient*
+
+--
+
+1. Propensity score weighting is *more efficient* that direct adjustment
+--
+
+1. Sometimes we are *more comfortable with the functional form of the propensity score* (predicting exposure) than the outcome model
+---
+
+# Example
+
+* **simulated** data (100 observations)  
+
+---
+
+# Example
+
+* **simulated** data (100 observations)  
+* Treatment is **randomly** assigned 
+
+---
+# Example
+
+* **simulated** data (100 observations)  
+* Treatment is **randomly** assigned 
+* There are **two baseline covariates**: `age` and `weight`
+---
+
+.pull-left[
+### Unadjusted model
+
+```{r, eval = FALSE}
+lm(y ~ treatment, data = data)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(gtsummary)
+set.seed(9)
+n <- 100
+d <- tibble(
+  age = rnorm(n, 55, 20),
+  weight = rnorm(n),
+  treatment = rbinom(n, 1, 0.5),
+  y = treatment + 0.2 * age + 0.2 * weight + rnorm(n)
+)
+lm(y ~ treatment, d) %>%
+  tbl_regression() %>%
+  modify_column_unhide(column = std.error)
+```
+]
+
+--
+
+.pull-right[
+
+### Adjusted model
+
+```{r, eval = FALSE}
+lm(y ~ treatment + weight + age, data = data)
+```
+
+```{r, echo = FALSE}
+lm(y ~ treatment + weight + age, data = d) %>%
+  tbl_regression() %>%
+  modify_column_unhide(column = std.error)
+```
+]
+
+--
+
+<br>
+
+### Propensity score adjusted model
+
+```{r, echo = FALSE}
+d %>%
+  mutate(
+    p = glm(treatment ~ weight + age, data = .) %>% predict(type = "response"),
+    ate = treatment / p + (1 - treatment) / (1 - p)
+  ) %>%
+  as.data.frame() -> d
+library(PSW)
+df <- as.data.frame(d)
+x <- psw(df, 
+         "treatment ~ weight + age", 
+         weight = "ATE", wt = TRUE,
+         out.var = "y")
+tibble(
+  Characteristic = "treatment",
+  Beta = round(x$est.wt, 1),
+  SE = round(x$std.wt, 3),
+  `95% CI` = glue::glue("{round(x$est.wt - 1.96 * x$std.wt, 1)}, {round(x$est.wt + 1.96 * x$std.wt, 1)}"),
+  `p-value` = "<0.001"
+) %>%
+  knitr::kable()
+```
+
+---
+
+# Example
+
+* **simulated** data (10,000 observations)  
+* Treatment is **randomly** assigned 
+* There are **two baseline covariates**: `age` and `weight`
+---
+
+.pull-left[
+### Unadjusted model
+
+```{r, eval = FALSE}
+lm(y ~ treatment, data = data)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(gtsummary)
+set.seed(9)
+n <- 10000
+d <- tibble(
+  age = rnorm(n, 55, 20),
+  weight = rnorm(n),
+  treatment = rbinom(n, 1, 0.5),
+  y = treatment + 0.2 * age + 0.2 * weight + rnorm(n)
+)
+lm(y ~ treatment, d) %>%
+  tbl_regression() %>%
+  modify_column_unhide(column = std.error)
+```
+]
+
+--
+
+.pull-right[
+
+### Adjusted model
+
+```{r, eval = FALSE}
+lm(y ~ treatment + weight + age, data = data)
+```
+
+```{r, echo = FALSE}
+lm(y ~ treatment + weight + age, data = d) %>%
+  tbl_regression() %>%
+  modify_column_unhide(column = std.error)
+```
+]
+
+--
+
+<br>
+
+### Propensity score adjusted model
+
+```{r, echo = FALSE}
+d %>%
+  mutate(
+    p = glm(treatment ~ weight + age, data = .) %>% predict(type = "response"),
+    ate = treatment / p + (1 - treatment) / (1 - p)
+  ) %>%
+  as.data.frame() -> d
+library(PSW)
+df <- as.data.frame(d)
+x <- psw(df, 
+         "treatment ~ weight + age", 
+         weight = "ATE", wt = TRUE,
+         out.var = "y")
+tibble(
+  Characteristic = "treatment",
+  Beta = round(x$est.wt, 1),
+  SE = round(x$std.wt, 3),
+  `95% CI` = glue::glue("{round(x$est.wt - 1.96 * x$std.wt, 1)}, {round(x$est.wt + 1.96 * x$std.wt, 1)}"),
+  `p-value` = "<0.001"
+) %>%
+  knitr::kable()
+```
+
+---
+
+class: middle, center, inverse
+
+# *time-varying* confounding
+
+
+
+
+
+
