@@ -18,16 +18,20 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dp
 library(tidyverse)
 ```
 
-class: inverse, center, middle, large
+class: inverse, center, middle
 
-#### [00-intro](00-intro.html)
-#### [01-causal_modeling_whole_game](01-causal_modeling_whole_game.html)
-#### [02-dags](02-dags.html)
-#### [03-pscores](03-pscores.html)
-#### [04-using-pscores](04-using-pscores.html)
-#### [05-pscore-diagnostics](05-pscore-diagnostics.html)
-#### [06-outcome-model](06-outcome-model.html)
-#### [07-g-computation](07-g-computation.html)
-#### [08-tipr](08-tipr.html)
+#### [00 Intro](https://causal-inference-r-workshop.netlify.app/00-intro.html)
+#### [01 Whole Game](https://causal-inference-r-workshop.netlify.app/01-causal_modeling_whole_game.html)
+#### [02 When Standard Methods Succeed](https://causal-inference-r-workshop.netlify.app/02-when-standard-methods-succeed.html)
+#### [03 Causal Inference with `group_by` and `summarise`](https://causal-inference-r-workshop.netlify.app/03-causal-inference-with-group-by-and-summarise.html)
+#### [04 Causal Diagrams](https://causal-inference-r-workshop.netlify.app/04-dags.html)
+#### [05 Introduction to Propensity Scores](https://causal-inference-r-workshop.netlify.app/05-pscores.html)
+#### [06 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/06-using-pscores.html)
+#### [07 Checking Propensity Scores](https://causal-inference-r-workshop.netlify.app/07-pscore-diagnostics.html)
+#### [08 Fitting the outcome model](https://causal-inference-r-workshop.netlify.app/08-outcome-model.html)
+#### [09 Continuous Exposures](https://causal-inference-r-workshop.netlify.app/09-continuous-exposures.html)
+#### [10 G-Computation](https://causal-inference-r-workshop.netlify.app/10-g-computation.html)
+#### [11 Tipping Point Sensitivity Analyses](https://causal-inference-r-workshop.netlify.app/11-tipr.html)
+#### [12 Whole Game (Your Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)
 
 
