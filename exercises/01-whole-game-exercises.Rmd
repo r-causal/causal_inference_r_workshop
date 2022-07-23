@@ -10,6 +10,8 @@ library(rsample)
 library(ggdag)
 library(causaldata)
 library(tidysmd)
+
+set.seed(1234)
 ```
 
 ## Causal Modeling: Whole Game
@@ -110,9 +112,9 @@ smk_wt_dag <- dagify(
     "smokeintensity" = "smoking\nintensity",
     "smokeyrs" = "yrs of\nsmoking"
   )
-)
+) %>% tidy_dagitty(laout = "star")
 
-tidy_dagitty(smk_wt_dag)
+smk_wt_dag
 ```
 
 Let's visualize our assumptions with `ggdag()`. 

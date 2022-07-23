@@ -27,6 +27,8 @@ library(broom)
 library(rsample)
 library(ggdag)
 library(causaldata)
+
+set.seed(1234)
 ```
 
 1. Specify causal question
@@ -96,7 +98,6 @@ class: inverse, center, middle
 
 ```{r, echo = FALSE, fig.height=5.5}
 library(ggdag)
-set.seed(1234)
 # set up DAG
 smk_wt_dag <- dagify(
   # specify causes of quitting smoking and weight gain:
@@ -131,13 +132,14 @@ smk_wt_dag <- dagify(
     "smokeyrs" = "yrs of\nsmoking"
   )
 ) %>% 
-  tidy_dagitty()
+  tidy_dagitty(layout = "star")
 
 smk_wt_dag %>% 
   filter(name %in% c("qsmk", "wt82_71")) %>% 
   ggdag(text = FALSE, use_labels = "label") +
-  ylim(6, 9.5) +
-  xlim(1.5, 5)
+  ylim(min(smk_wt_dag$data$y) - 0.25, max(smk_wt_dag$data$y) + 0.25) +  
+  xlim(min(smk_wt_dag$data$x) - 0.25, max(smk_wt_dag$data$x) + 0.25) +
+  theme_dag()
 ```
 
 ---
@@ -145,8 +147,9 @@ smk_wt_dag %>%
 ```{r, echo = FALSE, fig.height=5.5}
 smk_wt_dag %>% 
   ggdag(text = FALSE, use_labels = "label") +
-  ylim(6, 9.5) +
-  xlim(1.5, 5)
+  ylim(min(smk_wt_dag$data$y) - 0.25, max(smk_wt_dag$data$y) + 0.25) +  
+  xlim(min(smk_wt_dag$data$x) - 0.25, max(smk_wt_dag$data$x) + 0.25) +
+  theme_dag()
 ```
 
 ---
@@ -159,7 +162,8 @@ class:  center, middle
 
 ```{r, echo = FALSE, fig.height = 5.5}
 smk_wt_dag %>% 
-  ggdag_adjustment_set(text = FALSE, use_labels = "label", node_size = 8)
+  ggdag_adjustment_set(text = FALSE, use_labels = "label", node_size = 8, shadow = TRUE) +
+  theme_dag()
 ```
 
 ---
@@ -284,12 +288,13 @@ plot_df <- nhefs_complete_uc %>%
 ```{r, echo=FALSE, fig.height=5.5}
 ggplot(
   data = plot_df %>% filter(Method == "unweighted"),
-  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+  aes(x = abs(SMD), y = variable, group = Method, color = Method, fill = Method)
 ) +
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1) +
-  theme_minimal() +
+  geom_line(orientation = "y", size = 1) +
+  geom_point(size = 4, color = "white", shape = 21) + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.3) +
+  theme_minimal(base_size = 20) +
+  theme(axis.title.y = element_blank()) +
   xlim(0, .3)
 ```
 
@@ -298,13 +303,15 @@ ggplot(
 ```{r, echo=FALSE, fig.height=5.5}
 ggplot(
   data = plot_df,
-  aes(x = abs(SMD), y = variable, group = Method, color = Method)
+  aes(x = abs(SMD), y = variable, group = Method, color = Method, fill = Method)
 ) +
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1) +
-  theme_minimal() +
+  geom_line(orientation = "y", size = 1) +
+  geom_point(size = 4, color = "white", shape = 21) + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.3) +
+  theme_minimal(base_size = 20) +
+  theme(axis.title.y = element_blank()) +
   scale_color_manual(values = c("grey85", "#00BFC4")) +
+  scale_fill_manual(values = c("grey85", "#00BFC4")) +
   xlim(0, .3)
 ```
 
