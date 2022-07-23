@@ -1,0 +1,72 @@
+---
+title: "Whole Game 2: Malaria and Mosquito Nets"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(broom)
+library(rsample)
+library(ggdag)
+library(causaldata)
+library(tipr)
+```
+
+## Whole Game 2: Malaria and Mosquito Nets
+
+In this exercise, we'll attempt to answer a causal question: does mosquito bed net use reduce malaria risk? 
+
+To answer this question, we'll use the causal inference methods we learned in this workshop. You may use any technique you prefer. If you have time, try more than one technique and compare the results. Remember the broad strokes we discussed today: 
+
+1. Specify causal question (we just did this!)
+2. Draw assumptions (via a causal diagram, which we'll do below)
+3. Model assumptions (e.g. with a propensity score)
+4. Analyze propensities (diagnostics)
+5. Estimate causal effects 
+6. Conduct a sensitivity analysis
+
+We'll use simulated data, `net_data`, from from {causalworkshop} package, which includes five variables: 
+* `id`: an ID variable
+* `income`: weekly income, measured in dollars
+* `health`: a health score scale ranging from 0–100
+* `net`: a binary variable indicating if the participant used a net (1) or didn't use a net (0)
+* `malria_risk`: a risk of malaria scale ranging from 0-100
+
+Our thanks to Andrew Heiss for providing these data!
+
+```{r}
+library(causalworkshop)
+net_data
+```
+
+Here's the DAG we are proposing. While this DAG is simple, make sure you confirm what the adjustment set is. 
+
+```{r}
+coords <- list(
+  x = c(mal = 4, net = 1, inc = 2, hlth = 3),
+  y = c(mal = 1, net = 1, inc = 2, hlth = 2)
+)
+
+mosquito_dag <- dagify(
+  mal ~ net + inc + hlth,
+  net ~ inc + hlth,
+  hlth ~ inc,
+  coords = coords,
+  exposure = "net",
+  outcome = "mal"
+)
+
+ggdag_status(mosquito_dag) +
+  guides(color = "none") +
+  theme_dag()
+```
+
+# Your Turn
+
+Now, conduct the causal analysis as you see fit! Feel free to work in groups and to ask us questions.
+
+```{r}
+
+```
+
+
