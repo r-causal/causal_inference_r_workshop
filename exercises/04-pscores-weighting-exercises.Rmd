@@ -10,13 +10,13 @@ library(broom)
 library(touringplans)
 ```
 
-We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**).
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
 
 Below is the propensity score model you created in the previous exercise.
 
 ```{r, eval = FALSE}
 seven_dwarfs <- seven_dwarfs_train_2018 %>%
-  filter(hour == 17)
+  filter(hour == 9)
 
 propensity_model <- glm(
   extra_magic_morning ~ wdw_ticket_season + close + weather_wdwhigh,

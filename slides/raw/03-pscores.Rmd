@@ -138,7 +138,7 @@ The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typi
 
 --
 
-**We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm.**
+**We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am.**
 
 ---
 
@@ -172,7 +172,7 @@ dagify(
     breaks = c(-1, 0, 1, 2), 
     labels = c(
       "\n(one year ago)", "\n(6 months ago)",
-      "\n(3 months ago)", "5pm - 6pm\n(Today)"
+      "\n(3 months ago)", "9am - 10am\n(Today)"
     )
   ) +
   theme(axis.text.x = element_text())

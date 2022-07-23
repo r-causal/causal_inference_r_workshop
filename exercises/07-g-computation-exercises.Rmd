@@ -9,12 +9,12 @@ library(broom)
 library(touringplans)
 
 seven_dwarfs <- seven_dwarfs_train_2018 %>%
-  filter(hour == 17)
+  filter(hour == 9)
 ```
 
 # Your Turn 1
 
-For the parametric G-formula, we'll use a single model to fit a causal model of Extra Magic Hours (`extra_magic_morning`) on Observed Waiting Times (`avg_sactmin`) where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
+For the parametric G-formula, we'll use a single model to fit a causal model of Extra Magic Hours (`extra_magic_morning`) on Posted Waiting Times (`avg_spostmin`) where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
 
 First, let's fit the model. 
 
@@ -23,7 +23,7 @@ First, let's fit the model.
 
 ```{r}
 _______ ___ _______(
-  avg_sactmin ~ _______ + wdw_ticket_season + close + weather_wdwhigh, 
+  avg_spostmin ~ _______ + wdw_ticket_season + close + weather_wdwhigh, 
   data = seven_dwarfs
 )
 ```
