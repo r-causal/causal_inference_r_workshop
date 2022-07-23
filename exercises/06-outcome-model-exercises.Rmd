@@ -14,7 +14,7 @@ seven_dwarfs <- seven_dwarfs_train_2018 %>%
   filter(hour == 17)
 ```
 
-We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**).
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm (the **outcome**).
 
 ## Your turn
 
