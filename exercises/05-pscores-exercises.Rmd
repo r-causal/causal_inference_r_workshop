@@ -26,8 +26,8 @@ Below is a proposed DAG for this question.
 set.seed(1234)
 # set up DAG coordinates
 coord_dag <- list(
-  x = c(Season = 0, close = 0, weather_wdwhigh = -1, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather_wdwhigh = 0.25, x = 0, y = 0)
+  x = c(season = 0, close = 0, weather_wdwhigh = -1, x = 1, y = 2),
+  y = c(season = -1, close = 1, weather_wdwhigh = 0.25, x = 0, y = 0)
 )
 
 # nicer labels for the nodes

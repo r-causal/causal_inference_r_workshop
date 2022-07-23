@@ -63,7 +63,8 @@ mosquito_dag <- dagify(mal ~ net + inc + hlth,
 ggdag_status(mosquito_dag) +
   guides(color = "none") +
   theme_dag() +
-  labs(caption = "Thanks to Andrew Heiss for the data!")
+  labs(caption = "Thanks to Andrew Heiss for the data!") +
+  coord_cartesian(clip = "off")
 ```
 
 ---
