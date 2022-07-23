@@ -64,7 +64,7 @@ propensity_model <- glm(
 ### Average Treatment Effect (ATE)
 
 $$\tau = E[Y(1) - Y(0)]$$
-```{r, echo = FALSE, fig.height = 3}
+```{r, echo = FALSE, fig.height = 2}
 set.seed(10)
 p <- tibble(
   x = c(runif(10, 0, 0.9), runif(10, 0.1, 1)),
@@ -219,7 +219,7 @@ m
 ```
 
 
-Observations with propensity scores (on the linear logit scale) within 0.1 (the caliper) will be discarded
+Observations with propensity scores (on the linear logit scale) within 0.1 standard errors (the caliper) will be discarded
 
 ---
 
@@ -306,7 +306,7 @@ df <- propensity_model %>%
   )
 
 d <- df %>%
-  pivot_wider(names_from = qsmk, values_from = .fitted, sep = "_p")
+  pivot_wider(names_from = qsmk, values_from = .fitted, names_prefix = "qsmk_p")
 ```
 
 ## Histogram of propensity scores
