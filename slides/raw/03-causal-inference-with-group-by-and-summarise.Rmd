@@ -1,0 +1,495 @@
+---
+title: "Causal Inference with `group_by` and `summarise`"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2022-07-23 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false 
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+set.seed(1)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies-2.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized-2.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+![](img/obs-studies-3.png)
+
+---
+class: inverse
+
+![](img/trt.png)
+
+---
+class: inverse
+
+![](img/trt-conf.png)
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-2.png)
+
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-3.png)
+
+---
+
+class: inverse, center, middle
+
+# One binary confounder
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r}
+n <- 1000
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+```{r, echo = FALSE}
+sim %>%
+  select(confounder, exposure, outcome)
+```
+
+]
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r, eval = FALSE}
+n <- 1000 #<<
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+```{r, echo = FALSE}
+sim %>%
+  select(confounder, exposure, outcome)
+```
+
+]
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r, eval = FALSE}
+n <- 1000
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5), #<<
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+```{r, echo = FALSE}
+sim %>%
+  select(confounder, exposure, outcome)
+```
+
+]
+
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r, eval = FALSE}
+n <- 1000
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when( #<<
+    confounder == 1 ~ 0.75, #<<
+    confounder == 0 ~ 0.25 #<<
+  ), #<<
+  exposure = rbinom(n, 1, p_exposure), #<<
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+```{r, echo = FALSE}
+sim %>%
+  select(confounder, exposure, outcome)
+```
+
+]
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r, eval = FALSE}
+n <- 1000
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n) #<<
+)
+```
+]
+]
+
+.pull-right[
+```{r, echo = FALSE}
+sim %>%
+  select(confounder, exposure, outcome)
+```
+
+]
+
+---
+
+# Simulation
+
+```{r}
+lm(outcome ~ exposure, data = sim)
+```
+
+---
+# Simulation
+
+```{r}
+sim %>%
+  group_by(exposure) %>%
+  summarise(avg_y = mean(outcome))
+```
+
+---
+
+# Simulation
+
+```{r}
+sim %>%
+  group_by(exposure) %>% #<<
+  summarise(avg_y = mean(outcome)) 
+```
+---
+
+# Simulation
+
+```{r}
+sim %>%
+  group_by(exposure) %>%
+  summarise(avg_y = mean(outcome)) #<<
+```
+
+
+---
+
+# Simulation
+
+```{r}
+sim %>%
+  group_by(exposure) %>%
+  summarise(avg_y = mean(outcome)) %>%
+  pivot_wider(names_from = exposure, 
+              values_from = avg_y,  
+              names_prefix = "x_") %>% 
+  summarise(estimate = x_1 - x_0) 
+```
+---
+
+# Simulation
+
+```{r}
+sim %>%
+  group_by(confounder, exposure) %>% #<<
+  summarise(avg_y = mean(outcome))
+```
+
+---
+
+# Simulation
+
+```{r}
+sim %>%
+  group_by(confounder, exposure) %>% #<<
+  summarise(avg_y = mean(outcome)) %>%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %>% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+--
+
+* `r emo::ji("tada")`
+
+---
+
+class: inverse, center, middle
+
+# Two binary confounders
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r}
+n <- 1000
+sim2 <- tibble(
+  confounder_1 = rbinom(n, 1, 0.5),
+  confounder_2 = rbinom(n, 1, 0.5), #<<
+  
+  p_exposure = case_when(
+    confounder_1 == 1 & confounder_2 == 1 ~ 0.75,
+    confounder_1 == 0 & confounder_2 == 1 ~ 0.9,
+    confounder_1 == 1 & confounder_2 == 0 ~ 0.2,
+    confounder_1 == 0 & confounder_2 == 0 ~ 0.1,
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder_1 + confounder_2 + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+```{r, echo = FALSE}
+sim2 %>%
+  select(confounder_1, confounder_2, exposure, outcome)
+```
+]
+]
+
+---
+
+# Simulation
+
+```{r}
+lm(outcome ~ exposure, data = sim2)
+```
+
+---
+
+# Simulation
+
+```{r}
+sim2 %>%
+  group_by(confounder_1, confounder_2, exposure) %>% #<<
+  summarise(avg_y = mean(outcome)) %>%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %>% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+```{r}
+n <- 100000 #<<
+sim2 <- tibble(
+  confounder_1 = rbinom(n, 1, 0.5),
+  confounder_2 = rbinom(n, 1, 0.5), 
+  
+  p_exposure = case_when(
+    confounder_1 == 1 & confounder_2 == 1 ~ 0.75,
+    confounder_1 == 0 & confounder_2 == 1 ~ 0.9,
+    confounder_1 == 1 & confounder_2 == 0 ~ 0.2,
+    confounder_1 == 0 & confounder_2 == 0 ~ 0.1,
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder_1 + confounder_2 + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+```{r, echo = FALSE}
+sim2 %>%
+  select(confounder_1, confounder_2, exposure, outcome)
+```
+]
+]
+
+---
+
+# Simulation
+
+```{r}
+lm(outcome ~ exposure, data = sim2)
+```
+
+---
+
+# Simulation
+
+```{r}
+sim2 %>%
+  group_by(confounder_1, confounder_2, exposure) %>% #<<
+  summarise(avg_y = mean(outcome)) %>%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %>% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+---
+
+class: inverse, center, middle
+
+# Continuous confounder?
+
+---
+
+
+# Simulation
+
+.pull-left[
+.small[
+```{r}
+n <- 10000 
+sim3 <- tibble(
+  confounder = rnorm(n), #<<
+  p_exposure = exp(confounder) / (1 + exp(confounder)),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+```{r, echo = FALSE}
+sim3 %>%
+  select(confounder, exposure, outcome)
+```
+]
+]
+
+---
+
+# Simulation
+
+```{r}
+lm(outcome ~ exposure, data = sim3)
+```
+
+---
+
+# Simulation
+
+```{r}
+sim3 %>%
+  mutate(confounder_q = ntile(confounder, 5)) %>% #<<
+  group_by(confounder_q, exposure) %>%
+  summarise(avg_y = mean(outcome)) %>%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %>% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+---
+
+class: inverse, center, middle
+
+# What if we could come up with a **summary score** of all confounders?
+

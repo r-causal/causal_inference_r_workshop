@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Causal Inference with group_by and summarise</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lucy D’Agostino McGowan" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Causal Inference with <code>group_by</code> and <code>summarise</code>
+### Lucy D’Agostino McGowan
+### Wake Forest University
+### 2022-07-23 (updated: 2022-07-23)
+
+---
+
+
+
+
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+**Goal**: To answer a research question
+
+![](img/obs-studies-2.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized.png)
+
+---
+class: inverse
+
+## ~~Observational Studies~~
+### **Randomized Controlled Trial**
+
+![](img/randomized-2.png)
+
+---
+class: inverse
+
+## Observational Studies
+
+![](img/obs-studies-3.png)
+
+---
+class: inverse
+
+![](img/trt.png)
+
+---
+class: inverse
+
+![](img/trt-conf.png)
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-2.png)
+
+---
+class: inverse
+
+## Confounding
+
+![](img/conf-3.png)
+
+---
+
+class: inverse, center, middle
+
+# One binary confounder
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 1000
+sim &lt;- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+
+```
+## # A tibble: 1,000 × 3
+##    confounder exposure outcome
+##         &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1          0        0  1.13  
+##  2          0        0  1.11  
+##  3          1        1  0.129 
+##  4          1        0  1.21  
+##  5          0        0  0.0694
+##  6          1        1 -0.663 
+##  7          1        1  1.81  
+##  8          1        1 -0.912 
+##  9          1        0 -0.247 
+## 10          0        0  0.998 
+## # … with 990 more rows
+```
+
+]
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+*n &lt;- 1000
+sim &lt;- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+
+```
+## # A tibble: 1,000 × 3
+##    confounder exposure outcome
+##         &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1          0        0  1.13  
+##  2          0        0  1.11  
+##  3          1        1  0.129 
+##  4          1        0  1.21  
+##  5          0        0  0.0694
+##  6          1        1 -0.663 
+##  7          1        1  1.81  
+##  8          1        1 -0.912 
+##  9          1        0 -0.247 
+## 10          0        0  0.998 
+## # … with 990 more rows
+```
+
+]
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 1000
+sim &lt;- tibble(
+* confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+
+```
+## # A tibble: 1,000 × 3
+##    confounder exposure outcome
+##         &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1          0        0  1.13  
+##  2          0        0  1.11  
+##  3          1        1  0.129 
+##  4          1        0  1.21  
+##  5          0        0  0.0694
+##  6          1        1 -0.663 
+##  7          1        1  1.81  
+##  8          1        1 -0.912 
+##  9          1        0 -0.247 
+## 10          0        0  0.998 
+## # … with 990 more rows
+```
+
+]
+
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 1000
+sim &lt;- tibble(
+  confounder = rbinom(n, 1, 0.5),
+* p_exposure = case_when(
+*   confounder == 1 ~ 0.75,
+*   confounder == 0 ~ 0.25
+* ),
+* exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+
+```
+## # A tibble: 1,000 × 3
+##    confounder exposure outcome
+##         &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1          0        0  1.13  
+##  2          0        0  1.11  
+##  3          1        1  0.129 
+##  4          1        0  1.21  
+##  5          0        0  0.0694
+##  6          1        1 -0.663 
+##  7          1        1  1.81  
+##  8          1        1 -0.912 
+##  9          1        0 -0.247 
+## 10          0        0  0.998 
+## # … with 990 more rows
+```
+
+]
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 1000
+sim &lt;- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+* outcome = confounder + rnorm(n)
+)
+```
+]
+]
+
+.pull-right[
+
+```
+## # A tibble: 1,000 × 3
+##    confounder exposure outcome
+##         &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1          0        0  1.13  
+##  2          0        0  1.11  
+##  3          1        1  0.129 
+##  4          1        0  1.21  
+##  5          0        0  0.0694
+##  6          1        1 -0.663 
+##  7          1        1  1.81  
+##  8          1        1 -0.912 
+##  9          1        0 -0.247 
+## 10          0        0  0.998 
+## # … with 990 more rows
+```
+
+]
+
+---
+
+# Simulation
+
+
+```r
+lm(outcome ~ exposure, data = sim)
+```
+
+```
+## 
+## Call:
+## lm(formula = outcome ~ exposure, data = sim)
+## 
+## Coefficients:
+## (Intercept)     exposure  
+##      0.2688       0.4070
+```
+
+---
+# Simulation
+
+
+```r
+sim %&gt;%
+  group_by(exposure) %&gt;%
+  summarise(avg_y = mean(outcome))
+```
+
+```
+## # A tibble: 2 × 2
+##   exposure avg_y
+##      &lt;int&gt; &lt;dbl&gt;
+## 1        0 0.269
+## 2        1 0.676
+```
+
+---
+
+# Simulation
+
+
+```r
+sim %&gt;%
+* group_by(exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) 
+```
+
+```
+## # A tibble: 2 × 2
+##   exposure avg_y
+##      &lt;int&gt; &lt;dbl&gt;
+## 1        0 0.269
+## 2        1 0.676
+```
+---
+
+# Simulation
+
+
+```r
+sim %&gt;%
+  group_by(exposure) %&gt;%
+* summarise(avg_y = mean(outcome))
+```
+
+```
+## # A tibble: 2 × 2
+##   exposure avg_y
+##      &lt;int&gt; &lt;dbl&gt;
+## 1        0 0.269
+## 2        1 0.676
+```
+
+
+---
+
+# Simulation
+
+
+```r
+sim %&gt;%
+  group_by(exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) %&gt;%
+  pivot_wider(names_from = exposure, 
+              values_from = avg_y,  
+              names_prefix = "x_") %&gt;% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+```
+## # A tibble: 1 × 1
+##   estimate
+##      &lt;dbl&gt;
+## 1    0.407
+```
+---
+
+# Simulation
+
+
+```r
+sim %&gt;%
+* group_by(confounder, exposure) %&gt;%
+  summarise(avg_y = mean(outcome))
+```
+
+```
+## # A tibble: 4 × 3
+## # Groups:   confounder [2]
+##   confounder exposure    avg_y
+##        &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt;
+## 1          0        0 -0.00907
+## 2          0        1 -0.0166 
+## 3          1        0  1.09   
+## 4          1        1  0.936
+```
+
+---
+
+# Simulation
+
+
+```r
+sim %&gt;%
+* group_by(confounder, exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) %&gt;%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %&gt;% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+```
+## # A tibble: 2 × 2
+##   confounder estimate
+##        &lt;int&gt;    &lt;dbl&gt;
+## 1          0 -0.00752
+## 2          1 -0.151
+```
+
+--
+
+* 🎉
+
+---
+
+class: inverse, center, middle
+
+# Two binary confounders
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 1000
+sim2 &lt;- tibble(
+  confounder_1 = rbinom(n, 1, 0.5),
+* confounder_2 = rbinom(n, 1, 0.5),
+  
+  p_exposure = case_when(
+    confounder_1 == 1 &amp; confounder_2 == 1 ~ 0.75,
+    confounder_1 == 0 &amp; confounder_2 == 1 ~ 0.9,
+    confounder_1 == 1 &amp; confounder_2 == 0 ~ 0.2,
+    confounder_1 == 0 &amp; confounder_2 == 0 ~ 0.1,
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder_1 + confounder_2 + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+
+```
+## # A tibble: 1,000 × 4
+##    confounder_1 confounder_2 exposure outcome
+##           &lt;int&gt;        &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1            0            0        0   0.521
+##  2            1            0        0   1.38 
+##  3            0            0        0  -0.624
+##  4            0            1        1   0.427
+##  5            1            0        1   1.31 
+##  6            0            0        0  -0.707
+##  7            1            1        1   2.52 
+##  8            1            0        0   1.45 
+##  9            0            0        0  -0.505
+## 10            0            1        1   0.793
+## # … with 990 more rows
+```
+]
+]
+
+---
+
+# Simulation
+
+
+```r
+lm(outcome ~ exposure, data = sim2)
+```
+
+```
+## 
+## Call:
+## lm(formula = outcome ~ exposure, data = sim2)
+## 
+## Coefficients:
+## (Intercept)     exposure  
+##      0.6395       0.6951
+```
+
+---
+
+# Simulation
+
+
+```r
+sim2 %&gt;%
+* group_by(confounder_1, confounder_2, exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) %&gt;%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %&gt;% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+```
+## # A tibble: 4 × 3
+## # Groups:   confounder_1 [2]
+##   confounder_1 confounder_2 estimate
+##          &lt;int&gt;        &lt;int&gt;    &lt;dbl&gt;
+## 1            0            0 -0.309  
+## 2            0            1  0.0466 
+## 3            1            0 -0.0271 
+## 4            1            1 -0.00275
+```
+
+---
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+*n &lt;- 100000
+sim2 &lt;- tibble(
+  confounder_1 = rbinom(n, 1, 0.5),
+  confounder_2 = rbinom(n, 1, 0.5), 
+  
+  p_exposure = case_when(
+    confounder_1 == 1 &amp; confounder_2 == 1 ~ 0.75,
+    confounder_1 == 0 &amp; confounder_2 == 1 ~ 0.9,
+    confounder_1 == 1 &amp; confounder_2 == 0 ~ 0.2,
+    confounder_1 == 0 &amp; confounder_2 == 0 ~ 0.1,
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder_1 + confounder_2 + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+
+```
+## # A tibble: 100,000 × 4
+##    confounder_1 confounder_2 exposure outcome
+##           &lt;int&gt;        &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1            1            1        1   2.35 
+##  2            1            1        0   3.71 
+##  3            0            0        0   2.08 
+##  4            0            1        1   0.516
+##  5            0            0        0  -0.166
+##  6            1            1        1   1.58 
+##  7            0            0        0   0.472
+##  8            1            0        0   3.22 
+##  9            0            1        1   0.929
+## 10            0            1        1   1.41 
+## # … with 99,990 more rows
+```
+]
+]
+
+---
+
+# Simulation
+
+
+```r
+lm(outcome ~ exposure, data = sim2)
+```
+
+```
+## 
+## Call:
+## lm(formula = outcome ~ exposure, data = sim2)
+## 
+## Coefficients:
+## (Intercept)     exposure  
+##      0.6782       0.6561
+```
+
+---
+
+# Simulation
+
+
+```r
+sim2 %&gt;%
+* group_by(confounder_1, confounder_2, exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) %&gt;%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %&gt;% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+```
+## # A tibble: 4 × 3
+## # Groups:   confounder_1 [2]
+##   confounder_1 confounder_2 estimate
+##          &lt;int&gt;        &lt;int&gt;    &lt;dbl&gt;
+## 1            0            0  0.00565
+## 2            0            1  0.0466 
+## 3            1            0  0.0185 
+## 4            1            1  0.00388
+```
+
+---
+
+class: inverse, center, middle
+
+# Continuous confounder?
+
+---
+
+
+# Simulation
+
+.pull-left[
+.small[
+
+```r
+n &lt;- 10000 
+sim3 &lt;- tibble(
+* confounder = rnorm(n),
+  p_exposure = exp(confounder) / (1 + exp(confounder)),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n) 
+)
+```
+]
+]
+
+.pull-right[
+.small[
+
+```
+## # A tibble: 10,000 × 3
+##    confounder exposure outcome
+##         &lt;dbl&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1     -0.167        0  -0.560
+##  2      0.252        1   0.628
+##  3     -0.321        1  -0.608
+##  4      0.621        0   1.58 
+##  5     -0.619        1   0.358
+##  6     -0.897        0  -1.95 
+##  7     -2.01         0  -2.50 
+##  8      0.296        0  -1.10 
+##  9     -0.504        1  -0.316
+## 10     -0.536        1   1.12 
+## # … with 9,990 more rows
+```
+]
+]
+
+---
+
+# Simulation
+
+
+```r
+lm(outcome ~ exposure, data = sim3)
+```
+
+```
+## 
+## Call:
+## lm(formula = outcome ~ exposure, data = sim3)
+## 
+## Coefficients:
+## (Intercept)     exposure  
+##     -0.4036       0.8152
+```
+
+---
+
+# Simulation
+
+
+```r
+sim3 %&gt;%
+* mutate(confounder_q = ntile(confounder, 5)) %&gt;%
+  group_by(confounder_q, exposure) %&gt;%
+  summarise(avg_y = mean(outcome)) %&gt;%
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") %&gt;% 
+  summarise(estimate = x_1 - x_0) 
+```
+
+```
+## # A tibble: 5 × 2
+##   confounder_q estimate
+##          &lt;int&gt;    &lt;dbl&gt;
+## 1            1   0.104 
+## 2            2  -0.0293
+## 3            3   0.0201
+## 4            4   0.0674
+## 5            5   0.201
+```
+
+---
+
+class: inverse, center, middle
+
+# What if we could come up with a **summary score** of all confounders?
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
