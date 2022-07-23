@@ -340,6 +340,7 @@ ggplot(d) +
   geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
 ```
 
+---
 
 ## ATT
 
