@@ -30,7 +30,7 @@ fit_ipw <- function(split, ...) {
   
   # calculate ATE weights
 
-  # fit correctly bootsrapped ipw model 
+  # fit correctly bootstrapped ipw model 
   lm(___ ~ ___, data = .df, weights = ___) %>% 
     tidy() 
 }

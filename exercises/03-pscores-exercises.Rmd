@@ -74,7 +74,7 @@ Here's a data dictionary of the variables we need in the `seven_dwarfs` data set
 
 | Variable                       | Column in `seven_dwarfs` |
 |--------------------------------|--------------------------|
-| Wait Time (outcome)            | `avg_sactmin`            |
+| Posted Wait Time (outcome)     | `avg_spostmin`           |
 | Extra Magic Morning (exposure) | `extra_magic_morning`    |
 | Ticket Season                  | `wdw_ticket_season`      |
 | Closing Time                   | `close`                  |

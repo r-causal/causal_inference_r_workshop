@@ -4,28 +4,20 @@
     <title>Fitting the outcome model</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/countdown/countdown.css" rel="stylesheet" />
-    <script src="libs/countdown/countdown.js"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/countdown-0.3.5/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.3.5/countdown.js"></script>
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-.title[
 # Fitting the outcome model
-]
-.author[
 ### Lucy D’Agostino McGowan
-]
-.institute[
 ### Wake Forest University
-]
-.date[
-### 2021-09-01 (updated: 2022-06-07)
-]
+### 2021-09-01 (updated: 2022-07-23)
 
 ---
 
@@ -254,11 +246,11 @@ ipw_results &lt;- bootstraps(df, 1000, apparent = TRUE) %&gt;%
 
 ## Your Turn
 
-<div class="countdown" id="timer_629fe193" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62dc1145" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">12</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
-1. Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `qsmk` and `wt82_71`
+1. Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 5pm and 6pm.
 
 2. Using the `bootstraps()` and `int_t()` functions to estimate the final effect.
 
@@ -314,19 +306,6 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
-// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
-// screen reader (see PR #262)
-(function(d) {
-  let res = {};
-  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
-    const t = tr.querySelector('td:nth-child(2)').innerText;
-    tr.querySelectorAll('td:first-child .key').forEach(key => {
-      const k = key.innerText;
-      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
-    });
-  });
-  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
-})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
