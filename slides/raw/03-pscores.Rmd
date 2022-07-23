@@ -20,40 +20,7 @@ output:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
 ```
 
-class: inverse
 
-## Observational Studies
-
-**Goal**: To answer a research question
-
-![](img/obs-studies.png)
-
----
-class: inverse
-
-## Observational Studies
-
-**Goal**: To answer a research question
-
-![](img/obs-studies-2.png)
-
----
-class: inverse
-
-## ~~Observational Studies~~
-### **Randomized Controlled Trial**
-
-![](img/randomized.png)
-
----
-class: inverse
-
-## ~~Observational Studies~~
-### **Randomized Controlled Trial**
-
-![](img/randomized-2.png)
-
----
 class: inverse
 
 ## Observational Studies
@@ -118,7 +85,7 @@ library(broom)
 ```{r, eval = FALSE}
 glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
     data = df,
-    family = binomial())
+    family = binomial())
 ```
 
 ---
