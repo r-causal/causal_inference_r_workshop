@@ -29,7 +29,8 @@
     G-Computation](https://causal-inference-r-workshop.netlify.app/07-g-computation.html)
 -   [11 Tipping Point Sensitivity
     Analyses](https://causal-inference-r-workshop.netlify.app/08-tipr.html)
--   [12 Whole Game (Your Turn)]()
+-   [12 Whole Game (Your
+    Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)
 
 ### Installing materials locally
 
