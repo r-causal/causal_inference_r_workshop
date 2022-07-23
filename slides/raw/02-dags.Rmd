@@ -401,6 +401,21 @@ cancer ~ coffee + smoking
 
 ---
 
+# Choosing what variables to include
+
+## Adjustment sets and domain knowledge
+## Conduct sensitivity analysis if you don't have something important
+
+---
+
+# Common trip ups
+
+## The 10% rule
+## Predictors of the outcome, predictors of the exposure 
+## Selection bias and colliders (more later!)
+
+---
+
 class: inverse
 
 # Resources: ggdag vignettes
