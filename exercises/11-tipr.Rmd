@@ -8,7 +8,7 @@ output: html_document
 library(tipr)
 ```
 
-We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **expsoure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**.
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
 
 ## Your turn
 
