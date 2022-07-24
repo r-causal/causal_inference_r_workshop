@@ -112,7 +112,7 @@ smk_wt_dag <- dagify(
     "smokeintensity" = "smoking\nintensity",
     "smokeyrs" = "yrs of\nsmoking"
   )
-) %>% tidy_dagitty(laout = "star")
+) %>% tidy_dagitty(layout = "star")
 
 smk_wt_dag
 ```
