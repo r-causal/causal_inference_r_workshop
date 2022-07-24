@@ -8,8 +8,9 @@ library(tidyverse)
 library(broom)
 library(rsample)
 library(ggdag)
-library(causaldata)
 library(tipr)
+library(tidysmd)
+library(ggecdf)
 ```
 
 ## Whole Game 2: Malaria and Mosquito Nets
