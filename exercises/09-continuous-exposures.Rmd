@@ -17,22 +17,22 @@ In the touringplans data set, we have information about the posted waiting times
 library(ggdag)
 
 coord_dag <- list(
-  x = c(Season = -1, close = -1, weather = -2, extra = 0, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather = 0.25, extra = 0, x = 0, y = 0)
+  x = c(wdw_ticket_season = -1, close = -1, weather_wdwhigh = -2, extra_magic_morning = 0, avg_spostmin = 1, avg_sactmin = 2),
+  y = c(wdw_ticket_season = -1, close = 1, weather_wdwhigh = 0.25, extra_magic_morning = 0, avg_spostmin = 0, avg_sactmin = 0)
 )
 
 labels <- c(
-  extra = "Extra Magic Morning",
-  x = "Average posted wait ",
-  y = "Average actual wait",
-  Season = "Ticket Season",
-  weather = "Historic high temperature",
+  avg_sactmin = "Average actual wait",
+  avg_spostmin = "Average posted wait ",
+  extra_magic_morning = "Extra Magic Morning",
+  wdw_ticket_season = "Ticket Season",
+  weather_wdwhigh = "Historic high temperature",
   close = "Time park closed"
 )
 
 wait_time_dag <- dagify(
-  y ~ x + close + Season + weather + extra,
-  x ~ weather + close + Season + extra,
+  avg_sactmin ~ avg_spostmin + close + wdw_ticket_season + weather_wdwhigh + extra_magic_morning,
+  avg_spostmin ~ weather_wdwhigh + close + wdw_ticket_season + extra_magic_morning,
   coords = coord_dag,
   labels = labels
 )

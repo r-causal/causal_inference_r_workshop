@@ -58,7 +58,7 @@ predicted_no <- standardized_model %>%
 Finally, we'll get the mean differences between the values. 
 
 1. Bind `predicted_yes` and  `predicted_no` using `bind_cols()`
-2. Summarize the predicted values to create three new variables: `mean_yes`, `mean_no`, and `difference`. The first two should be the means of `mean_yes` and `mean_no`. `difference` should be `mean_yes` minus `mean_no`.
+2. Summarize the predicted values to create three new variables: `mean_yes`, `mean_no`, and `difference`. The first two should be the means of `yes_extra_hours` and `no_extra_hours`. `difference` should be `mean_yes` minus `mean_no`.
 
 ```{r}
 _______ %>% 
