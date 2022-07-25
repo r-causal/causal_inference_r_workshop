@@ -68,7 +68,7 @@ class: middle, center, inverse
 
 ---
 
-1. Adjusting for baseline confounders can make an estimate *more efficient*
+1. Adjusting for baseline covariates can make an estimate *more efficient*
 
 --
 

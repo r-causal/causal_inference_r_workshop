@@ -4,26 +4,18 @@
     <title>When Standard Methods Succeed</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-.title[
 # When Standard Methods Succeed
-]
-.author[
 ### Lucy D’Agostino McGowan
-]
-.institute[
 ### Wake Forest University
-]
-.date[
-### 2022-07-05 (updated: 2022-07-23)
-]
+### 2022-07-05 (updated: 2022-07-25)
 
 ---
 
@@ -81,7 +73,7 @@ class: middle, center, inverse
 
 ---
 
-1. Adjusting for baseline confounders can make an estimate *more efficient*
+1. Adjusting for baseline covariates can make an estimate *more efficient*
 
 --
 
@@ -129,7 +121,7 @@ lm(y ~ treatment, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -258,8 +250,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_group_heading {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -306,8 +298,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -359,8 +351,8 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -375,8 +367,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_last_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -388,15 +380,15 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #kbamwlccdi .gt_first_grand_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -434,8 +426,8 @@ lm(y ~ treatment, data = data)
 #kbamwlccdi .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -456,8 +448,8 @@ lm(y ~ treatment, data = data)
 
 #kbamwlccdi .gt_sourcenote {
   font-size: 90%;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -580,7 +572,7 @@ lm(y ~ treatment + weight + age, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -709,8 +701,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_group_heading {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -757,8 +749,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -810,8 +802,8 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -826,8 +818,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_last_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -839,15 +831,15 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #rrycjcqdkv .gt_first_grand_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -885,8 +877,8 @@ lm(y ~ treatment + weight + age, data = data)
 #rrycjcqdkv .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -907,8 +899,8 @@ lm(y ~ treatment + weight + age, data = data)
 
 #rrycjcqdkv .gt_sourcenote {
   font-size: 90%;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1058,7 +1050,7 @@ lm(y ~ treatment, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1187,8 +1179,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_group_heading {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -1235,8 +1227,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1288,8 +1280,8 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1304,8 +1296,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_last_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -1317,15 +1309,15 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #odaqhstiss .gt_first_grand_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -1363,8 +1355,8 @@ lm(y ~ treatment, data = data)
 #odaqhstiss .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1385,8 +1377,8 @@ lm(y ~ treatment, data = data)
 
 #odaqhstiss .gt_sourcenote {
   font-size: 90%;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1509,7 +1501,7 @@ lm(y ~ treatment + weight + age, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1638,8 +1630,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_group_heading {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -1686,8 +1678,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1739,8 +1731,8 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1755,8 +1747,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_last_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -1768,15 +1760,15 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #cxwxixnzbo .gt_first_grand_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -1814,8 +1806,8 @@ lm(y ~ treatment + weight + age, data = data)
 #cxwxixnzbo .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1836,8 +1828,8 @@ lm(y ~ treatment + weight + age, data = data)
 
 #cxwxixnzbo .gt_sourcenote {
   font-size: 90%;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -2020,19 +2012,6 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
-// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
-// screen reader (see PR #262)
-(function(d) {
-  let res = {};
-  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
-    const t = tr.querySelector('td:nth-child(2)').innerText;
-    tr.querySelectorAll('td:first-child .key').forEach(key => {
-      const k = key.innerText;
-      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
-    });
-  });
-  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
-})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
