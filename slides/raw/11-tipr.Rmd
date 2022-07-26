@@ -243,6 +243,6 @@ in the exposed population and unexposed population: 0.3*
 
 ## Your turn
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 5)`
 
 1. Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
