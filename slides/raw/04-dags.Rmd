@@ -189,7 +189,7 @@ dagify(
 
 ---
 
-## Your Turn 1 (**`02-dags-exercises.Rmd`**)
+## Your Turn 1 (**`04-dags-exercises.Rmd`**)
 
 ### Specify a DAG with `dagify()`. Write your assumption that `smoking` causes `cancer` as a formula. 
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
