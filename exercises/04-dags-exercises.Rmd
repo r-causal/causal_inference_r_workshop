@@ -67,6 +67,8 @@ Now that we know the open, confounding pathways (sometimes called "backdoor path
 1. Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 2. Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
+Stretch goal: Use `dagitty::adjustmentSets()` to print the adjustment sets to the console.
+
 Stretch goal: Sometimes, we know a variable plays a vital role in a causal diagram but we can't measure it, or we simply don't have it in our data set. You can tell {ggdag} that a variable is unmeasured with the `latent` argument in `dagify()`. Re-run the `dagify()` call above, but set `latent = "addictive"` (meaning we can't or haven't measured this variable). Plot it with `ggdag_adjustment_set()`. What's different? Now, try setting `latent = c("addictive", "smoking")` and plotting the adjustment set. What do the results mean?
 
 ```{r}

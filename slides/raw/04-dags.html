@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### RStudio, PBC
 ]
 .date[
-### 2021-09-01 (updated: 2022-07-23)
+### 2021-09-01 (updated: 2022-08-05)
 ]
 
 ---
@@ -125,7 +125,7 @@ dagify(
 # Step 1: Specify your DAG
 
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -145,17 +145,17 @@ dagify(
 # Step 1: Specify your DAG
 
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Your Turn 1 (**`02-dags-exercises.Rmd`**)
+## Your Turn 1 (**`04-dags-exercises.Rmd`**)
 
 ### Specify a DAG with `dagify()`. Write your assumption that `smoking` causes `cancer` as a formula. 
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
 
-<div class="countdown" id="timer_62dca16a" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62ed6de9" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -188,7 +188,7 @@ coffee_cancer_dag &lt;- dagify(
 ggdag(coffee_cancer_dag)
 ```
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -227,7 +227,7 @@ ggdag_paths(smk_wt_dag)
 
 ---
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -236,7 +236,7 @@ ggdag_paths(smk_wt_dag)
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
 
-<div class="countdown" id="timer_62dca04b" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62ed6f25" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -267,6 +267,7 @@ coffee_cancer_dag %&gt;%
 ## 5 1     smoking   -1.42  2.32  -&gt;        canc… -0.456  3.06 
 ## # … with 3 more variables: circular &lt;lgl&gt;, label &lt;chr&gt;,
 ## #   path &lt;chr&gt;
+## # ℹ Use `colnames()` to see all variable names
 ```
 
 ---
@@ -277,7 +278,7 @@ coffee_cancer_dag %&gt;%
   ggdag_paths()
 ```
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -312,7 +313,23 @@ ggdag_adjustment_set(smk_wt_dag)
 
 ---
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Identifying adjustment sets
+
+
+```r
+library(dagitty)
+adjustmentSets(smk_wt_dag)
+```
+
+```
+## { active, age, education, exercise, race, sex, smokeintensity,
+##   smokeyrs, wt71 }
+```
+
 
 ---
 
@@ -323,7 +340,7 @@ ggdag_adjustment_set(smk_wt_dag)
 #### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 #### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-<div class="countdown" id="timer_62dca276" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62ed6f00" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -342,7 +359,7 @@ ggdag_adjustment_set(
 
 ---
 
-&lt;img src="04-dags_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
