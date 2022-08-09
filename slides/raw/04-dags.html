@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### RStudio, PBC
 ]
 .date[
-### 2021-09-01 (updated: 2022-08-05)
+### 2021-09-01 (updated: 2022-08-09)
 ]
 
 ---
@@ -155,7 +155,7 @@ dagify(
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
 
-<div class="countdown" id="timer_62ed6de9" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62f27c74" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -236,7 +236,7 @@ ggdag_paths(smk_wt_dag)
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
 
-<div class="countdown" id="timer_62ed6f25" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62f27e56" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -340,7 +340,7 @@ adjustmentSets(smk_wt_dag)
 #### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 #### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-<div class="countdown" id="timer_62ed6f00" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_62f27bb7" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -370,6 +370,53 @@ ggdag_adjustment_set(
 cancer ~ coffee + addictive
 cancer ~ coffee + smoking
 ```
+
+---
+
+# Let's prove it!
+
+
+```r
+set.seed(1234)
+dag_data &lt;- coffee_cancer_dag |&gt; 
+  simulate_data()
+```
+
+---
+
+# Let's prove it!
+
+
+
+```r
+dag_data
+```
+
+```
+## # A tibble: 500 × 4
+##    addictive  cancer  coffee smoking
+##        &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1    -1.54   0.0933 -0.578    0.833
+##  2    -0.567 -1.19    0.561   -0.381
+##  3     0.284 -0.0642 -1.65    -0.610
+##  4    -1.03  -0.562   0.226    0.175
+##  5     0.637  0.0394 -0.898    1.90 
+##  6     0.318 -2.13   -0.865    0.429
+##  7     1.75   0.695  -0.0310  -0.223
+##  8     1.32  -1.49    0.607    1.28 
+##  9     1.43   1.11   -1.89    -0.125
+## 10     1.08  -0.206   0.679   -0.801
+## # … with 490 more rows
+## # ℹ Use `print(n = ...)` to see more rows
+```
+
+---
+
+# Let's prove it!
+
+&lt;img src="04-dags_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+
+
 
 ---
 

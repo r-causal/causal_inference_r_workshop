@@ -411,6 +411,57 @@ cancer ~ coffee + smoking
 
 ---
 
+# Let's prove it!
+
+```{r}
+set.seed(1234)
+dag_data <- coffee_cancer_dag |> 
+  simulate_data(-.6)
+```
+
+---
+
+# Let's prove it!
+
+
+```{r}
+dag_data
+```
+
+---
+
+# Let's prove it!
+
+```{r}
+#| echo: false
+
+fit_model <- function(fmla) {
+  lm(fmla, data = dag_data) |> 
+    broom::tidy(conf.int = TRUE) |> 
+    dplyr::filter(term == "coffee") |> 
+    dplyr::mutate(formula = as.character(fmla)[3]) |> 
+    dplyr::select(formula, estimate, conf.low, conf.high)
+}
+
+bind_rows(
+  fit_model(cancer ~ coffee),
+  fit_model(cancer ~ coffee + smoking),
+  fit_model(cancer ~ coffee + addictive)
+) |> 
+  ggplot(aes(x = estimate, y = formula, xmin = conf.low, xmax = conf.high)) +
+  geom_vline(xintercept = 0, size = 1, color = "grey80") + 
+  geom_pointrange(color = "steelblue", fatten = 3, size = 1) +
+  theme_minimal(18) +
+  labs(
+    y = NULL,
+    caption = "correct effect size: 0"
+  )
+```
+
+
+
+---
+
 # Choosing what variables to include
 
 ## Adjustment sets and domain knowledge
