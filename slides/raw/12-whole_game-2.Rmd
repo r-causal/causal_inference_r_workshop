@@ -52,15 +52,24 @@ net_data
 # Proposed DAG
 
 ```{r, echo = FALSE}
-mosquito_dag <- dagify(mal ~ net + inc + hlth,
-                       net ~ inc + hlth,
-                       hlth ~ inc,
-                       coords = list(x = c(mal = 4, net = 1, inc = 2, hlth = 3),
-                                     y = c(mal = 1, net = 1, inc = 2, hlth = 2)),
-                       exposure = "net",
-                       outcome = "mal")
+mosquito_dag <- dagify(
+  malaria_risk ~ net + income + health + temperature + resistance,
+  net ~ income + health + temperature + eligible + household,
+  eligible ~ income + household,
+  health ~ income,
+  exposure = "net",
+  outcome = "malaria_risk",
+  coords = list(x = c(malaria_risk = 7, net = 3, income = 4, health = 5,
+                      temperature = 6, resistance = 8.5, eligible = 2, household = 1),
+                y = c(malaria_risk = 2, net = 2, income = 3, health = 1,
+                      temperature = 3, resistance = 2, eligible = 3, household = 2)),
+  labels = c(malaria_risk = "Risk of malaria", net = "Mosquito net", income = "Income",
+             health = "Health", temperature = "Nighttime temperatures",
+             resistance = "Insecticide resistance",
+             eligible = "Eligible for program", household = "Number in household")
+)
 
-ggdag_status(mosquito_dag) +
+ggdag_status(mosquito_dag, use_labels = "label", text = FALSE) +
   guides(color = "none") +
   theme_dag() +
   labs(caption = "Thanks to Andrew Heiss for the data!") +
