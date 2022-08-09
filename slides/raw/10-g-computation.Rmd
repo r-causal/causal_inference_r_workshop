@@ -246,6 +246,54 @@ ggdag_adjust(
 
 ---
 
+# Let's prove it!
+
+```{r}
+set.seed(1234)
+collider_data <- collider_triangle() |> 
+  simulate_data(-.6)
+```
+
+---
+
+# Let's prove it!
+
+
+```{r}
+collider_data
+```
+
+---
+
+# Let's prove it!
+
+```{r}
+#| echo: false
+
+fit_model <- function(fmla) {
+  lm(fmla, data = collider_data) |> 
+    broom::tidy(conf.int = TRUE) |> 
+    dplyr::filter(term == "x") |> 
+    dplyr::mutate(formula = as.character(fmla)[3]) |> 
+    dplyr::select(formula, estimate, conf.low, conf.high)
+}
+
+bind_rows(
+  fit_model(y ~ x),
+  fit_model(y ~ x + m)
+) |> 
+  ggplot(aes(x = estimate, y = formula, xmin = conf.low, xmax = conf.high)) +
+  geom_vline(xintercept = 0, size = 1, color = "grey80") + 
+  geom_pointrange(color = "steelblue", fatten = 3, size = 1) +
+  theme_minimal(18) +
+  labs(
+    y = NULL,
+    caption = "correct effect size: 0"
+  )
+```
+
+---
+
 ## Loss to follow-up
 
 ```{r, echo=FALSE}

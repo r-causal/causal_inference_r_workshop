@@ -359,6 +359,16 @@ ggdag_adjustment_set(smk_wt_dag)
 
 ---
 
+# Identifying adjustment sets
+
+```{r}
+library(dagitty)
+adjustmentSets(smk_wt_dag)
+```
+
+
+---
+
 ## Your Turn 3
 
 #### Now that we know the open, confounding pathways (sometimes called "backdoor paths"), we need to know how to close them! First, we'll ask {ggdag} for adjustment sets, then we would need to do something in our analysis to account for at least one adjustment set (e.g. multivariable regression, weighting, or matching for the adjustment sets).
@@ -398,6 +408,57 @@ ggdag_adjustment_set(
 cancer ~ coffee + addictive
 cancer ~ coffee + smoking
 ```
+
+---
+
+# Let's prove it!
+
+```{r}
+set.seed(1234)
+dag_data <- coffee_cancer_dag |> 
+  simulate_data(-.6)
+```
+
+---
+
+# Let's prove it!
+
+
+```{r}
+dag_data
+```
+
+---
+
+# Let's prove it!
+
+```{r}
+#| echo: false
+
+fit_model <- function(fmla) {
+  lm(fmla, data = dag_data) |> 
+    broom::tidy(conf.int = TRUE) |> 
+    dplyr::filter(term == "coffee") |> 
+    dplyr::mutate(formula = as.character(fmla)[3]) |> 
+    dplyr::select(formula, estimate, conf.low, conf.high)
+}
+
+bind_rows(
+  fit_model(cancer ~ coffee),
+  fit_model(cancer ~ coffee + smoking),
+  fit_model(cancer ~ coffee + addictive)
+) |> 
+  ggplot(aes(x = estimate, y = formula, xmin = conf.low, xmax = conf.high)) +
+  geom_vline(xintercept = 0, size = 1, color = "grey80") + 
+  geom_pointrange(color = "steelblue", fatten = 3, size = 1) +
+  theme_minimal(18) +
+  labs(
+    y = NULL,
+    caption = "correct effect size: 0"
+  )
+```
+
+
 
 ---
 
