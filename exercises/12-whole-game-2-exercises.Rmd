@@ -27,15 +27,24 @@ To answer this question, we'll use the causal inference methods we learned in th
 6. Conduct a sensitivity analysis
 
 We'll use simulated data, `net_data`, from the {causalworkshop} package, which includes ten variables: 
-* `id`: an ID variable
-* `net` and `net_num`: a binary variable indicating if the participant used a net (1) or didn't use a net (0)
-* `malaria_risk`: a risk of malaria scale ranging from 0-100
-* `income`: weekly income, measured in dollars
-* `health`: a health score scale ranging from 0–100
-* `household`: number of people living in the household
-* `eligible`: a binary variable indicating if the household is eligible for the free net program.
-* `temperature`: the average temperature at night, in Celsius
-* `resistance`: Some strains of mosquitoes are more resistant to insecticide and thus pose a higher risk of infecting people with malaria. This is measured on a scale of 0–100, with higher values indicating higher resistance.
+`id`
+:    an ID variable
+`net` and `net_num`
+:    a binary variable indicating if the participant used a net (1) or didn't use a net (0)
+`malaria_risk`
+:    a risk of malaria scale ranging from 0-100
+`income`
+:    weekly income, measured in dollars
+`health`
+:    a health score scale ranging from 0–100
+`household`
+:    number of people living in the household
+`eligible`
+:    a binary variable indicating if the household is eligible for the free net program.
+`temperature`
+:    the average temperature at night, in Celsius
+`resistance`
+:    Insecticide resistance of local mosquitoes. This is measured on a scale of 0–100, with higher values indicating higher resistance.
 
 Our thanks to Andrew Heiss for providing these data!
 
@@ -54,19 +63,60 @@ mosquito_dag <- dagify(
   health ~ income,
   exposure = "net",
   outcome = "malaria_risk",
-  coords = list(x = c(malaria_risk = 7, net = 3, income = 4, health = 5,
-                      temperature = 6, resistance = 8.5, eligible = 2, household = 1),
-                y = c(malaria_risk = 2, net = 2, income = 3, health = 1,
-                      temperature = 3, resistance = 2, eligible = 3, household = 2)),
-  labels = c(malaria_risk = "Risk of malaria", net = "Mosquito net", income = "Income",
-             health = "Health", temperature = "Nighttime temperatures",
-             resistance = "Insecticide resistance",
-             eligible = "Eligible for program", household = "Number in household")
+  coords = list(
+    x = c(
+      malaria_risk = 7,
+      net = 3,
+      income = 4,
+      health = 5,
+      temperature = 6,
+      resistance = 8.5,
+      eligible = 2,
+      household = 1
+    ),
+    y = c(
+      malaria_risk = 2,
+      net = 2,
+      income = 3,
+      health = 1,
+      temperature = 3,
+      resistance = 2,
+      eligible = 3,
+      household = 2
+    )
+  ),
+  labels = c(
+    malaria_risk = "Risk of malaria",
+    net = "Mosquito net",
+    income = "Income",
+    health = "Health",
+    temperature = "Nighttime temperatures",
+    resistance = "Insecticide resistance",
+    eligible = "Eligible for program",
+    household = "Number in the household"
+  )
 )
 
-ggdag_status(mosquito_dag, use_labels = "label", text = FALSE) +
-  guides(color = "none") +
-  theme_dag() +
+mosquito_dag %>%
+  tidy_dagitty() %>%
+  node_status() %>%
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_edges() +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    seed = 10,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3
+  ) +
+  theme_dag(base_size = 14) +
+  theme(legend.position = "none") +
   labs(caption = "Thanks to Andrew Heiss for the data!") +
   coord_cartesian(clip = "off")
 ```
