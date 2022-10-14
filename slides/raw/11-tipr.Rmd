@@ -39,7 +39,7 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 ### What you'll need:
 
 <span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -55,7 +55,7 @@ class: center, middle
 ### What you'll need:
 
 <span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" style="color:grey">3</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -65,7 +65,7 @@ class: center, middle
 ### What you'll need:
 
 <span class = "num">1</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -88,7 +88,7 @@ $$\Huge \beta_{UO}(LB_{obs}, \delta)$$
 ### What you'll need:
 
 <span class = "num" style="color:grey">1</span> <h3 style="color:grey">&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num">3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -105,7 +105,7 @@ $$\Huge \beta_{UO}(LB_{obs}, \delta)$$
 ### What you'll need:
 
 <span class = "num" >1</span> <h3>&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" style="color:grey">3</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -123,7 +123,7 @@ $$\Huge \beta_{UO}(LB_{obs}, \delta)$$
 ### What you'll need:
 
 <span class = "num"  style="color:grey">1</span> <h3 style="color:grey">&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" style="color:grey">3</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -158,7 +158,7 @@ class: inverse, center, middle
 ### What you'll need:
 
 <span class = "num">1</span> <h3>&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" style="color:grey">3</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 ---
 
@@ -175,7 +175,7 @@ class: inverse, center, middle
 ### What you'll need:
 
 <span class = "num" style="color:grey" >1</span> <h3 style="color:grey">&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" >2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" >2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" style="color:grey">3</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 
 ---
@@ -184,7 +184,7 @@ class: inverse, center, middle
 ## Main function
 
 # `tip_coef()`
-* `confounder_outcome_effect`: association between the unmeasured confounder and outcome
+* `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
 
 ---
 
@@ -193,7 +193,7 @@ class: inverse, center, middle
 ### What you'll need:
 
 <span class = "num"  style="color:grey">1</span> <h3 style="color:grey">&nbsp; &nbsp; &nbsp;  &nbsp; The exposure-outcome effect</h3>
-<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured counfounder-exposure effect</h3> 
+<span class = "num" style="color:grey">2</span> <h3 style="color:grey"> &nbsp; &nbsp; &nbsp;  &nbsp; The exposure-unmeasured counfounder effect</h3> 
 <span class = "num" >3</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp; The unmeasured confounder-outcome effect</h3>
 ---
 
