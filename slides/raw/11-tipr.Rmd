@@ -149,7 +149,7 @@ class: inverse, center, middle
 
 # `tip_coef()`
 
-* `effect`: observed exposure - outcome effect 
+* `effect_observed`: observed exposure - outcome effect 
 ---
 
 
@@ -165,7 +165,7 @@ class: inverse, center, middle
 ## Main function
 
 # `tip_coef()`
-* `smd`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
+* `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
 
 
 ---
@@ -184,7 +184,7 @@ class: inverse, center, middle
 ## Main function
 
 # `tip_coef()`
-* `outcome_association`: association between the unmeasured confounder and outcome
+* `confounder_outcome_effect`: association between the unmeasured confounder and outcome
 
 ---
 
@@ -201,9 +201,9 @@ class: inverse, center, middle
 
 # `tip_coef()`
 
-* `effect`
-* `smd`
-* `outcome_association`
+* `effect_observed`
+* `exposure_confounder_effect`
+* `confounder_outcome_effect`
 ---
 
 ## Main function
@@ -213,8 +213,8 @@ class: inverse, center, middle
 ### **specify** one, it will **estimate** the other
 
 * `effect`
-* <span style="color:orange">`smd`</span>
-* <span style="color:orange">`outcome_association` </span>
+* <span style="color:orange">`exposure_confounder_effect`</span>
+* <span style="color:orange">`confounder_outcome_effect` </span>
 
 ---
 
@@ -226,8 +226,8 @@ class: inverse, center, middle
 
 ```{r, eval = TRUE}
 library(tipr)
-tip_coef(effect = 2.4,
-         smd = 0.3)
+tip_coef(effect_observed = 2.4,
+         exposure_confounder_effect = 0.3)
 ```
 
 --
