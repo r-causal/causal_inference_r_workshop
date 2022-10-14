@@ -412,7 +412,7 @@ fit_ipw <- function(split, ...) {
     augment(type.predict = "response", data = .df) %>% 
     mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
   
-  # fit correctly bootsrapped ipw model
+  # fit correctly bootstrapped ipw model
   lm(wt82_71 ~ qsmk, data = .df, weights = wts) %>% 
     tidy()
 }
