@@ -146,39 +146,74 @@ nhefs_denominators
 ## Do *posted* wait times at 8 am affect *actual* wait times at 9 am?
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=6.5}
+library(tidyverse)
 library(ggdag)
+library(ggokabeito)
+
+geom_dag_label_repel <- function(..., seed = 10) {
+  ggdag::geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = seed,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3,
+    ...
+  ) 
+}
 
 coord_dag <- list(
   x = c(Season = -1, close = -1, weather = -2, extra = 0, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather = 0.25, extra = 0, x = 0, y = 0)
+  y = c(Season = -1, close = 1, weather = 0, extra = 0, x = 0, y = 0)
 )
 
 labels <- c(
   extra = "Extra Magic Morning",
   x = "Average posted wait ",
-  y = "Average actual wait",
+  y = "Average acutal wait",
   Season = "Ticket Season",
   weather = "Historic high temperature",
   close = "Time park closed"
 )
 
-wait_time_dag <- dagify(
-  y ~ x + close + Season + weather + extra,
-  x ~ weather + close + Season + extra,
-  coords = coord_dag,
-  labels = labels
-)
-
-wait_time_dag %>%
-  ggdag(use_labels = "label", text = FALSE) +
-  theme_void() +
-  scale_x_continuous(
-    limits = c(-2.25, 2.25), 
-    breaks = c(-2, -1, 0, 1, 2), 
-    labels = c("\n(one year ago)", "\n(6 months ago)", "\n(3 months ago)", "8am-9am\n(Today)", "9am-10am\n(Today)")
-  ) +
-  theme(axis.text.x = element_text()) +
-  coord_equal(clip = "off")
+dagify(
+    y ~ x + close + Season + weather + extra,
+    x ~ weather + close + Season + extra,
+    extra ~ weather + close + Season,
+    coords = coord_dag,
+    labels = labels,
+    exposure = "x",
+    outcome = "y"
+) |>
+    tidy_dagitty() |>
+    node_status() |>
+    ggplot(
+        aes(x, y, xend = xend, yend = yend, color = status)
+    ) +
+    geom_dag_edges_arc(curvature = c(rep(0, 7), .2, 0, .2, .2, 0), edge_colour = "grey70") +
+    geom_dag_point() +
+    geom_dag_label_repel(seed = 1602) + 
+    scale_color_okabe_ito(na.value = "grey90") +
+    theme_dag() +
+    theme(
+        legend.position = "none",
+        axis.text.x = element_text()
+    ) +
+    coord_cartesian(clip = "off") +
+    scale_x_continuous(
+        limits = c(-2.25, 2.25),
+        breaks = c(-2, -1, 0, 1, 2),
+        labels = c(
+            "\n(one year ago)",
+            "\n(6 months ago)",
+            "\n(3 months ago)",
+            "8am-9am\n(Today)",
+            "9am-10am\n(Today)"
+        )
+    )
 ```
 
 ---
