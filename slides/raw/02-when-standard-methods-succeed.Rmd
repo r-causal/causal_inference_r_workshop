@@ -17,6 +17,12 @@ output:
 class: middle, center, inverse
 
 # when correlation *is* causation
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320, fig.height = 4)
+```
+
 ---
 
 class: middle, center, inverse

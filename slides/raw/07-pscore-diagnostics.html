@@ -57,7 +57,7 @@ class: inverse
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -77,7 +77,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 *smds &lt;- tidy_smd(
@@ -96,7 +96,7 @@ library(tidyverse)
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -116,7 +116,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -136,7 +136,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -160,9 +160,7 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -178,9 +176,7 @@ ggplot(
 * data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -196,9 +192,7 @@ ggplot(
   data = smds,
 * aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -214,40 +208,19 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-* geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+* geom_love()
 ```
-
----
-
-## SMD in R
-
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
-
-
-
-```r
-ggplot(
-  data = smds,
-  aes(x = abs(smd), y = variable, group = weights, color = weights)
-) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-* geom_vline(xintercept = 0.1, color = "black", size = 0.1)
-```
-
 ---
 
 ## Love plot
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 1
 
-<div class="countdown" id="timer_c879110c" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_f41737da" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -260,7 +233,7 @@ ggplot(
 
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -269,24 +242,6 @@ For continuous variables, it can be helpful to look at the _whole_ distribution 
 
 
 ```r
-*library(ggecdf)
-
-ggplot(df, aes(x = wt71, color = factor(qsmk))) +
-  geom_ecdf() +
-  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
-                     labels = c("Yes", "No")) + 
-  xlab("Weight in Kg in 1971") + 
-  ylab("Proportion &lt;= x") 
-```
-
----
-
-## Unweighted ECDF
-
-
-```r
-library(ggecdf)
-
 *ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -301,8 +256,6 @@ library(ggecdf)
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 * geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -315,7 +268,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## Unweighted ECDF
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -324,8 +277,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -340,8 +291,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 * geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -355,12 +304,12 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## Weighted  ECDF 
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 ---
 
 ## Your turn 2
 
-<div class="countdown" id="timer_520ae0a4" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_cb135532" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -837,11 +786,11 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.01</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">1,359 (87%)</td>
 <td class="gt_row gt_center">1,352 (87%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">206 (13%)</td>
 <td class="gt_row gt_center">209 (13%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -853,11 +802,11 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.00</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">764 (49%)</td>
 <td class="gt_row gt_center">764 (49%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">802 (51%)</td>
 <td class="gt_row gt_center">797 (51%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -873,15 +822,15 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.04</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">302 (19%)</td>
 <td class="gt_row gt_center">294 (19%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">665 (42%)</td>
 <td class="gt_row gt_center">691 (44%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+    <tr><td class="gt_row gt_left">    2</td>
 <td class="gt_row gt_center">599 (38%)</td>
 <td class="gt_row gt_center">576 (37%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -889,15 +838,15 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.03</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">700 (45%)</td>
 <td class="gt_row gt_center">684 (44%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">718 (46%)</td>
 <td class="gt_row gt_center">738 (47%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+    <tr><td class="gt_row gt_left">    2</td>
 <td class="gt_row gt_center">147 (9.4%)</td>
 <td class="gt_row gt_center">138 (8.9%)</td>
 <td class="gt_row gt_center"></td></tr>

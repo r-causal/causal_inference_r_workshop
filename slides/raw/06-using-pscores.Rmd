@@ -302,7 +302,8 @@ df <- propensity_model %>%
     w_atm = pmin(.fitted, 1 - .fitted) / 
       (qsmk * .fitted + (1 - qsmk) * (1 - .fitted)),
     w_ato = (1 - .fitted) * qsmk + 
-      .fitted * (1 - qsmk)
+      .fitted * (1 - qsmk),
+    qsmk = factor(qsmk)
   )
 
 d <- df %>%
@@ -312,12 +313,14 @@ d <- df %>%
 ## Histogram of propensity scores
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) + 
-  geom_histogram(bins = 50, aes(qsmk_p1)) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  ylab("count") + xlab("p") +
+library(halfmoon)
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) 
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  theme(legend.position = "bottom")
 ```
 
 ---
@@ -325,19 +328,15 @@ ggplot(d) +
 ## ATE
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) +
-  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ate), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ate, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_ate), alpha = 0.5) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +
-    theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
-   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
 ```
 
 ---
@@ -346,19 +345,15 @@ ggplot(d) +
 
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) +
-  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_att), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_att, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_att), alpha = 0.5) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +
-    theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
-   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
 ```
 
 
@@ -367,19 +362,15 @@ ggplot(d) +
 ## ATC
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) +
-  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atc), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atc, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_atc), alpha = 0.5) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +
-    theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 50), label = "trt", angle = 270, color = "white") + 
-   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
 ```
 
 ---
@@ -387,18 +378,15 @@ ggplot(d) +
 ## ATM
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) +
-  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_atm), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_atm, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_atm), alpha = 0.5) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +  theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
-   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
 ```
 
 ---
@@ -406,19 +394,15 @@ ggplot(d) +
 ## ATO
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-ggplot(d) +
-  geom_histogram(bins = 50, aes(qsmk_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(qsmk_p1, weight = w_ato), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = qsmk_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = qsmk_p0, weight = w_ato, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_ato), alpha = 0.5) + 
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +
-  theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 30), fill = "#5DB854") + 
-  geom_text(aes(x = 0.975, y = 17), label = "trt", angle = 270, color = "white") + 
-   geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  geom_text(aes(x = 0.975, y = -50), label = "control", angle = 270, color = "white")
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
 ```
 
 
@@ -430,9 +414,10 @@ ggplot(d) +
   * $w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
   
 ```{r}
+library(propensity)
 df <- propensity_model %>% 
   augment(type.predict = "response", data = nhefs_complete) %>% 
-  mutate(w_ate = (qsmk / .fitted) +  ((1 - qsmk) / (1 - .fitted))) #<<
+  mutate(w_ate = wt_ate(.fitted, qsmk)) #<<
 ```
 
 ---

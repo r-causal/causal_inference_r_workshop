@@ -172,7 +172,7 @@ nhefs_denominators
 ### Use `augment()` to add model predictions to the data frame
 ### In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
 
-<div class="countdown" id="timer_1280ba73" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_e509cfed" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -279,7 +279,7 @@ nhefs_light_smokers &lt;- nhefs_light_smokers %&gt;%
 ### Calculate the numerator weights using `dnorm()` as above.
 ### Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
 
-<div class="countdown" id="timer_73e72731" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_cf3ad478" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -341,12 +341,9 @@ lm(
 
 ```
 ## # A tibble: 1 × 5
-##   term              estimate std.error statistic
-##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 smkintensity82_71    0.960    0.0210     -4.58
-##      p.value
-##        &lt;dbl&gt;
-## 1 0.00000519
+##   term              estimate std.error statistic    p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 smkintensity82_71    0.960    0.0210     -4.58 0.00000519
 ```
 
 ---
@@ -355,7 +352,7 @@ lm(
 
 ### Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created. 
 
-<div class="countdown" id="timer_16012a5e" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_fd828d86" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>

@@ -46,7 +46,7 @@ $$\LARGE d = \frac{\bar{x}_{treatment}-\bar{x}_{control}}{\sqrt{\frac{s^2_{treat
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds <- tidy_smd(
@@ -65,7 +65,7 @@ smds <- tidy_smd(
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds <- tidy_smd( #<<
@@ -83,7 +83,7 @@ smds <- tidy_smd( #<<
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds <- tidy_smd(
@@ -102,7 +102,7 @@ smds <- tidy_smd(
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds <- tidy_smd(
@@ -121,7 +121,7 @@ smds <- tidy_smd(
 
 
 ```{r,  message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds <- tidy_smd(
@@ -144,9 +144,7 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -161,9 +159,7 @@ ggplot(
   data = smds, #<<
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -178,9 +174,7 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights) #<<
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -195,34 +189,14 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") + #<<
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love() #<<
 ```
-
----
-
-## SMD in R
-
-<span class = "num">2</span> <h3> &nbsp; &nbsp; &nbsp;  &nbsp;  Plot them! (in a Love plot!) </h3> 
-
-
-```{r}
-ggplot(
-  data = smds,
-  aes(x = abs(smd), y = variable, group = weights, color = weights)
-) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1) #<<
-```
-
 ---
 
 ## Love plot
 
 ```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 library(broom)
 library(causaldata)
@@ -275,8 +249,6 @@ ggplot(
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, eval = TRUE}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -291,23 +263,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ## Unweighted ECDF
 
 ```{r}
-library(ggecdf) #<<
-
-ggplot(df, aes(x = wt71, color = factor(qsmk))) +
-  geom_ecdf() +
-  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
-                     labels = c("Yes", "No")) + 
-  xlab("Weight in Kg in 1971") + 
-  ylab("Proportion <= x") 
-```
-
----
-
-## Unweighted ECDF
-
-```{r}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) + #<<
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -321,8 +276,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) + #<<
 ## Unweighted ECDF
 
 ```{r}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() + #<<
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -336,8 +289,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ## Unweighted ECDF
 
 ```{r, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -352,8 +303,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ## Weighted  ECDF 
 
 ```{r, eval = FALSE}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -367,8 +316,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ## Weighted  ECDF 
 
 ```{r, eval = FALSE}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) + #<<
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -383,8 +330,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ## Weighted  ECDF 
 
 ```{r, eval = TRUE, echo = FALSE}
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) + #<<
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),

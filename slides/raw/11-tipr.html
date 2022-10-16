@@ -243,12 +243,11 @@ tip_coef(effect_observed = 2.4,
 
 ```
 ## # A tibble: 1 × 4
-##   effect_observed exposure_confounder_effect
-##             &lt;dbl&gt;                      &lt;dbl&gt;
-## 1             2.4                        0.3
-##   confounder_outcome_effect n_unmeasured_confounders
-##                       &lt;dbl&gt;                    &lt;dbl&gt;
-## 1                         8                        1
+##   effect_observed exposure_confounder_effect confo…¹ n_unm…²
+##             &lt;dbl&gt;                      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1             2.4                        0.3       8       1
+## # … with abbreviated variable names
+## #   ¹​confounder_outcome_effect, ²​n_unmeasured_confounders
 ```
 
 --
@@ -264,7 +263,7 @@ in the exposed population and unexposed population: 0.3*
 
 ## Your turn
 
-<div class="countdown" id="timer_07fb3b82" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_027edcc9" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
