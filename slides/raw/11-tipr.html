@@ -4,20 +4,28 @@
     <title>Tipping Point Sensitivity Analyses</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/countdown-0.3.5/countdown.css" rel="stylesheet" />
-    <script src="libs/countdown-0.3.5/countdown.js"></script>
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Tipping Point Sensitivity Analyses
+]
+.author[
 ### Lucy D’Agostino McGowan
+]
+.institute[
 ### Wake Forest University
-### 2021-09-01 (updated: 2022-07-26)
+]
+.date[
+### 2021-09-01 (updated: 2022-10-16)
+]
 
 ---
 
@@ -41,7 +49,7 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 ### What you'll need:
 
 &lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -57,7 +65,7 @@ class: center, middle
 ### What you'll need:
 
 &lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" style="color:grey"&gt;3&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -67,7 +75,7 @@ class: center, middle
 ### What you'll need:
 
 &lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -90,7 +98,7 @@ class: center, middle
 ### What you'll need:
 
 &lt;span class = "num" style="color:grey"&gt;1&lt;/span&gt; &lt;h3 style="color:grey"&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num"&gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -107,7 +115,7 @@ class: center, middle
 ### What you'll need:
 
 &lt;span class = "num" &gt;1&lt;/span&gt; &lt;h3&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" style="color:grey"&gt;3&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -125,7 +133,7 @@ class: center, middle
 ### What you'll need:
 
 &lt;span class = "num"  style="color:grey"&gt;1&lt;/span&gt; &lt;h3 style="color:grey"&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" style="color:grey"&gt;3&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -151,7 +159,7 @@ class: inverse, center, middle
 
 # `tip_coef()`
 
-* `effect`: observed exposure - outcome effect 
+* `effect_observed`: observed exposure - outcome effect 
 ---
 
 
@@ -160,14 +168,14 @@ class: inverse, center, middle
 ### What you'll need:
 
 &lt;span class = "num"&gt;1&lt;/span&gt; &lt;h3&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" style="color:grey"&gt;3&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 ---
 
 ## Main function
 
 # `tip_coef()`
-* `smd`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
+* `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
 
 
 ---
@@ -177,7 +185,7 @@ class: inverse, center, middle
 ### What you'll need:
 
 &lt;span class = "num" style="color:grey" &gt;1&lt;/span&gt; &lt;h3 style="color:grey"&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" &gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" &gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" style="color:grey"&gt;3&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 
 ---
@@ -186,7 +194,7 @@ class: inverse, center, middle
 ## Main function
 
 # `tip_coef()`
-* `outcome_association`: association between the unmeasured confounder and outcome
+* `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
 
 ---
 
@@ -195,7 +203,7 @@ class: inverse, center, middle
 ### What you'll need:
 
 &lt;span class = "num"  style="color:grey"&gt;1&lt;/span&gt; &lt;h3 style="color:grey"&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-outcome effect&lt;/h3&gt;
-&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured counfounder-exposure effect&lt;/h3&gt; 
+&lt;span class = "num" style="color:grey"&gt;2&lt;/span&gt; &lt;h3 style="color:grey"&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The exposure-unmeasured counfounder effect&lt;/h3&gt; 
 &lt;span class = "num" &gt;3&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; The unmeasured confounder-outcome effect&lt;/h3&gt;
 ---
 
@@ -203,9 +211,9 @@ class: inverse, center, middle
 
 # `tip_coef()`
 
-* `effect`
-* `smd`
-* `outcome_association`
+* `effect_observed`
+* `exposure_confounder_effect`
+* `confounder_outcome_effect`
 ---
 
 ## Main function
@@ -215,8 +223,8 @@ class: inverse, center, middle
 ### **specify** one, it will **estimate** the other
 
 * `effect`
-* &lt;span style="color:orange"&gt;`smd`&lt;/span&gt;
-* &lt;span style="color:orange"&gt;`outcome_association` &lt;/span&gt;
+* &lt;span style="color:orange"&gt;`exposure_confounder_effect`&lt;/span&gt;
+* &lt;span style="color:orange"&gt;`confounder_outcome_effect` &lt;/span&gt;
 
 ---
 
@@ -229,15 +237,18 @@ class: inverse, center, middle
 
 ```r
 library(tipr)
-tip_coef(effect = 2.4,
-         smd = 0.3)
+tip_coef(effect_observed = 2.4,
+         exposure_confounder_effect = 0.3)
 ```
 
 ```
 ## # A tibble: 1 × 4
-##   effect_observed   smd outcome_association n_unmeasured_confounders
-##             &lt;dbl&gt; &lt;dbl&gt;               &lt;dbl&gt;                    &lt;dbl&gt;
-## 1             2.4   0.3                   8                        1
+##   effect_observed exposure_confounder_effect
+##             &lt;dbl&gt;                      &lt;dbl&gt;
+## 1             2.4                        0.3
+##   confounder_outcome_effect n_unmeasured_confounders
+##                       &lt;dbl&gt;                    &lt;dbl&gt;
+## 1                         8                        1
 ```
 
 --
@@ -253,7 +264,8 @@ in the exposed population and unexposed population: 0.3*
 
 ## Your turn
 
-<div class="countdown" id="timer_62e049f0" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_07fb3b82" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -309,6 +321,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

@@ -4,18 +4,26 @@
     <title>When Standard Methods Succeed</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # When Standard Methods Succeed
+]
+.author[
 ### Lucy D’Agostino McGowan
+]
+.institute[
 ### Wake Forest University
-### 2022-07-05 (updated: 2022-07-25)
+]
+.date[
+### 2022-07-05 (updated: 2022-10-16)
+]
 
 ---
 
@@ -121,7 +129,7 @@ lm(y ~ treatment, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -250,8 +258,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -298,8 +306,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -351,8 +359,8 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -367,8 +375,8 @@ lm(y ~ treatment, data = data)
 }
 
 #kbamwlccdi .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -380,15 +388,15 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #kbamwlccdi .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -426,8 +434,8 @@ lm(y ~ treatment, data = data)
 #kbamwlccdi .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 1px;
+  padding-right: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -448,8 +456,8 @@ lm(y ~ treatment, data = data)
 
 #kbamwlccdi .gt_sourcenote {
   font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -483,15 +491,6 @@ lm(y ~ treatment, data = data)
   font-size: 65%;
 }
 
-#kbamwlccdi .gt_two_val_uncert {
-  display: inline-block;
-  line-height: 1em;
-  text-align: right;
-  font-size: 60%;
-  vertical-align: -0.25em;
-  margin-left: 0.1em;
-}
-
 #kbamwlccdi .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -504,33 +503,35 @@ lm(y ~ treatment, data = data)
   vertical-align: 0;
 }
 
-#kbamwlccdi .gt_slash_mark {
-  font-size: 0.7em;
-  line-height: 0.7em;
-  vertical-align: 0.15em;
+#kbamwlccdi .gt_indent_1 {
+  text-indent: 5px;
 }
 
-#kbamwlccdi .gt_fraction_numerator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: 0.45em;
+#kbamwlccdi .gt_indent_2 {
+  text-indent: 10px;
 }
 
-#kbamwlccdi .gt_fraction_denominator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: -0.05em;
+#kbamwlccdi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kbamwlccdi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kbamwlccdi .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -561,6 +562,19 @@ lm(y ~ treatment, data = data)
 lm(y ~ treatment + weight + age, data = data)
 ```
 
+
+```
+## Warning in modify_column_unhide(., column =
+## std.error): partial argument match of 'column' to
+## 'columns'
+```
+
+```
+## Warning in match.call(definition, call, expand.dots,
+## envir): partial argument match of 'column' to
+## 'columns'
+```
+
 <div id="rrycjcqdkv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
@@ -572,7 +586,7 @@ lm(y ~ treatment + weight + age, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -701,8 +715,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -749,8 +763,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -802,8 +816,8 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -818,8 +832,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #rrycjcqdkv .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -831,15 +845,15 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #rrycjcqdkv .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -877,8 +891,8 @@ lm(y ~ treatment + weight + age, data = data)
 #rrycjcqdkv .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 1px;
+  padding-right: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -899,8 +913,8 @@ lm(y ~ treatment + weight + age, data = data)
 
 #rrycjcqdkv .gt_sourcenote {
   font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -934,15 +948,6 @@ lm(y ~ treatment + weight + age, data = data)
   font-size: 65%;
 }
 
-#rrycjcqdkv .gt_two_val_uncert {
-  display: inline-block;
-  line-height: 1em;
-  text-align: right;
-  font-size: 60%;
-  vertical-align: -0.25em;
-  margin-left: 0.1em;
-}
-
 #rrycjcqdkv .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -955,33 +960,35 @@ lm(y ~ treatment + weight + age, data = data)
   vertical-align: 0;
 }
 
-#rrycjcqdkv .gt_slash_mark {
-  font-size: 0.7em;
-  line-height: 0.7em;
-  vertical-align: 0.15em;
+#rrycjcqdkv .gt_indent_1 {
+  text-indent: 5px;
 }
 
-#rrycjcqdkv .gt_fraction_numerator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: 0.45em;
+#rrycjcqdkv .gt_indent_2 {
+  text-indent: 10px;
 }
 
-#rrycjcqdkv .gt_fraction_denominator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: -0.05em;
+#rrycjcqdkv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rrycjcqdkv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rrycjcqdkv .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -1050,7 +1057,7 @@ lm(y ~ treatment, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1179,8 +1186,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -1227,8 +1234,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1280,8 +1287,8 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1296,8 +1303,8 @@ lm(y ~ treatment, data = data)
 }
 
 #odaqhstiss .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -1309,15 +1316,15 @@ lm(y ~ treatment, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #odaqhstiss .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -1355,8 +1362,8 @@ lm(y ~ treatment, data = data)
 #odaqhstiss .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 1px;
+  padding-right: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1377,8 +1384,8 @@ lm(y ~ treatment, data = data)
 
 #odaqhstiss .gt_sourcenote {
   font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1412,15 +1419,6 @@ lm(y ~ treatment, data = data)
   font-size: 65%;
 }
 
-#odaqhstiss .gt_two_val_uncert {
-  display: inline-block;
-  line-height: 1em;
-  text-align: right;
-  font-size: 60%;
-  vertical-align: -0.25em;
-  margin-left: 0.1em;
-}
-
 #odaqhstiss .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -1433,33 +1431,35 @@ lm(y ~ treatment, data = data)
   vertical-align: 0;
 }
 
-#odaqhstiss .gt_slash_mark {
-  font-size: 0.7em;
-  line-height: 0.7em;
-  vertical-align: 0.15em;
+#odaqhstiss .gt_indent_1 {
+  text-indent: 5px;
 }
 
-#odaqhstiss .gt_fraction_numerator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: 0.45em;
+#odaqhstiss .gt_indent_2 {
+  text-indent: 10px;
 }
 
-#odaqhstiss .gt_fraction_denominator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: -0.05em;
+#odaqhstiss .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#odaqhstiss .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#odaqhstiss .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -1490,6 +1490,19 @@ lm(y ~ treatment, data = data)
 lm(y ~ treatment + weight + age, data = data)
 ```
 
+
+```
+## Warning in modify_column_unhide(., column =
+## std.error): partial argument match of 'column' to
+## 'columns'
+```
+
+```
+## Warning in match.call(definition, call, expand.dots,
+## envir): partial argument match of 'column' to
+## 'columns'
+```
+
 <div id="cxwxixnzbo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
@@ -1501,7 +1514,7 @@ lm(y ~ treatment + weight + age, data = data)
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1630,8 +1643,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
@@ -1678,8 +1691,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1731,8 +1744,8 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1747,8 +1760,8 @@ lm(y ~ treatment + weight + age, data = data)
 }
 
 #cxwxixnzbo .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-style: solid;
@@ -1760,15 +1773,15 @@ lm(y ~ treatment + weight + age, data = data)
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 #cxwxixnzbo .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-style: double;
@@ -1806,8 +1819,8 @@ lm(y ~ treatment + weight + age, data = data)
 #cxwxixnzbo .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 1px;
+  padding-right: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1828,8 +1841,8 @@ lm(y ~ treatment + weight + age, data = data)
 
 #cxwxixnzbo .gt_sourcenote {
   font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1863,15 +1876,6 @@ lm(y ~ treatment + weight + age, data = data)
   font-size: 65%;
 }
 
-#cxwxixnzbo .gt_two_val_uncert {
-  display: inline-block;
-  line-height: 1em;
-  text-align: right;
-  font-size: 60%;
-  vertical-align: -0.25em;
-  margin-left: 0.1em;
-}
-
 #cxwxixnzbo .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -1884,33 +1888,35 @@ lm(y ~ treatment + weight + age, data = data)
   vertical-align: 0;
 }
 
-#cxwxixnzbo .gt_slash_mark {
-  font-size: 0.7em;
-  line-height: 0.7em;
-  vertical-align: 0.15em;
+#cxwxixnzbo .gt_indent_1 {
+  text-indent: 5px;
 }
 
-#cxwxixnzbo .gt_fraction_numerator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: 0.45em;
+#cxwxixnzbo .gt_indent_2 {
+  text-indent: 10px;
 }
 
-#cxwxixnzbo .gt_fraction_denominator {
-  font-size: 0.6em;
-  line-height: 0.6em;
-  vertical-align: -0.05em;
+#cxwxixnzbo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cxwxixnzbo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cxwxixnzbo .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>p-value</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>Beta</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>SE</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col"><strong>p-value</strong></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -2012,6 +2018,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
