@@ -57,33 +57,21 @@ nhefs_complete_uc
 
 ```
 ## # A tibble: 1,566 × 67
-##     seqn  qsmk death yrdth modth dadth   sbp   dbp
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1   233     0     0    NA    NA    NA   175    96
-##  2   235     0     0    NA    NA    NA   123    80
-##  3   244     0     0    NA    NA    NA   115    75
-##  4   245     0     1    85     2    14   148    78
-##  5   252     0     0    NA    NA    NA   118    77
-##  6   257     0     0    NA    NA    NA   141    83
-##  7   262     0     0    NA    NA    NA   132    69
-##  8   266     0     0    NA    NA    NA   100    53
-##  9   419     0     1    84    10    13   163    79
-## 10   420     0     1    86    10    17   184   106
-##    sex     age race  income marital school education
-##    &lt;fct&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
-##  1 0        42 1         19       2      7 1        
-##  2 0        36 0         18       2      9 2        
-##  3 1        56 1         15       3     11 2        
-##  4 0        68 1         15       3      5 1        
-##  5 0        40 0         18       2     11 2        
-##  6 1        43 1         11       4      9 2        
-##  7 1        56 0         19       2     12 3        
-##  8 1        29 0         22       2     12 3        
-##  9 0        51 0         18       2     10 2        
-## 10 0        43 0         16       2     11 2        
-## # … with 1,556 more rows, and 52 more variables: ht &lt;dbl&gt;,
-## #   wt71 &lt;dbl&gt;, wt82 &lt;dbl&gt;, wt82_71 &lt;dbl&gt;,
-## #   birthplace &lt;dbl&gt;, smokeintensity &lt;dbl&gt;, …
+##     seqn  qsmk death yrdth modth dadth   sbp   dbp sex  
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+##  1   233     0     0    NA    NA    NA   175    96 0    
+##  2   235     0     0    NA    NA    NA   123    80 0    
+##  3   244     0     0    NA    NA    NA   115    75 1    
+##  4   245     0     1    85     2    14   148    78 0    
+##  5   252     0     0    NA    NA    NA   118    77 0    
+##  6   257     0     0    NA    NA    NA   141    83 1    
+##  7   262     0     0    NA    NA    NA   132    69 1    
+##  8   266     0     0    NA    NA    NA   100    53 1    
+##  9   419     0     1    84    10    13   163    79 0    
+## 10   420     0     1    86    10    17   184   106 0    
+## # … with 1,556 more rows, and 58 more variables: age &lt;dbl&gt;,
+## #   race &lt;fct&gt;, income &lt;dbl&gt;, marital &lt;dbl&gt;, school &lt;dbl&gt;,
+## #   education &lt;fct&gt;, …
 ```
 
 ---
@@ -178,12 +166,11 @@ lm(
 
 ```
 ## # A tibble: 1 × 7
-##   term  estimate std.error statistic  p.value
-##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 qsmk      3.46     0.438      7.90 5.36e-15
-##   conf.low conf.high
-##      &lt;dbl&gt;     &lt;dbl&gt;
-## 1     2.60      4.32
+##   term  estimate std.error statis…¹  p.value conf.…² conf.…³
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+*## 1 qsmk      3.46     0.438     7.90 5.36e-15    2.60    4.32
+## # … with abbreviated variable names ¹​statistic, ²​conf.low,
+## #   ³​conf.high
 ```
 
 ---
@@ -221,11 +208,12 @@ class: center, middle
 
 
 ```r
+library(propensity)
 nhefs_complete_uc &lt;- propensity_model %&gt;% 
   # predict whether quit smoking
 * augment(type.predict = "response", data = nhefs_complete_uc) %&gt;%
   # calculate inverse probability
-* mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+* mutate(wts = wt_ate(.fitted, qsmk))
 ```
 
 ---
@@ -240,17 +228,28 @@ class: inverse, center, middle
 
 &lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
+---
+
+## What are the weights doing to the sample?
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-
-
+## What are the weights doing to the sample?
 
 &lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -285,12 +284,11 @@ ipw_estimate
 
 ```
 ## # A tibble: 1 × 7
-##   term  estimate std.error statistic  p.value
-##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 qsmk      3.44     0.408      8.43 7.47e-17
-##   conf.low conf.high
-##      &lt;dbl&gt;     &lt;dbl&gt;
-## 1     2.64      4.24
+##   term  estimate std.error statis…¹  p.value conf.…² conf.…³
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+*## 1 qsmk      3.44     0.408     8.43 7.47e-17    2.64    4.24
+## # … with abbreviated variable names ¹​statistic, ²​conf.low,
+## #   ³​conf.high
 ```
 
 ---
@@ -325,12 +323,12 @@ as_tibble(ipw_estimate_robust)
 
 ```
 ## # A tibble: 1 × 9
-##   term  estimate std.error statistic  p.value
-##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 qsmk      3.44     0.526      6.54 8.57e-11
-##   conf.low conf.high    df outcome
-##      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  
-## 1     2.41      4.47  1564 wt82_71
+##   term  estimate std.error statis…¹  p.value conf.…² conf.…³
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+*## 1 qsmk      3.44     0.526     6.54 8.57e-11    2.41    4.47
+## # … with 2 more variables: df &lt;dbl&gt;, outcome &lt;chr&gt;, and
+## #   abbreviated variable names ¹​statistic, ²​conf.low,
+## #   ³​conf.high
 ```
 
 ---
@@ -431,7 +429,7 @@ boot_estimate
 
 class: middle
 
-&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="01-causal_modeling_whole_game_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 

@@ -27,6 +27,8 @@ library(broom)
 library(rsample)
 library(ggdag)
 library(causaldata)
+library(propensity)
+library(halfmoon)
 
 set.seed(1234)
 ```
@@ -162,8 +164,12 @@ class:  center, middle
 
 ```{r, echo = FALSE, fig.height = 5.5}
 smk_wt_dag %>% 
-  ggdag_adjustment_set(text = FALSE, use_labels = "label", node_size = 8, shadow = TRUE) +
-  theme_dag()
+  ggdag_adjustment_set(text = FALSE, use_labels = "label", node_size = 10, shadow = TRUE) +
+  theme_dag() + 
+  facet_wrap(
+    vars(set), 
+    labeller = as_labeller(scales::label_wrap(40))
+  )
 ```
 
 ---
@@ -233,11 +239,12 @@ propensity_model <- glm( #<<
 ## Calculate inverse probability weights
 
 ```{r}
+library(propensity)
 nhefs_complete_uc <- propensity_model %>% 
   # predict whether quit smoking
   augment(type.predict = "response", data = nhefs_complete_uc) %>% #<<
   # calculate inverse probability
-  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted)) #<<
+  mutate(wts = wt_ate(.fitted, qsmk)) #<<
 ```
 
 ---
@@ -252,13 +259,51 @@ class: inverse, center, middle
 
 ```{r, echo = FALSE}
 ggplot(nhefs_complete_uc, aes(wts)) +
-  geom_density(col = "#E69F00", fill = "#E69F0095", size = .8) + 
+  geom_histogram(color = "white", fill = "#E69F00", bins = 50) + 
   #  use a log scale for the x axis
   scale_x_log10() + 
   theme_minimal(base_size = 20) + 
   xlab("Weights")
 ```
 
+---
+
+## What are the weights doing to the sample?
+
+```{r, echo = FALSE}
+nhefs_complete_uc |> 
+  mutate(qsmk = factor(qsmk)) |> 
+  ggplot(aes(.fitted)) +
+  geom_mirror_histogram(
+    aes(fill = qsmk),
+    bins = 50
+  ) +
+  scale_y_continuous(labels = abs) +
+  labs(x = "propensity score") + 
+  theme_minimal(base_size = 20)
+```
+
+---
+
+## What are the weights doing to the sample?
+
+```{r, echo = FALSE}
+nhefs_complete_uc |> 
+  mutate(qsmk = factor(qsmk)) |> 
+  ggplot(aes(.fitted)) +
+  geom_mirror_histogram(
+    aes(group = qsmk),
+    bins = 50
+  ) +
+  geom_mirror_histogram(
+    aes(fill = qsmk, weight = wts),
+    bins = 50,
+    alpha = .5
+  ) +
+  scale_y_continuous(labels = abs) +
+  labs(x = "propensity score") + 
+  theme_minimal(base_size = 20)
+```
 
 ---
 
