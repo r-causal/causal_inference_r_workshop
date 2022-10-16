@@ -22,7 +22,7 @@ class: center, middle, inverse, title-slide
 ### RStudio, PBC
 ]
 .date[
-### 2021-09-01 (updated: 2022-10-14)
+### 2021-09-01 (updated: 2022-10-16)
 ]
 
 ---
@@ -57,22 +57,32 @@ net_data
 
 ```
 ## # A tibble: 1,752 × 10
-##       id net   net_num malar…¹ income health house…² eligi…³
-##    &lt;int&gt; &lt;lgl&gt;   &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt;  
-##  1     1 FALSE       0      38    779     35       1 FALSE  
-##  2     2 FALSE       0      48    700     35       3 FALSE  
-##  3     3 FALSE       0      32   1083     58       3 FALSE  
-##  4     4 FALSE       0      55    753     68       3 FALSE  
-##  5     5 FALSE       0      36    919     46       5 FALSE  
-##  6     6 FALSE       0      30    969     37       3 FALSE  
-##  7     7 FALSE       0      29   1012     58       1 FALSE  
-##  8     8 FALSE       0      45    708     30       2 FALSE  
-##  9     9 FALSE       0      51    733     18       3 FALSE  
-## 10    10 FALSE       0      42    862     64       3 FALSE  
-## # … with 1,742 more rows, 2 more variables:
-## #   temperature &lt;dbl&gt;, insecticide_resistance &lt;dbl&gt;, and
-## #   abbreviated variable names ¹​malaria_risk, ²​household,
-## #   ³​eligible
+##       id net   net_num malaria_risk income health
+##    &lt;int&gt; &lt;lgl&gt;   &lt;int&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1     1 FALSE       0           38    779     35
+##  2     2 FALSE       0           48    700     35
+##  3     3 FALSE       0           32   1083     58
+##  4     4 FALSE       0           55    753     68
+##  5     5 FALSE       0           36    919     46
+##  6     6 FALSE       0           30    969     37
+##  7     7 FALSE       0           29   1012     58
+##  8     8 FALSE       0           45    708     30
+##  9     9 FALSE       0           51    733     18
+## 10    10 FALSE       0           42    862     64
+##    household eligible temperature insecticide_resis…¹
+##        &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt;               &lt;dbl&gt;
+##  1         1 FALSE           18.3                  38
+##  2         3 FALSE           18.6                  40
+##  3         3 FALSE           24.2                  70
+##  4         3 FALSE           19.1                  57
+##  5         5 FALSE           21.2                  59
+##  6         3 FALSE           20.2                  49
+##  7         1 FALSE           18.9                  52
+##  8         2 FALSE           28.8                  42
+##  9         3 FALSE           19.9                  66
+## 10         3 FALSE           21.4                  45
+## # … with 1,742 more rows, and abbreviated variable name
+## #   ¹​insecticide_resistance
 ```
 
 ---
