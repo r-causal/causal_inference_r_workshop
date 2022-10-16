@@ -4,10 +4,10 @@
     <title>Propensity Score Diagnostics</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lucy D’Agostino McGowan" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/countdown/countdown.css" rel="stylesheet" />
-    <script src="libs/countdown/countdown.js"></script>
+    <script src="libs/header-attrs-2.17/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/countdown-0.4.0/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.4.0/countdown.js"></script>
     <link rel="stylesheet" href="theme.css" type="text/css" />
   </head>
   <body>
@@ -57,7 +57,7 @@ class: inverse
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -77,7 +77,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 *smds &lt;- tidy_smd(
@@ -96,7 +96,7 @@ library(tidyverse)
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -116,7 +116,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -136,7 +136,7 @@ smds &lt;- tidy_smd(
 
 
 ```r
-library(tidysmd)
+library(halfmoon)
 library(tidyverse)
 
 smds &lt;- tidy_smd(
@@ -160,9 +160,7 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -178,9 +176,7 @@ ggplot(
 * data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -196,9 +192,7 @@ ggplot(
   data = smds,
 * aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
 
 ---
@@ -214,40 +208,19 @@ ggplot(
   data = smds,
   aes(x = abs(smd), y = variable, group = weights, color = weights)
 ) +  
-* geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+* geom_love()
 ```
-
----
-
-## SMD in R
-
-&lt;span class = "num"&gt;2&lt;/span&gt; &lt;h3&gt; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp;  Plot them! (in a Love plot!) &lt;/h3&gt; 
-
-
-
-```r
-ggplot(
-  data = smds,
-  aes(x = abs(smd), y = variable, group = weights, color = weights)
-) +  
-  geom_line(orientation = "y") +
-  geom_point() + 
-* geom_vline(xintercept = 0.1, color = "black", size = 0.1)
-```
-
 ---
 
 ## Love plot
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Your turn 1
 
-<div class="countdown" id="timer_c879110c" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_46756810" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -260,7 +233,7 @@ ggplot(
 
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -269,24 +242,6 @@ For continuous variables, it can be helpful to look at the _whole_ distribution 
 
 
 ```r
-*library(ggecdf)
-
-ggplot(df, aes(x = wt71, color = factor(qsmk))) +
-  geom_ecdf() +
-  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
-                     labels = c("Yes", "No")) + 
-  xlab("Weight in Kg in 1971") + 
-  ylab("Proportion &lt;= x") 
-```
-
----
-
-## Unweighted ECDF
-
-
-```r
-library(ggecdf)
-
 *ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -301,8 +256,6 @@ library(ggecdf)
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 * geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -315,7 +268,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## Unweighted ECDF
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -324,8 +277,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -340,8 +291,6 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 
 ```r
-library(ggecdf)
-
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 * geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
@@ -355,12 +304,12 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## Weighted  ECDF 
 
-&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-pscore-diagnostics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 ---
 
 ## Your turn 2
 
-<div class="countdown" id="timer_520ae0a4" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_f3628a58" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -413,12 +362,12 @@ tbl_svysummary(svy_des, by = x) %&gt;%
 
 class: gtsummary
 
-<div id="suemogsvyr" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lseufgnnnk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#suemogsvyr .gt_table {
+#lseufgnnnk .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -443,7 +392,7 @@ class: gtsummary
   border-left-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_heading {
+#lseufgnnnk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -455,7 +404,7 @@ class: gtsummary
   border-right-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_title {
+#lseufgnnnk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -467,7 +416,7 @@ class: gtsummary
   border-bottom-width: 0;
 }
 
-#suemogsvyr .gt_subtitle {
+#lseufgnnnk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -479,13 +428,13 @@ class: gtsummary
   border-top-width: 0;
 }
 
-#suemogsvyr .gt_bottom_border {
+#lseufgnnnk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_col_headings {
+#lseufgnnnk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -500,7 +449,7 @@ class: gtsummary
   border-right-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_col_heading {
+#lseufgnnnk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -520,7 +469,7 @@ class: gtsummary
   overflow-x: hidden;
 }
 
-#suemogsvyr .gt_column_spanner_outer {
+#lseufgnnnk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -532,15 +481,15 @@ class: gtsummary
   padding-right: 4px;
 }
 
-#suemogsvyr .gt_column_spanner_outer:first-child {
+#lseufgnnnk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#suemogsvyr .gt_column_spanner_outer:last-child {
+#lseufgnnnk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#suemogsvyr .gt_column_spanner {
+#lseufgnnnk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -552,7 +501,7 @@ class: gtsummary
   width: 100%;
 }
 
-#suemogsvyr .gt_group_heading {
+#lseufgnnnk .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -577,7 +526,7 @@ class: gtsummary
   vertical-align: middle;
 }
 
-#suemogsvyr .gt_empty_group_heading {
+#lseufgnnnk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -592,15 +541,15 @@ class: gtsummary
   vertical-align: middle;
 }
 
-#suemogsvyr .gt_from_md > :first-child {
+#lseufgnnnk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#suemogsvyr .gt_from_md > :last-child {
+#lseufgnnnk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#suemogsvyr .gt_row {
+#lseufgnnnk .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -619,7 +568,7 @@ class: gtsummary
   overflow-x: hidden;
 }
 
-#suemogsvyr .gt_stub {
+#lseufgnnnk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -632,7 +581,7 @@ class: gtsummary
   padding-right: 5px;
 }
 
-#suemogsvyr .gt_stub_row_group {
+#lseufgnnnk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -646,11 +595,11 @@ class: gtsummary
   vertical-align: top;
 }
 
-#suemogsvyr .gt_row_group_first td {
+#lseufgnnnk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#suemogsvyr .gt_summary_row {
+#lseufgnnnk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -660,16 +609,16 @@ class: gtsummary
   padding-right: 5px;
 }
 
-#suemogsvyr .gt_first_summary_row {
+#lseufgnnnk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_first_summary_row.thick {
+#lseufgnnnk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#suemogsvyr .gt_last_summary_row {
+#lseufgnnnk .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -679,7 +628,7 @@ class: gtsummary
   border-bottom-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_grand_summary_row {
+#lseufgnnnk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -689,7 +638,7 @@ class: gtsummary
   padding-right: 5px;
 }
 
-#suemogsvyr .gt_first_grand_summary_row {
+#lseufgnnnk .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -699,11 +648,11 @@ class: gtsummary
   border-top-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_striped {
+#lseufgnnnk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#suemogsvyr .gt_table_body {
+#lseufgnnnk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -712,7 +661,7 @@ class: gtsummary
   border-bottom-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_footnotes {
+#lseufgnnnk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -726,7 +675,7 @@ class: gtsummary
   border-right-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_footnote {
+#lseufgnnnk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 1px;
@@ -735,7 +684,7 @@ class: gtsummary
   padding-right: 5px;
 }
 
-#suemogsvyr .gt_sourcenotes {
+#lseufgnnnk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -749,7 +698,7 @@ class: gtsummary
   border-right-color: #D3D3D3;
 }
 
-#suemogsvyr .gt_sourcenote {
+#lseufgnnnk .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -757,64 +706,64 @@ class: gtsummary
   padding-right: 5px;
 }
 
-#suemogsvyr .gt_left {
+#lseufgnnnk .gt_left {
   text-align: left;
 }
 
-#suemogsvyr .gt_center {
+#lseufgnnnk .gt_center {
   text-align: center;
 }
 
-#suemogsvyr .gt_right {
+#lseufgnnnk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#suemogsvyr .gt_font_normal {
+#lseufgnnnk .gt_font_normal {
   font-weight: normal;
 }
 
-#suemogsvyr .gt_font_bold {
+#lseufgnnnk .gt_font_bold {
   font-weight: bold;
 }
 
-#suemogsvyr .gt_font_italic {
+#lseufgnnnk .gt_font_italic {
   font-style: italic;
 }
 
-#suemogsvyr .gt_super {
+#lseufgnnnk .gt_super {
   font-size: 65%;
 }
 
-#suemogsvyr .gt_footnote_marks {
+#lseufgnnnk .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#suemogsvyr .gt_asterisk {
+#lseufgnnnk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#suemogsvyr .gt_indent_1 {
+#lseufgnnnk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#suemogsvyr .gt_indent_2 {
+#lseufgnnnk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#suemogsvyr .gt_indent_3 {
+#lseufgnnnk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#suemogsvyr .gt_indent_4 {
+#lseufgnnnk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#suemogsvyr .gt_indent_5 {
+#lseufgnnnk .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -837,11 +786,11 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.01</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">1,359 (87%)</td>
 <td class="gt_row gt_center">1,352 (87%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">206 (13%)</td>
 <td class="gt_row gt_center">209 (13%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -853,11 +802,11 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.00</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">764 (49%)</td>
 <td class="gt_row gt_center">764 (49%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">802 (51%)</td>
 <td class="gt_row gt_center">797 (51%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -873,15 +822,15 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.04</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">302 (19%)</td>
 <td class="gt_row gt_center">294 (19%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">665 (42%)</td>
 <td class="gt_row gt_center">691 (44%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+    <tr><td class="gt_row gt_left">    2</td>
 <td class="gt_row gt_center">599 (38%)</td>
 <td class="gt_row gt_center">576 (37%)</td>
 <td class="gt_row gt_center"></td></tr>
@@ -889,15 +838,15 @@ class: gtsummary
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center"></td>
 <td class="gt_row gt_center">0.03</td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+    <tr><td class="gt_row gt_left">    0</td>
 <td class="gt_row gt_center">700 (45%)</td>
 <td class="gt_row gt_center">684 (44%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+    <tr><td class="gt_row gt_left">    1</td>
 <td class="gt_row gt_center">718 (46%)</td>
 <td class="gt_row gt_center">738 (47%)</td>
 <td class="gt_row gt_center"></td></tr>
-    <tr><td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+    <tr><td class="gt_row gt_left">    2</td>
 <td class="gt_row gt_center">147 (9.4%)</td>
 <td class="gt_row gt_center">138 (8.9%)</td>
 <td class="gt_row gt_center"></td></tr>
