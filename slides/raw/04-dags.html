@@ -155,7 +155,7 @@ dagify(
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
 
-<div class="countdown" id="timer_0be4fc2b" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_4fc5cc55" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -237,7 +237,7 @@ ggdag_paths(smk_wt_dag)
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
 
-<div class="countdown" id="timer_5f50d5f4" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_fe6f6e72" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -260,20 +260,15 @@ coffee_cancer_dag %&gt;%
 ## # Outcome: cancer
 ## #
 ## # A tibble: 5 × 11
-##   set   name           x     y direction to     
-##   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;  
-## 1 1     addictive  0.494 2.00  -&gt;        coffee 
-## 2 1     addictive  0.494 2.00  -&gt;        smoking
-## 3 1     cancer     2.41  0.310 &lt;NA&gt;      &lt;NA&gt;   
-## 4 1     coffee    -0.423 2.81  &lt;NA&gt;      &lt;NA&gt;   
-## 5 1     smoking    1.50  1.11  -&gt;        cancer 
-##     xend   yend circular label                  path 
-##    &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;    &lt;chr&gt;                  &lt;chr&gt;
-## 1 -0.423  2.81  FALSE    "Addictive \nBehavior" open…
-## 2  1.50   1.11  FALSE    "Addictive \nBehavior" open…
-## 3 NA     NA     FALSE    "Lung Cancer"          open…
-## 4 NA     NA     FALSE    "Coffee"               open…
-## 5  2.41   0.310 FALSE    "Smoking"              open…
+##   set   name           x     y direction to      xend   yend
+##   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 1     addictive  0.494 2.00  -&gt;        coff… -0.423  2.81 
+## 2 1     addictive  0.494 2.00  -&gt;        smok…  1.50   1.11 
+## 3 1     cancer     2.41  0.310 &lt;NA&gt;      &lt;NA&gt;  NA     NA    
+## 4 1     coffee    -0.423 2.81  &lt;NA&gt;      &lt;NA&gt;  NA     NA    
+## 5 1     smoking    1.50  1.11  -&gt;        canc…  2.41   0.310
+## # … with 3 more variables: circular &lt;lgl&gt;, label &lt;chr&gt;,
+## #   path &lt;chr&gt;
 ```
 
 ---
@@ -332,8 +327,8 @@ adjustmentSets(smk_wt_dag)
 ```
 
 ```
-## { active, age, education, exercise, race, sex,
-##   smokeintensity, smokeyrs, wt71 }
+## { active, age, education, exercise, race, sex, smokeintensity,
+##   smokeyrs, wt71 }
 ```
 
 
@@ -346,7 +341,7 @@ adjustmentSets(smk_wt_dag)
 #### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 #### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-<div class="countdown" id="timer_418eb6d5" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_061b16a8" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
