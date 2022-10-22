@@ -9,7 +9,8 @@ library(broom)
 library(rsample)
 library(ggdag)
 library(causaldata)
-library(tidysmd)
+library(halfmoon)
+library(propensity)
 
 set.seed(1234)
 ```
@@ -153,7 +154,7 @@ When we adjust for the variables in our DAG, we get an estimate of about 3.5 kg-
 
 For a simple IPW model, we have two modeling steps. First, we fit a propensity score model, which predicts the probability that you received a treatment or exposure (here, that a participant quit smoking). We use this model to calculate inverse probability weights--1 / your probability of treatment. Then, in the second step, we use this weights in the outcome model, which estimates the effect of exposure on the outcome (here, the effect of quitting smoking on gaining weight).
 
-For the propensity score model, we'll use logistic regression (since quitting smoking is a binary variable). The outcome is quitting smoking, and the variables in the model are all those included in our adjustment set. Then, we'll use `augment()` from {broom} (which calls `predict()` on the inside) to calculate our weights and save it back into our data set.
+For the propensity score model, we'll use logistic regression (since quitting smoking is a binary variable). The outcome is quitting smoking, and the variables in the model are all those included in our adjustment set. Then, we'll use `augment()` from {broom} (which calls `predict()` on the inside) to calculate our weights using `propensity::wt_ate()` and save it back into our data set. 
 
 
 ```{r}
@@ -171,7 +172,7 @@ nhefs_complete_uc <- propensity_model %>%
   # predict whether quit smoking
   augment(type.predict = "response", data = nhefs_complete_uc) %>% 
   # calculate inverse probability
-  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  mutate(wts = wt_ate(.fitted, qsmk))
 
 nhefs_complete_uc %>% 
   select(qsmk, .fitted, wts)
@@ -181,7 +182,7 @@ Let's look at the distribution of the weights.
 
 ```{r}
 ggplot(nhefs_complete_uc, aes(wts)) +
-  geom_density(col = "#E69F00", fill = "#E69F0095", size = .8) + 
+  geom_histogram(color = "white", fill = "#E69F00", bins = 50) + 
   #  use a log scale for the x axis
   scale_x_log10() + 
   theme_minimal(base_size = 20) + 
@@ -194,7 +195,7 @@ The main goal here is to *break* the non-causal associations between quitting sm
 
 Standardized mean differences (SMD) are a simple measurement of differences that work across variable types. In general, the closer to 0 we are, the better job we have done eliminating the non-causal relationships we drew in our DAG. Note that low SMDs for everything we adjust for does *not* mean that there is not something else that might confound our study. Unmeasured confounders or misspecified DAGs can still distort our effects, even if our SMDs look great!
 
-We'll use the {tidysmd} package to calculate the SMDs, then visualize them.
+We'll use the {halfmoon} package to calculate the SMDs, then visualize them.
 
 ```{r}
 vars <- c(
@@ -220,6 +221,28 @@ ggplot(
 ```
 
 These look pretty good! Some variables are better than others, but weighting appears to have done a much better job eliminating these differences than an unadjusted analysis.
+
+We can also use halfmoon's `geom_mirror_histogram()` to visualize the impact that the weights are having on our population.
+
+```{r}
+nhefs_complete_uc %>%
+  mutate(qsmk = factor(qsmk)) %>%
+  ggplot(aes(.fitted)) +
+  geom_mirror_histogram(
+    aes(group = qsmk),
+    bins = 50
+  ) +
+  geom_mirror_histogram(
+    aes(fill = qsmk, weight = wts),
+    bins = 50,
+    alpha = .5
+  ) +
+  scale_y_continuous(labels = abs) +
+  labs(x = "propensity score") + 
+  theme_minimal(base_size = 20)
+```
+
+Both groups are being *upweighted* so that their distributions of propensity scores are much more similar.
 
 We could do more here to analyze our assumptions, but let's move on to our second step: fitting the outcome model weighted by our inverse probabilities. Some researchers call these Marginal Structural Models, in part because the model is marginal; we only need to include our outcome (`wt82_71`) and exposure (`qsmk`). The other variables aren't in the model; they are accounted for with the IPWs!
 
@@ -292,7 +315,7 @@ fit_ipw <- function(split, ...) {
   # calculate inverse probability weights
   .df <- propensity_model %>% 
     augment(type.predict = "response", data = .df) %>% 
-    mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+    mutate(wts = wt_ate(.fitted, qsmk))
   
   # fit correctly bootsrapped ipw model
   lm(wt82_71 ~ qsmk, data = .df, weights = wts) %>% 
