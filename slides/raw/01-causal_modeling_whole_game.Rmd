@@ -44,6 +44,12 @@ set.seed(1234)
 
 class: middle, center, inverse
 
+# **We'll focus on the broader ideas behind each step and what they look like all together; we don't expect you to fully digest each idea. We'll spend the rest of the workshop taking up each step in detail**
+
+---
+
+class: middle, center, inverse
+
 # **Do people who quit smoking gain weight?**
 
 ---
