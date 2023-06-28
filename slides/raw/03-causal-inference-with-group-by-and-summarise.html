@@ -508,6 +508,8 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>sim <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">group_by</span>(exposure) <span class="sc">|&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">summarise</span>(<span class="at">avg_y =</span> <span class="fu">mean</span>(outcome)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   exposure avg_y
@@ -543,6 +545,8 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sim <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">group_by</span>(confounder, exposure) <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">summarise</span>(<span class="at">avg_y =</span> <span class="fu">mean</span>(outcome))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
 # Groups:   confounder [2]
@@ -567,6 +571,8 @@ Coefficients:
 <span id="cb11-7"><a href="#cb11-7"></a>    <span class="at">names_prefix =</span> <span class="st">"x_"</span></span>
 <span id="cb11-8"><a href="#cb11-8"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb11-9"><a href="#cb11-9"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   confounder estimate

@@ -114,7 +114,7 @@ lm(y ~ treatment + weight + age, data = d) |>
 #| echo: false
 d |>
   mutate(
-    p = glm(treatment ~ weight + age, data = .) |>predict(type = "response"),
+    p = glm(treatment ~ weight + age, data = d) |> predict(type = "response"),
     ate = treatment / p + (1 - treatment) / (1 - p)
   ) |>
   as.data.frame() -> d
@@ -199,7 +199,7 @@ lm(y ~ treatment + weight + age, data = d) |>
 #| echo: false
 d |>
   mutate(
-    p = glm(treatment ~ weight + age, data = .) |>predict(type = "response"),
+    p = glm(treatment ~ weight + age, data = d) |> predict(type = "response"),
     ate = treatment / p + (1 - treatment) / (1 - p)
   ) |>
   as.data.frame() -> d

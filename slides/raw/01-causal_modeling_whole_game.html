@@ -496,14 +496,14 @@ Malcolm Barrett
 <section id="multivariable-regression-whats-the-association" class="slide level2">
 <h2>Multivariable regression: what’s the association?</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|1-8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">lm</span>( <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>  wt82_71<span class="sc">~</span> qsmk <span class="sc">+</span> sex <span class="sc">+</span>  <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a>    wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">data =</span> nhefs_complete_uc <span class="co">#&lt;&lt;</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a>) <span class="sc">|&gt;</span><span class="co">#&lt;&lt;</span></span>
+<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|1-8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">lm</span>( </span>
+<span id="cb5-2"><a href="#cb5-2"></a>  wt82_71<span class="sc">~</span> qsmk <span class="sc">+</span> sex <span class="sc">+</span>  </span>
+<span id="cb5-3"><a href="#cb5-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
+<span id="cb5-4"><a href="#cb5-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb5-5"><a href="#cb5-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
+<span id="cb5-6"><a href="#cb5-6"></a>    wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">data =</span> nhefs_complete_uc </span>
+<span id="cb5-8"><a href="#cb5-8"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb5-9"><a href="#cb5-9"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
 <span id="cb5-10"><a href="#cb5-10"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"qsmk"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -528,8 +528,8 @@ Malcolm Barrett
 <section id="fit-propensity-score-model" class="slide level2">
 <h2>Fit propensity score model</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|1-2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>( <span class="co">#&lt;&lt;</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  qsmk <span class="sc">~</span> sex <span class="sc">+</span>  <span class="co">#&lt;&lt;</span></span>
+<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|1-2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>( </span>
+<span id="cb7-2"><a href="#cb7-2"></a>  qsmk <span class="sc">~</span> sex <span class="sc">+</span>  </span>
 <span id="cb7-3"><a href="#cb7-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
 <span id="cb7-4"><a href="#cb7-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
 <span id="cb7-5"><a href="#cb7-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
@@ -545,9 +545,9 @@ Malcolm Barrett
 <div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|4,6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(propensity)</span>
 <span id="cb8-2"><a href="#cb8-2"></a>nhefs_complete_uc <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>  <span class="co"># predict whether quit smoking</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> nhefs_complete_uc) <span class="sc">|&gt;</span><span class="co">#&lt;&lt;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> nhefs_complete_uc) <span class="sc">|&gt;</span></span>
 <span id="cb8-5"><a href="#cb8-5"></a>  <span class="co"># calculate inverse probability</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a>  <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, qsmk)) <span class="co">#&lt;&lt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, qsmk)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-7" class="slide level2 center" data-background-color="#23373B">
@@ -581,10 +581,10 @@ Malcolm Barrett
 <section id="estimate-causal-effect-with-ipw" class="slide level2">
 <h2>Estimate causal effect with IPW</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|1-2,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>ipw_model <span class="ot">&lt;-</span> <span class="fu">lm</span>( <span class="co">#&lt;&lt;</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>  wt82_71 <span class="sc">~</span> qsmk, <span class="co">#&lt;&lt;</span></span>
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|1-2,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>ipw_model <span class="ot">&lt;-</span> <span class="fu">lm</span>( </span>
+<span id="cb9-2"><a href="#cb9-2"></a>  wt82_71 <span class="sc">~</span> qsmk, </span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">data =</span> nhefs_complete_uc, </span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">weights =</span> wts <span class="co">#&lt;&lt;</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">weights =</span> wts </span>
 <span id="cb9-5"><a href="#cb9-5"></a>) </span>
 <span id="cb9-6"><a href="#cb9-6"></a></span>
 <span id="cb9-7"><a href="#cb9-7"></a>ipw_estimate <span class="ot">&lt;-</span> ipw_model <span class="sc">|&gt;</span></span>
@@ -611,10 +611,10 @@ Malcolm Barrett
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12" data-code-line-numbers="|3-4,6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># also see robustbase, survey, gee, and others</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="fu">library</span>(estimatr)</span>
-<span id="cb12-3"><a href="#cb12-3"></a>ipw_model_robust <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>( <span class="co">#&lt;&lt;</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>  wt82_71 <span class="sc">~</span> qsmk, <span class="co">#&lt;&lt;</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>ipw_model_robust <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>( </span>
+<span id="cb12-4"><a href="#cb12-4"></a>  wt82_71 <span class="sc">~</span> qsmk, </span>
 <span id="cb12-5"><a href="#cb12-5"></a>  <span class="at">data =</span> nhefs_complete_uc, </span>
-<span id="cb12-6"><a href="#cb12-6"></a>  <span class="at">weights =</span> wts <span class="co">#&lt;&lt;</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="at">weights =</span> wts </span>
 <span id="cb12-7"><a href="#cb12-7"></a>) </span>
 <span id="cb12-8"><a href="#cb12-8"></a></span>
 <span id="cb12-9"><a href="#cb12-9"></a>ipw_estimate_robust <span class="ot">&lt;-</span> ipw_model_robust <span class="sc">|&gt;</span></span>
@@ -684,10 +684,10 @@ Malcolm Barrett
 <section id="using-rsample-to-bootstrap-our-causal-effect" class="slide level2">
 <h2>Using {rsample} to bootstrap our causal effect</h2>
 <div class="fragment">
-<div class="cell" data-layout-align="center" data-hash="01-causal_modeling_whole_game_cache/revealjs/boot_cache_f763b9630ab52a449e780d03ff737c2a">
+<div class="cell" data-layout-align="center" data-hash="01-causal_modeling_whole_game_cache/revealjs/boot_cache_c1ae9350162d3ec56b38e7754b023d10">
 <div class="sourceCode cell-code" id="cb17" data-code-line-numbers="|2-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># fit ipw model to bootstrapped samples</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>ipw_results <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(nhefs_complete, <span class="dv">1000</span>, <span class="at">apparent =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span><span class="co">#&lt;&lt;</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">mutate</span>(<span class="at">results =</span> <span class="fu">map</span>(splits, fit_ipw)) <span class="co">#&lt;&lt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2"></a>ipw_results <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(nhefs_complete, <span class="dv">1000</span>, <span class="at">apparent =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">mutate</span>(<span class="at">results =</span> <span class="fu">map</span>(splits, fit_ipw)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -695,7 +695,7 @@ Malcolm Barrett
 <h2>Using {rsample} to bootstrap our causal effect</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb18" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># get t-statistic-based CIs</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>boot_estimate <span class="ot">&lt;-</span> <span class="fu">int_t</span>(ipw_results, results) <span class="sc">|&gt;</span> <span class="co">#&lt;&lt;</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>boot_estimate <span class="ot">&lt;-</span> <span class="fu">int_t</span>(ipw_results, results) <span class="sc">|&gt;</span> </span>
 <span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"qsmk"</span>)</span>
 <span id="cb18-4"><a href="#cb18-4"></a></span>
 <span id="cb18-5"><a href="#cb18-5"></a>boot_estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
