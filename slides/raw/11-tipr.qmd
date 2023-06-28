@@ -1,0 +1,193 @@
+---
+title: "Tipping Point Sensitivity Analyses"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+knitr:
+  opts_chunk: 
+    eval: false
+---
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+## Recall: Propensity scores {background-color="#23373B"}
+
+Rosenbaum and Rubin showed in observational studies, conditioning on **propensity scores** can lead to unbiased estimates of the exposure effect
+
+1. There are no unmeasured confounders
+2. Every subject has a nonzero probability of receiving either exposure
+
+## Quantifying Unmeasured Confounding {background-color="#23373B"}
+
+1. The exposure-outcome 
+1. The exposure-unmeasured 
+1. The unmeasured confounder-outcome effect
+
+## {background-color="#23373B" .center .large}
+
+### **What will tip our confidence bound to cross zero?**
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. The exposure-outcome 
+1. The exposure-unmeasured 
+1. ~~The unmeasured confounder-outcome effect~~
+:::
+
+---
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. The exposure-outcome 
+1. ~~The exposure-unmeasured~~
+1. The unmeasured confounder-outcome effect
+:::
+
+## Tipping point
+
+$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
+* $\beta_{UO}$: the **unmeasured confounder-outcome effect**
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. ~~The exposure-outcome~~
+1. ~~The exposure-unmeasured~~
+1. The unmeasured confounder-outcome effect
+:::
+
+## Tipping point
+
+$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
+
+* $LB_{obs}$: **limiting bound** - the bound closest to the null
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. The exposure-outcome 
+1. ~~The exposure-unmeasured~~
+1. ~~The unmeasured confounder-outcome effect~~
+:::
+
+## Tipping point
+
+$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
+
+* $\delta$: **standardized mean difference** of the unmeasured confounder between the exposed and unexposed groups
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. ~~The exposure-outcome~~
+1. The exposure-unmeasured
+1. ~~The unmeasured confounder-outcome effect~~
+:::
+
+## Tipping Point
+
+$$\Huge \beta_{UO}(LB_{obs}, \delta)=\frac{LB_{obs}}{\delta}$$
+
+## Tipping Point
+
+$$\Huge \delta(LB_{obs}, \beta_{UO})=\frac{LB_{obs}}{\beta_{UO}}$$
+
+## {background-color="#23373B" .center .huge}
+
+### **tipr**
+
+## Main function
+
+### `tip_coef()`
+
+* `effect_observed`: observed exposure - outcome effect 
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. The exposure-outcome
+1. ~~The exposure-unmeasured~~
+1. ~~The unmeasured confounder-outcome effect~~
+:::
+
+## Main function
+
+### `tip_coef()`
+* `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. ~~The exposure-outcome~~
+1. The exposure-unmeasured
+1. ~~The unmeasured confounder-outcome effect~~
+:::
+
+## Main function
+
+### `tip_coef()`
+* `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
+
+## Quantifying Unmeasured Confounding
+
+::: {.nonincremental}
+1. ~~The exposure-outcome~~
+1. ~~The exposure-unmeasured~~
+1. The unmeasured confounder-outcome effect
+:::
+
+## Main function
+
+### `tip_coef()`
+
+::: {.nonincremental}
+* `effect_observed`
+:::
+
+## Main function
+
+### `tip_coef()`:  **specify** one, it will **estimate** the other
+
+::: {.nonincremental}
+* `exposure_confounder_effect`
+* `confounder_outcome_effect` 
+:::
+
+## Example
+
+*Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
+
+```{r}
+#| eval: true
+#| output-location: fragment
+library(tipr)
+tip_coef(
+  effect_observed = 2.4,
+  exposure_confounder_effect = 0.3
+)
+```
+
+## Example
+
+* The observed effect (2.4, 4.4) *WOULD* be tipped by 1 unmeasured confounder
+with the following specifications:
+
+* estimated standardized mean difference between the unmeasured confounder
+in the exposed population and unexposed population: *0.3*
+
+* estimated association between the unmeasured confounder and the outcome: *8*
+
+## *Your turn*
+
+`r countdown::countdown(minutes = 5)`
+
+### Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.

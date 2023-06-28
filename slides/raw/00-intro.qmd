@@ -1,0 +1,90 @@
+---
+title: "Causal Inference in R: Introduction"
+date: "2020-07-29 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+---
+
+## `> who_are_we(c("lucy", "malcolm"))`
+
+```{r}
+#| label: setup
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+```{css}
+/*| echo: false*/
+img {
+  height: 250px;
+  width: 250px;
+  border-radius: 50%;
+}
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+<br />
+<br />
+
+<img src="img/ldm.jpg" class="rounded-circle" />
+
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `r fontawesome::fa("globe")` [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)
+:::
+
+::: {.column width="50%"}
+<br />
+<br />
+<img src="img/mb.jpg" class="rounded-circle" />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `r fontawesome::fa("globe")` [https://www.malco.io/](https://www.malco.io/)
+:::
+
+::::
+
+
+## The three practices of analysis {background-color="#23373B"}
+
+1. Describe
+2. Predict
+3. Explain
+
+## {background-color="#23373B" .center}
+### Normal regression estimates associations. But we want *counterfactual, causal* estimates: 
+<br />
+
+### What would happen if *everyone* in the study were exposed to x vs if *no one* was exposed.
+
+
+## {background-color="#23373B" .center}
+### For causal inference, we need to make sometimes unverifiable assumptions. 
+
+<br />
+
+### Today, we'll focus on the assumption of *no confounding*.
+
+## Tools for causal inference {background-color="#23373B"}
+
+1. Causal diagrams
+1. Propensity score weighting
+1. Propensity score matching
+
+## Other tools for causal inference {background-color="#23373B"}
+
+1. Randomized trials
+1. G-methods & friends
+1. Instrumental variables & friends
+
+
+## {background-color="#23373B" .center}
+
+### **RStudio Cloud**: <https://bit.ly/causal-r-cloud> {.d-flex .justify-content-center .align-items-center .vh-100}
+
+## Resources {background-color="#23373B"}
+### [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
+### [The Book of Why](http://bayes.cs.ucla.edu/WHY/): Detailed, friendly intro to DAGs and causal inference. Free online.
+### [Mastering 'Metrics](http://www.masteringmetrics.com/): Friendly introduction to IV-based methods

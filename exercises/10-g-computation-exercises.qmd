@@ -1,0 +1,243 @@
+---
+title: "The Parametric G-Formula"
+format: html
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(broom)
+library(touringplans)
+
+seven_dwarfs <- seven_dwarfs_train_2018 |>
+  filter(hour == 9)
+```
+
+# Your Turn 1
+
+For the parametric G-formula, we'll use a single model to fit a causal model of Extra Magic Hours (`extra_magic_morning`) on Posted Waiting Times (`avg_spostmin`) where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
+
+First, let's fit the model. 
+
+1.Use `lm()` to create a model with the outcome, exposure, and confounders.
+2. Save the model as `standardized_model`
+
+```{r}
+_______ ___ _______(
+  avg_spostmin ~ _______ + wdw_ticket_season + close + weather_wdwhigh, 
+  data = seven_dwarfs
+)
+```
+
+
+# Your Turn 2
+
+Now that we've fit a model, we need to clone our data set. To do this, we'll simply mutate it so that in one set, all participants have `extra_magic_morning` set to 0 and in another, all participants have `extra_magic_morning` set to 1.
+
+1. Create the cloned data sets, called `yes` and `no`.
+2. For both data sets, use `standardized_model` and `augment()` to get the predicted values. Use the `newdata` argument in `augment()` with the relevant cloned data set. Then, select only the fitted value. Rename `.fitted` to either `yes_extra_hours` or `no_extra_hours` (use the pattern `select(new_name = old_name)`).
+3. Save the predicted data sets as`predicted_yes` and `predicted_no`.
+
+```{r}
+_______ <- seven_dwarfs |>
+  _______
+
+_______ <- seven_dwarfs |>
+  _______
+
+predicted_yes <- standardized_model |>
+  _______(newdata = _______) |>
+  _______
+
+predicted_no <- standardized_model |>
+  _______(newdata = _______) |>
+  _______
+```
+
+# Your Turn 3
+
+Finally, we'll get the mean differences between the values. 
+
+1. Bind `predicted_yes` and  `predicted_no` using `bind_cols()`
+2. Summarize the predicted values to create three new variables: `mean_yes`, `mean_no`, and `difference`. The first two should be the means of `yes_extra_hours` and `no_extra_hours`. `difference` should be `mean_yes` minus `mean_no`.
+
+```{r}
+_______ |>
+  _______(
+    mean_yes = _______,
+    mean_no = _______,
+    difference = _______
+  )
+```
+
+That's it! `difference` is our effect estimate. To get confidence intervals, however, we would need to use the bootstrap method. See the link below for a full example.
+
+## Stretch goal: Boostrapped intervals
+
+Like propensity-based models, we need to do a little more work to get correct standard errors and confidence intervals. In this stretch goal, use rsample to bootstrap the estimates we got from the G-computation model. 
+
+Remember, you need to bootstrap the entire modeling process, including the regression model, cloning the data sets, and calculating the effects.
+
+```{r}
+set.seed(1234)
+library(rsample)
+
+fit_gcomp <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit outcome model. remember to model using `.df` instead of `seven_dwarfs`
+  
+  
+  # clone datasets. remember to clone `.df` instead of `seven_dwarfs`
+  
+  
+  # predict wait time for each cloned dataset
+
+  
+  # calculate ATE
+  bind_cols(predicted_yes, predicted_no) |>
+    summarize(
+      mean_yes = mean(yes_extra_hours),
+      mean_no = mean(no_extra_hours),
+      difference = mean_yes - mean_no
+    ) |>
+    # rsample expects a `term` and `estimate` column
+    pivot_longer(everything(), names_to = "term", values_to = "estimate")
+}
+
+gcomp_results <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, ______))
+
+# using bias-corrected confidence intervals
+boot_estimate <- int_bca(_______, results, .fn = fit_gcomp)
+
+boot_estimate
+```
+
+# Your Turn 4
+
+1. Take a look at how many participants were lost to follow up in `nhefs`, called `censored` in this data set. You don't need to change anything in this code.
+
+```{r}
+nhefs_censored <- nhefs |>
+  drop_na(
+    qsmk, sex, race, age, school, smokeintensity, smokeyrs, exercise,
+    active, wt71
+  )
+
+nhefs_censored |>
+  count(censored = as.factor(censored)) |>
+  ggplot(aes(censored, n)) + 
+  geom_col()
+```
+
+2. Create a logistic regression model that predicts whether or not someone is censored. 
+
+```{r}
+cens_model <- ___(
+  ______ ~ qsmk + sex + race + age + I(age^2) + education +
+    smokeintensity + I(smokeintensity^2) +
+    smokeyrs + I(smokeyrs^2) + exercise + active +
+    wt71 + I(wt71^2),
+  data = nhefs_censored, 
+  family = binomial()
+)
+```
+
+# Your Turn 5
+
+1. Use the logistic model you just fit to create inverse probability of censoring weights
+2. Calculate the weights using `.fitted`
+3. Join `cens` to `nhefs_censored` so that you have the weights in your dataset
+4. Fit a linear regression model of `wt82_71` weighted by `cens_wts`. We'll use this model as the basis for our G-computation
+
+```{r}
+cens <- _______ |>
+  augment(type.predict = "response", data = nhefs_censored) |>
+  mutate(cens_wts = 1 / ifelse(censored == 0, 1 - ______, 1)) |>
+  select(id, cens_wts)
+
+#  join all the weights data from above
+nhefs_censored_wts <- _______ |>
+  left_join(_____, by = "id")
+
+cens_model <- lm(
+  ______ ~ qsmk + I(qsmk * smokeintensity) + smokeintensity +
+    I(smokeintensity^2) + sex + race + age + I(age^2) + education + smokeyrs +
+    I(smokeyrs^2) + exercise + active + wt71 + I(wt71^2),
+  data = nhefs_censored_wts,
+  weights = ______
+)
+```
+
+# Your Turn 6
+
+1. Next, we usually need to clone our datasets, but we can use `kept_smoking` and `quit_smoking` that we created in the first section
+2. Use the outcome model, `cens_model`, to make predictions for `kept_smoking` and `quit_smoking`
+3. Calculate the differences between the mean values of `kept_smoking` and `quit_smoking`
+
+```{r}
+predicted_kept_smoking <- _______ |>
+  augment(newdata = _______) |>
+  select(kept_smoking = .fitted)
+
+predicted_quit_smoking <- _______ |>
+  augment(newdata = _______) |>
+  select(quit_smoking = .fitted)
+
+#  summarize the mean difference
+bind_cols(predicted_kept_smoking, predicted_quit_smoking) |>
+  summarise(
+    
+  )
+```
+
+## Stretch goal: Boostrapped intervals
+
+Finish early? Try bootstrapping the G-computation model with censoring weights
+
+Remember, you need to bootstrap the entire modeling process, including fitting both regression models, cloning the data sets, and calculating the effects.
+
+```{r}
+fit_gcomp_cens <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fit the censoring model. remember to model using `.df` instead of `nhefs_censored`
+
+    # calculate the inverse probability of censoring weights. remember to predict `.df` instead of `nhefs_censored`
+  
+  #  join all the weights data from above to .df
+  
+  # fit outcome model. remember to model using `nhefs_censored_wts` instead of `nhefs_censored` or `.df`
+  
+  # clone datasets. remember to clone `.df` instead of `nhefs_censored`
+  
+  # predict change in weight for each cloned dataset
+  
+  # calculate ATE
+  bind_cols(predicted_kept_smoking, predicted_quit_smoking) |>
+    summarize(
+      mean_quit_smoking = mean(quit_smoking),
+      mean_kept_smoking = mean(kept_smoking),
+      difference = mean_quit_smoking - mean_kept_smoking
+    ) |>
+    # rsample expects a `term` and `estimate` column
+    pivot_longer(everything(), names_to = "term", values_to = "estimate")
+}
+
+gcomp_cens_results <- bootstraps(nhefs_censored, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, ______))
+
+# using bias-corrected confidence intervals
+boot_estimate_cens <- int_bca(_______, results, .fn = fit_gcomp_cens)
+
+boot_estimate_cens
+```
+
+***
+
+# Take aways
+
+* To fit the parametric G-formula, fit a standardized model with all covariates. Then, use cloned data sets with values set to each level of the exposure you want to study. 
+* Use the model to predict the values for that level of the exposure and compute the effect estimate you want
+* If loss to follow-up is potentially related to your study question, inverse probability of censoring weights can help mitigate the bias.

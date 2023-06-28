@@ -1,0 +1,399 @@
+---
+title: "Using Propensity Scores"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+---
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+## Propensity scores {background-color="#23373B" .large}
+
+Matching
+
+Weighting
+
+Stratification
+
+Direct Adjustment
+
+...
+
+## Propensity scores {background-color="#23373B" .large}
+
+**Matching**
+
+Weighting
+
+Stratification
+
+Direct Adjustment
+
+...
+
+## Target estimands
+
+```{r}
+#| include: false
+library(tidyverse)
+library(broom)
+library(causaldata)
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete
+)
+```
+
+### Average Treatment Effect (ATE)
+
+$$\tau = E[Y(1) - Y(0)]$$
+```{r}
+#| echo: false
+#| fig.height: 2.0
+set.seed(10)
+p <- tibble(
+  x = c(runif(10, 0, 0.9), runif(10, 0.1, 1)),
+  y = rep(c(1, 0), each = 10),
+  col = rep(c("Treated", "Control"), each = 10)
+)
+set.seed(10)
+ggplot(p, aes(x = x, y = y, color = col)) +
+  geom_text(aes(label = col), position = "jitter") + 
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  scale_color_manual(values = c("cornflower blue", "orange")) +
+  labs(x = "", y = "")
+```
+
+## Target estimands
+
+### Average Treatment Effect among the Treated (ATT)
+
+$$\tau = E[Y(1) - Y(0) | Z = 1]$$
+```{r}
+#| echo: false
+#| fig.height: 3.0
+set.seed(10)
+p |>
+  mutate(color = ifelse(x > 0.8, "grey", col)) |>
+ggplot(aes(x = x, y = y, color = color)) +
+  geom_text(aes(label = col), position = "jitter") + 
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  scale_color_manual(values = c("cornflower blue", "grey", "orange")) +
+  labs(x = "", y = "") + 
+  geom_vline(xintercept = c(0, 0.8))
+```
+
+## Matching in R (ATT)
+
+```{r}
+#| output-location: fragment
+library(MatchIt)
+m <- matchit(qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete)
+m
+```
+
+## Matching in R (ATT)
+
+```{r}
+#| output-location: fragment
+matched_data <- get_matches(m, id = "i")
+glimpse(matched_data)
+```
+
+## Target estimands
+
+### Average Treatment Effect among the Controls (ATC)
+
+$$\tau = E[Y(1) - Y(0) | Z = 0]$$
+```{r}
+#| echo: false
+#| fig.height: 3.0
+set.seed(10)
+p |>
+  mutate(color = ifelse(x < 0.1, "grey", col)) |>
+ggplot(aes(x = x, y = y, color = color)) +
+  geom_text(aes(label = col), position = "jitter") + 
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  scale_color_manual(values = c("cornflower blue", "grey", "orange")) +
+  labs(x = "", y = "") + 
+  geom_vline(xintercept = c(0.115, 1))
+```
+
+## Matching in R (ATC)
+
+```{r}
+#| output-location: fragment
+library(MatchIt)
+m <- matchit(qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete,
+  estimand = "ATC")
+m
+```
+
+## Target estimands
+
+### Average Treatment Effect among the Matched (ATM)
+
+```{r}
+#| echo: false
+#| fig.height: 3.0
+set.seed(10)
+p |>
+  mutate(color = ifelse(x < 0.1 | x > 0.8, "grey", col)) |>
+ggplot(aes(x = x, y = y, color = color)) +
+  geom_text(aes(label = col), position = "jitter") + 
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  scale_color_manual(values = c("cornflower blue", "grey", "orange")) +
+  labs(x = "", y = "") + 
+  geom_vline(xintercept = c(0.115, 0.8))
+```
+
+## Matching in R (ATM)
+
+```{r}
+#| code-line-numbers: "|8-9"
+#| output-location: slide
+library(MatchIt)
+m <- matchit(qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  data = nhefs_complete,
+  link = "linear.logit", 
+  caliper = 0.1) 
+m
+```
+
+. . .
+
+Observations with propensity scores (on the linear logit scale) within 0.1 standard errors (the caliper) will be discarded
+
+## Matching in R (ATM)
+
+```{r}
+matched_data <- get_matches(m, id = "i")
+glimpse(matched_data)
+```
+
+## *Your Turn 1*
+
+`r countdown::countdown(minutes = 10)`
+
+### Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
+
+## Propensity scores {background-color="#23373B".large}
+
+Matching
+
+**Weighting**
+
+Stratification
+
+Direct Adjustment
+
+...
+
+## Target estimands: ATE {background-color="#23373B"}
+
+Average Treatment Effect (ATE)
+
+$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
+
+## Target estimands: ATT & ATC {background-color="#23373B"}
+
+. . .
+
+Average Treatment Effect Among the Treated (ATT)
+$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
+
+. . .
+
+Average Treatment Effect Among the Controls (ATC)
+$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
+
+
+## Target estimands: ATM & ATO {background-color="#23373B"}
+
+. . .
+
+Average Treatment Effect Among the Evenly Matchable (ATM)
+$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
+
+. . .
+
+Average Treatment Effect Among the Overlap Population
+$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
+
+## Histogram of propensity scores
+
+```{r}
+#| include: false
+df <- propensity_model |>
+  augment(type.predict = "response", data = nhefs_complete) |>
+  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted),
+    w_ate = (qsmk / .fitted) + 
+      ((1 - qsmk) / (1 - .fitted)),
+    w_att = ((.fitted * qsmk) / .fitted) + 
+      ((.fitted * (1 - qsmk)) / (1 - .fitted)),
+    w_atc = (((1 - .fitted) * qsmk) / .fitted) + 
+      (((1 - .fitted) * (1 - qsmk)) / (1 - .fitted)),
+    w_atm = pmin(.fitted, 1 - .fitted) / 
+      (qsmk * .fitted + (1 - qsmk) * (1 - .fitted)),
+    w_ato = (1 - .fitted) * qsmk + 
+      .fitted * (1 - qsmk),
+    qsmk = factor(qsmk)
+  )
+
+d <- df |>
+  pivot_wider(names_from = qsmk, values_from = .fitted, names_prefix = "qsmk_p")
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(halfmoon)
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  theme(legend.position = "bottom")
+```
+
+## ATE
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_ate), alpha = 0.5) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
+```
+
+## ATT
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_att), alpha = 0.5) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
+```
+
+## ATC
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_atc), alpha = 0.5) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
+```
+
+## ATM
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_atm), alpha = 0.5) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
+```
+
+## ATO
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(df, aes(.fitted)) + 
+  geom_mirror_histogram(bins = 50, aes(group = qsmk)) + 
+  geom_mirror_histogram(bins = 50, aes(fill = qsmk, weight = w_ato), alpha = 0.5) + 
+  geom_hline(yintercept = 0, lwd = 0.5) +
+  ylab("count") + 
+  xlab("propensity score") +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("green", "blue")) +
+  theme(legend.position = "bottom")
+```
+
+## ATE in R 
+
+Average Treatment Effect (ATE)
+$w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
+  
+```{r}
+#| code-line-numbers: "|4"
+library(propensity)
+df <- propensity_model |>
+  augment(type.predict = "response", data = nhefs_complete) |>
+  mutate(w_ate = wt_ate(.fitted, qsmk)) 
+```
+
+## *Your Turn* 
+
+`r countdown::countdown(minutes = 10)`
+
+### Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame
+
+### *Stretch*: Using the same propensity scores, create ATM weights

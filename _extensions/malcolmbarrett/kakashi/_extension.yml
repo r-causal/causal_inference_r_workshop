@@ -1,0 +1,35 @@
+title: Kakashi Reveal.js Quarto Presentation
+author: Malcolm Barrett
+version: 0.0.1
+contributes:
+  formats:
+    common:
+      knitr:
+        opts_chunk:
+          echo: true
+          warning: false
+          message: false
+          dev: "ragg_png"
+          dpi: 320
+          out.width: "80%"
+          fig.width: 6
+          fig.asp: 0.618
+          fig.retina: 2
+          fig.align: "center"
+          fig.show: "hold"
+    revealjs:
+      theme: kakashi.scss
+      slide-number: c/t
+      show-slide-number: all
+      title-slide-attributes:
+        data-background-color: "#23373B"
+        data-color: "#EDEEF"
+      preview-links: true
+      code-overflow: wrap
+      menu: false
+      incremental: true
+      auto-animate: true
+      transition: fade
+      background-transition: fade
+      transition-speed: fast
+

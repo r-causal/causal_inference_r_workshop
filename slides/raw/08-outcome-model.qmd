@@ -1,0 +1,97 @@
+---
+title: "Fitting the outcome model"
+author: "Malcolm Barrett"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+knitr:
+  opts_chunk: 
+    eval: false
+---
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+## Outcome Model {.large}
+
+```{r}
+library(broom)
+
+lm(outcome ~ exposure, data = df, weights = wts) |>
+  tidy()
+```
+
+. . .
+
+`r emo::ji("check")` This will get us the point estimate  
+
+. . .
+
+`r emo::ji("x")` This will get NOT us the correct confidence intervals  
+
+. . .
+
+`r emo::ji("package")` {rsample}
+
+## 1. Create a function to run your analysis once on a sample of your data
+
+::: {.small}
+
+```{r}
+#| code-line-numbers: "|1-2|4-9|11-14|16-18"
+fit_ipw <- function(split, ...) {
+  .df <- analysis(split)
+  
+  # fit propensity score model
+  propensity_model <- glm(
+    exposure ~ confounder_1 + confounder_2 + ...
+    family = binomial(), 
+    data = .df
+  )
+  
+  # calculate inverse probability weights
+  .df <- propensity_model |>
+    augment(type.predict = "response", data = .df) |>
+    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+  
+  # fit correctly bootsrapped ipw model
+  lm(outcome ~ exposure, data = .df, weights = wts) |>
+    tidy()
+}
+```
+:::
+
+## 2. Use {rsample} to bootstrap our causal effect
+
+```{r}
+#| code-line-numbers: "|4|5"
+library(rsample)
+
+# fit ipw model to bootstrapped samples
+ipw_results <- bootstraps(df, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, fit_ipw)) 
+```
+
+## 3. Pull out the causal effect
+
+```{r}
+#| code-line-numbers: "|2"
+#| eval: false
+# get t-statistic-based CIs
+boot_estimate <- int_t(ipw_results, results) |> 
+  filter(term == "exposure")
+```
+
+## *Your Turn*
+
+`r countdown::countdown(minutes = 12)`
+
+### Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `extra_magic_morning` and `avg_spostmin`
+
+### Using the `bootstraps()` and `int_t()` functions to estimate the final effect.
+
+

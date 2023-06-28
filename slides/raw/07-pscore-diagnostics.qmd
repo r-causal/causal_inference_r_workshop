@@ -1,0 +1,226 @@
+---
+title: "Propensity Score Diagnostics"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+knitr:
+  opts_chunk: 
+    eval: false
+---
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+## Checking balance {background-color="#23373B"}
+
+* Love plots (Standardized Mean Difference)
+* ECDF plots
+
+## Standardized Mean Difference (SMD) {background-color="#23373B"}
+
+$$\LARGE d = \frac{\bar{x}_{treatment}-\bar{x}_{control}}{\sqrt{\frac{s^2_{treatment}+s^2_{control}}{2}}}$$
+
+## SMD in R
+
+Calculate standardized mean differences
+
+```{r}
+#| message: false
+#| warning: false
+#| code-line-numbers: "|4|6|7|8"
+library(halfmoon)
+library(tidyverse)
+
+smds <- tidy_smd(
+  df,
+  .vars = c(confounder_1, confounder_2, ...),
+  .group = exposure,
+  .wts = wts # weight is optional
+)
+```
+
+---
+
+## SMD in R {.small}
+
+Plot them! (in a Love plot!)
+
+```{r}
+#| code-line-numbers: "|2|3|5"
+ggplot(
+  data = smds,
+  aes(x = abs(smd), y = variable, group = weights, color = weights)
+) +  
+  geom_love()
+```
+
+## Love plot
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+library(halfmoon)
+library(tidyverse)
+library(broom)
+library(causaldata)
+
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete
+)
+
+df <- propensity_model |>
+  augment(type.predict = "response", data = nhefs_complete) |>
+  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+
+vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
+          "exercise", "active", "wt71")
+
+plot_df <- tidy_smd(
+  df,
+  all_of(vars),
+  qsmk,
+  w_ate
+)
+
+ggplot(
+  data = plot_df,
+  mapping = aes(x = abs(smd), y = variable, group = method, color = method)
+) +
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+```
+
+## Your turn 1
+
+`r countdown::countdown(minutes = 10)`
+
+### Create a Love Plot for the propensity score weighting you created in the previous exercise
+
+## ECDF
+
+For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
+
+. . .
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| eval: true
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf() +
+  scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
+                     labels = c("Yes", "No")) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+## Unweighted ECDF
+
+```{r}
+#| code-line-numbers: "|1|2"
+#| eval: true
+#| output-location: slide
+ggplot(df, aes(x = wt71, color = factor(qsmk))) + 
+  geom_ecdf() +
+  scale_color_manual(
+    "Quit smoking", 
+    values = c("#5154B8", "#5DB854"),
+    labels = c("Yes", "No")
+  ) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x") 
+```
+
+
+## Weighted  ECDF 
+
+```{r}
+#| eval: true
+#| code-line-numbers: "|2"
+ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+  geom_ecdf(aes(weights = w_ate)) +
+  scale_color_manual(
+    "Quit smoking", 
+    values = c("#5154B8", "#5DB854"),
+    labels = c("Yes", "No")
+  ) + 
+  xlab("Weight in Kg in 1971") + 
+  ylab("Proportion <= x (Weighted)") 
+```
+
+## *Your turn 2*
+
+`r countdown::countdown(minutes = 10)`
+
+### Create an unweighted ECDF examining the `weather_wdwhigh` confounder by whether or not the day had Extra Magic Hours.
+### Create a weighted ECDF examining the `weather_wdwhigh` confounder
+
+
+## {background-color="#23373B" .center .huge}
+
+### *Bonus!* Weighted Tables in R 
+
+
+## 1. Create a "design object" to incorporate the weights {.gtsummary}
+
+
+```{r}
+#| message: false
+#| warning: false
+library(survey)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df,
+  weights = ~ wts
+)
+```
+
+## 2. Pass to `gtsummary::tbl_svysummary()` {.gtsummary}
+
+```{r}
+#| message: false
+#| warning: false
+library(gtsummary)
+tbl_svysummary(svy_des, by = x) |>
+  add_difference(everything() ~ "smd")
+# modify_column_hide(ci) to hide CI column
+```
+
+## {.gtsummary .tiny}
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: true
+#| echo: false
+library(survey)
+library(gtsummary)
+
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = df |> select(wt71, race, age, sex, smokeintensity, smokeyrs, exercise, active, w_ate, qsmk),
+  weights = ~ w_ate
+)
+theme_gtsummary_compact()
+
+tbl_svysummary(svy_des, by = qsmk, include = -w_ate) |>
+  add_difference(everything() ~ "smd") |>
+  modify_column_hide(ci)
+```

@@ -3,3 +3,5 @@
 .RData
 render_pdf.R
 .DS_Store
+
+/.quarto/
