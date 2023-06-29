@@ -25,7 +25,7 @@ Create a function called `ipw_fit` that fits the propensity score model from Exe
 ```{r}
 #| eval: false
 fit_ipw <- function(split, ...) { 
-  .df <-____
+  .df <- ____
   
   # fit propensity score model
   
