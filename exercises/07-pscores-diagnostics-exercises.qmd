@@ -7,9 +7,8 @@ format: html
 ```{r}
 library(tidyverse)
 library(broom)
-library(tidysmd)
 library(touringplans)
-library(ggecdf)
+library(halfmoon)
 ```
 
 We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
@@ -27,7 +26,7 @@ propensity_model <- glm(
   family = binomial()
 )
 
-df <- propensity_model |>
+seven_dwarfs_ps <- propensity_model |>
   augment(type.predict = "response", data = seven_dwarfs) |>
   mutate(w_ate = 1 / ifelse(extra_magic_morning == 0, 1 - .fitted, .fitted))
 ```
@@ -40,7 +39,7 @@ Calculate the standardized mean differences with and without weights
 
 ```{r}
 #| eval: false
-smds <- df |>
+smds <- seven_dwarfs_ps |>
   mutate(close = as.numeric(close)) |>
   tidy_smd(
   .vars = ____,
@@ -49,7 +48,7 @@ smds <- df |>
 )
 ```
 
-Create the Love Plot using ggplot
+Create the Love Plot using ggplot and halfmoon
 
 ```{r}
 #| eval: false
@@ -57,12 +56,8 @@ ggplot(
   data = ____,
   aes(x = abs(____), y = ____, group = ____, color = ____)
 ) +
-  geom_line(orientation = "y") +
-  geom_point() + 
-  geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+  geom_love()
 ```
-
-
 
 ## Your Turn 2
 
@@ -70,23 +65,28 @@ Create an unweighted ECDF for `weather_wdwhigh` by whether or not the day had Ex
 
 ```{r}
 #| eval: false
-ggplot(df, aes(x = ____, group = ____, color = factor(____))) +
+ggplot(seven_dwarfs_ps, aes(x = ____, group = ____, color = factor(____))) +
   ____() +
-  scale_color_manual("Extra Magic Hours", values = c("#5154B8", "#5DB854"),
-                     labels = c("Yes", "No")) + 
+  scale_color_manual(
+    "Extra Magic Hours", 
+    values = c("#5154B8", "#5DB854"),
+    labels = c("Yes", "No")
+  ) + 
   xlab(____) + 
   ylab("Proportion <= x") 
 ```
-
 
 Create an weighted ECDF for `weather_wdwhigh` by whether or not the day had Extra Magic Hours.
 
 ```{r}
 #| eval: false
-ggplot(df, aes(x = ____, color = factor(____))) +
+ggplot(seven_dwarfs_ps, aes(x = ____, color = factor(____))) +
   ____(aes(weights = ____)) + 
-  scale_color_manual("Extra Magic Hours", values = c("#5154B8", "#5DB854"),
-                     labels = c("Yes", "No")) +
+  scale_color_manual(
+    "Extra Magic Hours",
+    values = c("#5154B8", "#5DB854"),
+    labels = c("Yes", "No")
+  ) +
   xlab(____) +
   ylab("Proportion <= x (Weighted)")
 ```
