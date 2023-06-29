@@ -12,6 +12,7 @@ library(ggdag)
 library(causaldata)
 library(halfmoon)
 library(propensity)
+library(ggokabeito)
 
 set.seed(1234)
 ```
@@ -33,13 +34,11 @@ nhefs_complete_uc
 Let's look at the distribution of weight gain between the two groups. 
 
 ```{r}
-colors <- c("#E69F00", "#56B4E9")
-
 nhefs_complete_uc |>
   ggplot(aes(wt82_71, fill = factor(qsmk))) + 
   geom_vline(xintercept = 0, color = "grey60", size = 1) +
   geom_density(color = "white", alpha = .75, size = .5) +
-  scale_fill_manual(values = colors) + 
+  scale_color_okabe_ito(order = c(1, 5)) + 
   theme_minimal() +
   theme(legend.position = "bottom") + 
   labs(
@@ -132,8 +131,8 @@ What do we need to control for to estimate an unbiased effect of quitting smokin
 smk_wt_dag |>
   ggdag_adjustment_set(text = FALSE, use_labels = "label") +
   theme_dag() +
-  scale_color_manual(values = colors) + 
-  scale_fill_manual(values = colors)
+  scale_color_okabe_ito(order = c(1, 5)) + 
+  scale_fill_okabe_ito(order = c(1, 5))
 ```
 
 Let's fit a model with these variables. Note that we'll fit all continuous variables with squared terms, as well, to allow them a bit of flexibility.
@@ -214,11 +213,9 @@ plot_df <- tidy_smd(
 
 ggplot(
     data = plot_df,
-    mapping = aes(x = abs(smd), y = variable, group = weights, color = weights)
+    mapping = aes(x = abs(smd), y = variable, group = method, color = method)
 ) +
-    geom_line(orientation = "y") +
-    geom_point() + 
-    geom_vline(xintercept = 0.1, color = "black", size = 0.1)
+    geom_love()
 ```
 
 These look pretty good! Some variables are better than others, but weighting appears to have done a much better job eliminating these differences than an unadjusted analysis.
@@ -269,10 +266,10 @@ But we have other problem that we need to address. While we're just using `lm()`
 ```{r}
 # also see robustbase, survey, gee, and others
 library(estimatr)
-ipw_model_robust <- lm_robust( #<<
-  wt82_71 ~ qsmk, #<<
+ipw_model_robust <- lm_robust( 
+  wt82_71 ~ qsmk, 
   data = nhefs_complete_uc, 
-  weights = wts #<<
+  weights = wts 
 ) 
 
 ipw_estimate_robust <- ipw_model_robust |>
@@ -373,4 +370,3 @@ So, we have a final estimate for our causal effect: on average, a person who qui
 # Take aways
 * The broad strokes for a causal analysis are: 1) identify your causal question 2) make your assumptions clear 3) check your assumptions as best you can and 4) use the right estimator for the question you're trying to ask. As scientists, we should be able to critique each of these steps, and that's a good thing!
 * To create marginal structural models, first fit a propensity model for the weights with the exposure as the outcome. Then, use the inverse of the predicted probabilities as weights in a model with just the outcome and exposure.
-* See more at https://causalinferencebookr.netlify.com
