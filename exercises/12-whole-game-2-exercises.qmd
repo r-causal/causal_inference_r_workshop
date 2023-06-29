@@ -10,8 +10,8 @@ library(broom)
 library(rsample)
 library(ggdag)
 library(tipr)
-library(tidysmd)
-library(ggecdf)
+library(propensity)
+library(halfmoon)
 ```
 
 ## Whole Game 2: Malaria and Mosquito Nets
