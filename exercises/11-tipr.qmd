@@ -3,7 +3,6 @@ title: "Tipping Point Sensitivity Analyses"
 format: html
 ---
 
-
 ```{r}
 library(tipr)
 ```
