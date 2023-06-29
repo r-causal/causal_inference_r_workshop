@@ -4,10 +4,11 @@ format: html
 ---
 
 
-```{r}
+```{r setup}
 library(tidyverse)
 library(broom)
 library(touringplans)
+library(propensity)
 ```
 
 We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
@@ -25,7 +26,7 @@ propensity_model <- glm(
   family = binomial()
 )
 
-df <- propensity_model |>
+seven_dwarfs_prop <- propensity_model |>
   augment(type.predict = "response", data = seven_dwarfs)
 ```
 
@@ -38,65 +39,67 @@ Create at "matched" data set using the same propensity score model as above and 
 ```{r}
 #| eval: false
 library(MatchIt)
-m <- matchit(___,
-        data = seven_dwarfs,
-        ___,
-        ___
-        )
-matched_df <- ___(m)
+matched_dwarfs <- matchit(
+  ___,
+  data = seven_dwarfs,
+  ___,
+  ___
+)
+
+matched_df <- ___(matched_dwarfs)
 ```
 
 ## Your Turn 2 (Weighting)
 
 _After updating the code chunks below, change `eval = TRUE` before knitting._
 
-Add the ATE weights to the data frame, `df`
+Add the ATE weights to the data frame, `seven_dwarfs_prop`
 
 ```{r}
 #| eval: false
-df <- df |>
+seven_dwarfs_prop <- seven_dwarfs_prop |>
   mutate(w_ate = ___)
 ```
 
 
 Stretch Goal 1: 
 
-Add ATM weights to the data frame, `df`
+Add ATM weights to the data frame, `seven_dwarfs_prop`
 
 ```{r}
 #| eval: false
-df <- df |>
+seven_dwarfs_prop <- seven_dwarfs_prop |>
   mutate(w_atm = ___)
 ```
 
 Stretch Goal 2: 
 
-Update the code below to examine the distribution of the weighted sample. **HINT** the part that needs to be updated is the `weight` parameter in two of the `geom_histogram()` calls.
+Update the code below to examine the distribution of the weighted sample. **HINT** the part that needs to be updated is the `weight` parameter in two of the `geom_mirror_histogram()` call.
 
 ```{r}
 #| eval: false
-d <- df |>
-  pivot_wider(names_from = extra_magic_morning, 
-                     values_from = .fitted, 
-                     names_prefix = "extra_magic_morning_p")
+seven_dwarfs_prop_wide <- seven_dwarfs_prop |>
+  pivot_wider(
+    names_from = extra_magic_morning, 
+    values_from = .fitted, 
+    names_prefix = "extra_magic_morning_p"
+  )
 ```
 
 
 ```{r}
 #| eval: false
 #| warning: false
-ggplot(d) +
-  geom_histogram(bins = 50, aes(extra_magic_morning_p1), alpha = 0.5) + 
-  geom_histogram(bins = 50, aes(extra_magic_morning_p1, weight = ____), fill = "green", alpha = 0.5) + 
-  geom_histogram(bins = 50, alpha = 0.5, aes(x = extra_magic_morning_p0, y = -after_stat(count))) + 
-  geom_histogram(bins = 50, aes(x = extra_magic_morning_p0, weight = ____, y = -after_stat(count)), fill = "blue", alpha = 0.5) + 
-  ylab("count") + xlab("p") +
+ggplot(
+  seven_dwarfs_prop, 
+  aes(.fitted, fill = factor(extra_magic_morning))
+) +
+  geom_mirror_histogram(bins = 50, alpha = .5) +
+  geom_mirror_histogram(aes(weight = ____), alpha = .5, bins = 50) +
   geom_hline(yintercept = 0, lwd = 0.5) +
-  scale_y_continuous(label = abs) +
-  theme_minimal() + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = 5, ymax = 100), fill = "#5DB854") + 
-  annotate("text", x = 0.975, y = 50, label = "trt", angle = 270, color = "white") + 
-  geom_rect(aes(xmin = 0.95, xmax = 1, ymin = -100, ymax = -5), fill = "#5154B8") + 
-  annotate("text", x = 0.975, y = -50, label = "control", angle = 270, color = "white")
-
+  theme_minimal() +
+  scale_y_continuous(labels = abs) +
+  scale_fill_manual(values = c("blue", "green")) +
+  labs(x = "p", fill = "Extra Magic Morning") +
+  xlim(0, 1) 
 ```
