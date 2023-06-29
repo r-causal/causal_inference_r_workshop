@@ -1,0 +1,312 @@
+/*-- scss:defaults --*/
+// importing fonts
+@import url(https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,500,500i,700,700i|IBM+Plex+Mono:400,500);
+@import url(//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack-subset.css);
+
+// colors
+$light-blue: #56B4E9 !default;
+$pale-blue: #CEE9FF !default;
+$dark-blue: #0072B2 !default;
+$light-grey: #EDEEEF !default;
+$grayish-black: #474747 !default;
+$greenish-black: #23373B !default;
+$grey: #E5E5E5 !default;
+$dark-grey: #6C7B7F !default;
+$pink: #EC99C6 !default;
+$orange: #E69F00 !default;
+$green: #009E73 !default;
+
+// fonts
+$font-family-serif: 'Fira Sans','Droid Serif', 'Palatino Linotype', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif !default;
+
+// headings
+$presentation-heading-font: $font-family-serif !default;
+$presentation-heading-color: $grayish-black !default;
+$h1-font-size: 1.6em !default;
+$h2-font-size: 1.3em !default;
+$h3-font-size: 1.15em !default;
+
+//code
+$code-color: $green !default;
+$font-family-monospace: 'IBM Plex Mono', 'Lucida Console', Monaco, monospace !default;
+
+// quarto variables
+$body-bg: #fff !default;
+$body-color: $grayish-black !default;
+$link-color: $pink !default;
+$presentation-font-size-root: 36px !default;
+$selection-bg: $light-grey !default;
+$selection-color: $body-color !default;
+
+/*-- scss:rules --*/
+.reveal pre code {
+  font-size: 1.3em;
+  padding: 0.5em;
+  line-height: 1.2em;
+  overflow: visible;
+}
+
+#title-slide {
+  background-size: cover;
+  background-color: $greenish-black;
+  color: $light-grey;
+}
+
+.title h1 {
+  color: $orange;
+  font-size: 72px;
+  text-shadow: none;
+  vertical-align: bottom;
+}
+
+.subtitle {
+  color: $light-blue;
+  text-shadow: none;
+  font-size: 72px;
+  font-weight: bold;
+}
+
+.quarto-title-authors {
+  color: $light-grey;
+  font-size: 64px;
+  font-family: $presentation-heading-font;
+}
+
+.footer {
+  font-family: $presentation-heading-font;
+}
+
+.reveal .slide-number {
+  font-family: $presentation-heading-font;
+}
+
+.reveal .panel-tabset [role=tab] {
+    font-size: 0.8em;
+}
+
+.reveal .footer {
+    color: $grayish-black;
+}
+
+section.has-dark-background {
+  background-size: cover;
+  color: $light-grey;
+  font-weight: bold;
+  text-shadow: none;
+}
+
+section.has-dark-background h1  {
+  color: $orange;
+  font-weight: 500;
+}
+
+section.has-dark-background h2  {
+  color: $light-blue;
+  font-weight: 500;
+}
+
+a, a > code  {
+  color: $pink;
+  text-decoration: none;
+}
+
+section.has-dark-background a, a > code  {
+  color: $pink;
+  text-decoration: none;
+}
+
+section.has-dark-background code  {
+  color: $green;
+}
+
+strong {
+  color: $orange;
+}
+
+em {
+  color: $light-blue;
+  font-style: normal;
+  font-weight: bold;
+}
+
+del {
+  color: $grey;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul {
+  font-size: 125%;
+  list-style-type: none;
+  text-align: left;
+  font-weight: 500;
+  padding-top: 40px;
+}
+
+ul li {
+  padding-bottom: 40px;
+}
+
+ol {
+  counter-reset: my-counter;
+  list-style: none;
+  padding-left: 40px;
+  font-size: 125%;
+  font-weight: bold;
+  text-align: left;
+}
+
+.fragment:not(.current-fragment) {
+  color: $light-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) {
+  color: $dark-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) {
+  color: $dark-grey;
+}
+
+section.has-dark-background .current-fragment {
+  color: $light-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) strong {
+  color: $dark-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) em {
+  color: $dark-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) a, a > code  {
+  color: $dark-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) code {
+  color: $dark-grey;
+}
+
+section.has-dark-background .fragment:not(.current-fragment) del {
+  color: $dark-grey;
+}
+
+.fragment:not(.current-fragment) code {
+  color: $light-grey;
+}
+
+.fragment:not(.current-fragment)::before {
+  background-color: lighten($light-grey, 3%);
+}
+
+section.has-dark-background .fragment:not(.current-fragment)::before {
+  background-color: lighten($dark-grey, 3%);
+}
+
+.fragment:not(.current-fragment) strong {
+  color: $light-grey;
+}
+
+.fragment:not(.current-fragment) em {
+  color: $light-grey;
+}
+
+.fragment:not(.current-fragment) del {
+  color: $light-grey;
+}
+
+.fragment:not(.current-fragment) a {
+  color: $light-grey;
+}
+
+.current-fragment {
+  color: $body-color;
+}
+
+.reveal
+  div.sourceCode
+  pre
+  code.has-line-highlights
+  > span:not(.highlight-line) {
+  opacity: 0.1 !important;
+}
+
+.reveal
+  div.sourceCode
+  pre
+  code.has-line-highlights
+  > span.highlight-line {
+  font-weight: bold;
+}
+
+ol li {
+  counter-increment: my-counter;
+  padding-left: 40px;
+  position: relative;
+  font-size: 125%;
+  margin: 20px 0;
+  display: block;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
+ol li::before {
+  content: counter(my-counter);
+  color: #fff;
+  font-size: 100%;
+  font-weight: bold;
+  position: absolute;
+  left: -40px;
+  line-height: 60px;
+  width: 60px;
+  height: 60px;
+  top: 10%;
+  background: $light-blue;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.slide-menu-wrapper {
+  display: none;
+  visibility: hidden;
+}
+
+.middle {
+  vertical-align: middle;
+}
+
+.center img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center {
+  text-align: center;
+}
+
+.huge { font-size: 200% }
+.extra-large { font-size: 150% }
+.large { font-size: 130% }
+.medium { font-size: 115% }
+.small { font-size: 70% }
+.tiny { font-size: 50% }
+
+.gtsummary strong {
+  color: #474747;
+  font-weight: bold;
+}
+
+.gtsummary em {
+  color: #474747;
+  font-style: italic;
+}

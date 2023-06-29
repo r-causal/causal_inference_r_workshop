@@ -1,0 +1,112 @@
+---
+title: "Whole Game 2: Malaria and Mosquito Nets"
+author: "Malcolm Barrett"
+format: "kakashi-revealjs"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+---
+
+```{r}
+#| label: setup
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+
+library(tidyverse)
+library(ggdag)
+```
+
+## {background-color="#23373B"}
+
+1. Specify causal question
+2. Draw assumptions (causal diagram)
+3. Model assumptions (e.g. with a propensity score)
+4. Analyze propensities (diagnostics)
+5. Estimate causal effects 
+6. Conduct a sensitivity analysis
+
+## {background-color="#23373B" .center .huge}
+
+### **Does mosquito bed net use reduce malaria risk?**
+
+## The Data
+
+```{r}
+library(causalworkshop)
+net_data
+```
+
+## Proposed DAG
+
+```{r}
+#| echo: false
+#| fig.width: 7.5
+mosquito_dag <- dagify(
+  malaria_risk ~ net + income + health + temperature + resistance,
+  net ~ income + health + temperature + eligible + household,
+  eligible ~ income + household,
+  health ~ income,
+  exposure = "net",
+  outcome = "malaria_risk",
+  coords = list(
+    x = c(
+      malaria_risk = 7,
+      net = 3,
+      income = 4,
+      health = 5,
+      temperature = 6,
+      resistance = 8.5,
+      eligible = 2,
+      household = 1
+    ),
+    y = c(
+      malaria_risk = 2,
+      net = 2,
+      income = 3,
+      health = 1,
+      temperature = 3,
+      resistance = 2,
+      eligible = 3,
+      household = 2
+    )
+  ),
+  labels = c(
+    malaria_risk = "Risk of malaria",
+    net = "Mosquito net",
+    income = "Income",
+    health = "Health",
+    temperature = "Nighttime temperatures",
+    resistance = "Insecticide resistance",
+    eligible = "Eligible for program",
+    household = "Number in the household"
+  )
+)
+
+mosquito_dag |>
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_edges() +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    seed = 10,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3
+  ) +
+  theme_dag(base_size = 14) +
+  theme(legend.position = "none") +
+  labs(caption = "Thanks to Andrew Heiss for the data!") +
+  coord_cartesian(clip = "off")
+```
+
+## {background-color="#23373B" .center .huge}
+
+### **Your Turn!**

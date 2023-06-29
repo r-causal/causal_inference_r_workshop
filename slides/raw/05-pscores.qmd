@@ -1,0 +1,197 @@
+---
+title: "Propensity Scores"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+---
+
+## Observational Studies {background-color="#23373B"}
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+```
+
+![](img/obs-studies-3.png)
+
+## {background-color="#23373B"}
+
+![](img/trt.png)
+
+## {background-color="#23373B"}
+
+![](img/trt-conf.png)
+
+## Confounding {background-color="#23373B"}
+
+
+![](img/conf-2.png)
+
+
+## Confounding {background-color="#23373B"}
+
+![](img/conf-3.png)
+
+## Propensity scores
+
+Rosenbaum and Rubin showed in observational studies, conditioning on **propensity scores** can lead to unbiased estimates of the exposure effect
+
+1. There are no unmeasured confounders
+2. Every subject has a nonzero probability of receiving either exposure
+
+## Propensity scores
+
+* Fit a **logistic regression** predicting exposure using known covariates
+
+::: {.fragment}
+$$Pr(exposure = 1) = \frac{1}{1+\exp(-X\beta)}$$
+:::
+
+* Each individuals' predicted values are the **propensity scores**
+
+## Propensity scores
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(broom)
+```
+
+## Propensity scores
+
+```{r}
+#| eval: false
+glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+    data = df,
+    family = binomial())
+```
+
+---
+
+## Propensity scores
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|4"
+glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+    data = df,
+    family = binomial()) |>
+  augment(type.predict = "response", data = df) 
+```
+
+## Propensity scores {background-color="#23373B"}
+
+![](img/pscores.png)
+
+## Example {.small}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+<img src="img/Mickey_and_Walt_Disney.jpg" height="300"></img>
+
+Photo by Anna [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
+:::
+
+::: {.column width="50%"}
+Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during "Extra Magic Hours" during which the park was closed to all other guests.
+
+These extra hours could be in the morning or evening.  
+
+The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these "Extra Magic Hours".
+:::
+
+::::
+
+## {background-color="#23373B" .large .center}
+
+**We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am.**
+
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig.height: 4.0
+library(tidyverse)
+library(ggdag)
+library(ggokabeito)
+
+geom_dag_label_repel <- function(..., seed = 10) {
+  ggdag::geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = seed,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3,
+    ...
+  ) 
+}
+
+coord_dag <- list(
+  x = c(Season = 0, close = 0, weather = -1, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather = 0, x = 0, y = 0)
+)
+
+labels <- c(
+  x = "Extra Magic Morning",
+  y = "Average wait",
+  Season = "Ticket Season",
+  weather = "Historic high temperature",
+  close = "Time park closed"
+)
+
+dagify(
+  y ~ x + close + Season + weather,
+  x ~ weather + close + Season,
+  coords = coord_dag,
+  labels = labels,
+  exposure = "x",
+  outcome = "y"
+) |>
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_edges_arc(curvature = c(rep(0, 5), .3)) +
+  geom_dag_point() +
+  geom_dag_label_repel(seed = 1630) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text()
+  ) +
+  coord_cartesian(clip = "off") +
+  scale_x_continuous(
+    limits = c(-1.25, 2.25),
+    breaks = c(-1, 0, 1, 2),
+    labels = c(
+      "\n(one year ago)",
+      "\n(6 months ago)",
+      "\n(3 months ago)",
+      "5pm - 6pm\n(Today)"
+    )
+  )
+```
+
+## **Your turn**
+
+`r countdown::countdown(minutes = 10)`
+
+### Using the **confounders** identified in the previous DAG, fit a propensity score model for `extra_magic_morning`
+### *Stretch*: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without
+
+
+
