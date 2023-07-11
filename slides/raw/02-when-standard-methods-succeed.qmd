@@ -59,6 +59,37 @@ options(
 * Treatment is **randomly** assigned 
 * There are **two baseline covariates**: `age` and `weight`
 
+## Example
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(tidyverse)
+library(gtsummary)
+set.seed(10)
+n <- 100
+d <- tibble(
+  age = rnorm(n, 55, 20),
+  weight = rnorm(n),
+  treatment = rbinom(n, 1, 0.5),
+  y = treatment + 0.2 * age + 0.2 * weight + rnorm(n)
+)
+library(ggdag)
+
+x <- data.frame(
+  name = c("y", "trt", "age", "weight"), 
+  time = c(3, 2, 1, 1)
+)
+dagify(
+  y ~ trt + age + weight,
+  coords = time_ordered_coords(x)
+) |> 
+  ggdag() + theme_dag()
+```
+
+* **True average treatment effect**: 1
+
 ## {.tiny}
 
 :::: {.columns}
@@ -75,16 +106,6 @@ lm(y ~ treatment, data = data)
 #| echo: false
 #| message: false
 #| warning: false
-library(tidyverse)
-library(gtsummary)
-set.seed(9)
-n <- 100
-d <- tibble(
-  age = rnorm(n, 55, 20),
-  weight = rnorm(n),
-  treatment = rbinom(n, 1, 0.5),
-  y = treatment + 0.2 * age + 0.2 * weight + rnorm(n)
-)
 lm(y ~ treatment, d) |>
   tbl_regression() |>
   modify_column_unhide(column = std.error)
