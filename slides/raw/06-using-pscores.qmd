@@ -3,7 +3,7 @@ title: "Using Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
-format: "kakashi-revealjs"
+format: kakashi-revealjs
 ---
 
 ```{r}
@@ -25,6 +25,15 @@ Stratification
 Direct Adjustment
 
 ...
+
+## Estimands
+
+::: {.tiny}
+Greifer, N., & Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577.
+:::
+
+![](img/estimand.png)
+
 
 ## Propensity scores {background-color="#23373B" .large}
 
@@ -207,7 +216,11 @@ glimpse(matched_data)
 
 ## *Your Turn 1*
 
-`r countdown::countdown(minutes = 10)`
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 10)
+```
 
 ### Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
 
@@ -392,7 +405,11 @@ df <- propensity_model |>
 
 ## *Your Turn* 
 
-`r countdown::countdown(minutes = 10)`
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 10)
+```
 
 ### Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame
 
