@@ -26,7 +26,7 @@ library(halfmoon)
 set.seed(1234)
 ```
 
-1. Specify causal question
+1. Specify causal question (e.g. target trial)
 2. Draw assumptions (causal diagram)
 3. Model assumptions (e.g. propensity score)
 4. Analyze propensities (diagnostics)
