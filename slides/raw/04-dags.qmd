@@ -112,6 +112,7 @@ knitr::include_graphics("img/tidy_ggdagitty.png")
 ```{r}
 #| eval: false
 #| code-line-numbers: "|2|3"
+library(ggdag)
 dagify(
   cancer ~ smoking, 
   coffee ~ smoking
