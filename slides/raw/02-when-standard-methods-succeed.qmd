@@ -2,7 +2,7 @@
 title: "When Standard Methods Succeed"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-format: "kakashi-revealjs"
+format: kakashi-revealjs
 ---
 
 ## {background-color="#23373B" .center .large}
@@ -89,6 +89,7 @@ dagify(
 ```
 
 * **True average treatment effect**: 1
+
 
 ## {.tiny}
 
@@ -183,7 +184,7 @@ lm(y ~ treatment, data = data)
 #| warning: false
 library(tidyverse)
 library(gtsummary)
-set.seed(9)
+set.seed(10)
 n <- 10000
 d <- tibble(
   age = rnorm(n, 55, 20),
@@ -248,8 +249,109 @@ tibble(
 
 ### *time-varying* confounding
 
+## Example
+
+## Example
+
+* **simulated** data (10,000 observations)  
+* Treatment is **not** randomly assigned 
+* There are **two baseline confounders**: `age` and `weight`
+* The treatment effect is **homogeneous**
+
+## Example
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+set.seed(10)
+n <- 10000
+d <- tibble(
+  age = rnorm(n, 55, 20),
+  weight = rnorm(n),
+  treatment = rbinom(n, 1, 1 / (1 + exp(-(0.01 * age + 0.1 * weight)))),
+  y = treatment + 0.2 * age + 0.2 * weight + rnorm(n)
+)
+
+x <- data.frame(
+  name = c("y", "trt", "age", "weight"), 
+  time = c(3, 2, 1, 1)
+)
+dagify(
+  y ~ trt + age + weight,
+  trt ~ age + weight,
+  coords = time_ordered_coords(x)
+) |> 
+  ggdag() + theme_dag()
+```
+
+* **True average treatment effect**: 1
+
+## {.tiny}
+
+:::: {.columns}
+
+::: {.column width="33%" .fragment}
+### Unadjusted model
+
+```{r}
+#| eval: false
+lm(y ~ treatment, data = data)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+lm(y ~ treatment, d) |>
+  tbl_regression() |>
+  modify_column_unhide(column = std.error)
+```
+:::
 
 
+::: {.column width="33%" .fragment}
+### Adjusted model
 
+```{r}
+#| eval: false
+lm(y ~ treatment + weight + age, data = data)
+```
 
+```{r}
+#| echo: false
+lm(y ~ treatment + weight + age, data = d) |>
+  tbl_regression() |>
+  modify_column_unhide(column = std.error)
+```
+:::
 
+::: {.column width="33%" .fragment}
+### Propensity score adjusted model
+
+```{r}
+#| echo: false
+d |>
+  mutate(
+    p = glm(treatment ~ weight + age, data = d) |> predict(type = "response"),
+    ate = treatment / p + (1 - treatment) / (1 - p)
+  ) |>
+  as.data.frame() -> d
+library(PSW)
+df <- as.data.frame(d)
+x <- psw(df, 
+         "treatment ~ weight + age", 
+         weight = "ATE", wt = TRUE,
+         out.var = "y")
+tibble(
+  Characteristic = "treatment",
+  Beta = round(x$est.wt, 1),
+  SE = round(x$std.wt, 3),
+  `95% CI` = glue::glue("{round(x$est.wt - 1.96 * x$std.wt, 1)}, {round(x$est.wt + 1.96 * x$std.wt, 1)}"),
+  `p-value` = "<0.001"
+) |>
+  knitr::kable()
+```
+
+:::
+::::
