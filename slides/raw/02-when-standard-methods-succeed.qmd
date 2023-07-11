@@ -48,9 +48,10 @@ options(
 
 ## Even in these cases, using the methods you will learn here can help! {background-color="#23373B"} 
 
-1. Adjusting for baseline covariates can make an estimate *more efficient*
-1. Propensity score weighting is *more efficient* that direct adjustment
-1. Sometimes we are *more comfortable with the functional form of the propensity score* (predicting exposure) than the outcome model
+* Adjusting for baseline covariates can make an estimate *more efficient*
+* Propensity score weighting is *more efficient* that direct adjustment
+* Sometimes we are *more comfortable with the functional form of the propensity score* (predicting exposure) than the outcome model
+
 
 ## Example
 
