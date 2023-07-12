@@ -288,6 +288,62 @@ tip_hr_with_binary(
 :::
 ::::
 
+## Disney Data
+
+### `tip_coef()`
+
+* `effect_observed`: observed exposure - outcome effect **4.45 minutes (95% CI: 0.17, 8.37)**
+
+## Disney Data
+
+### `tip_coef()`
+* `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
+
+
+
+## Disney Data
+
+### `tip_coef()`
+* `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
+
+
+## Disney Data
+
+### `tip_coef()`:  **specify** one, it will **estimate** the other
+
+::: {.nonincremental}
+* `exposure_confounder_effect`
+* `confounder_outcome_effect` 
+:::
+
+## Disney Data
+
+*Our causal effect estimate: **4.45 minutes (95% CI: 0.17, 8.37)***
+
+::: small
+```{r}
+#| eval: true
+#| echo: false
+#| output-location: fragment
+library(tipr)
+tip_coef(
+  effect_observed = 0.17,
+  exposure_confounder_effect = 0.1,
+  verbose = FALSE
+)
+```
+:::
+
+```{r}
+#| eval: false
+#| output-location: fragment
+library(tipr)
+tip_coef(
+  effect_observed = 0.17,
+  exposure_confounder_effect = 0.1
+)
+```
+
 ## *Your turn*
 
 ```{r}
