@@ -28,7 +28,7 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 2. Every subject has a nonzero probability of receiving either exposure
 :::
 
-# Quantifying Unmeasured Confounding
+# Quantifying Unmeasured Confounding {background-color="#23373B"}
 
 ##
 
@@ -40,7 +40,7 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 1. The exposure-unmeasured 
 1. The unmeasured confounder-outcome effect
 
-## Quantifying Unmeasured Confounding 
+## *Quantifying Unmeasured Confounding*
 
 ![](img/adjust.png)
 
@@ -50,6 +50,11 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 ## {background-color="#23373B" .center .large}
 
 ### **What will tip our confidence bound to cross zero?**
+
+## *Quantifying Unmeasured Confounding*
+
+![](img/tipr-table.png)
+[D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)](https://doi.org/10.1007/s40471-022-00308-6)
 
 ## 
 
