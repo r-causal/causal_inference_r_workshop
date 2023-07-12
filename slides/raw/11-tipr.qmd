@@ -2,7 +2,7 @@
 title: "Tipping Point Sensitivity Analyses"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
+subtitle: "2021-09-01 (updated: `r Sys.Date()`)"
 format: kakashi-revealjs
 knitr:
   opts_chunk: 
@@ -16,6 +16,7 @@ options(
   tibble.width = 60
 )
 ```
+
 
 
 ## Recall: Propensity scores {background-color="#23373B"}
