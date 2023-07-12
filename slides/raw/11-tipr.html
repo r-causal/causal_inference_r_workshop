@@ -5,13 +5,11 @@
 <script src="11-tipr_files/libs/quarto-html/popper.min.js"></script>
 <script src="11-tipr_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="11-tipr_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="11-tipr_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="11-tipr_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="11-tipr_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.2.269">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Tipping Point Sensitivity Analyses</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,10 +25,9 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -96,7 +93,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="11-tipr_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="11-tipr_files/libs/revealjs/dist/theme/quarto.css" id="theme">
   <link href="11-tipr_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="11-tipr_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="11-tipr_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -139,44 +136,44 @@
     font-weight: 400;
   }
 
-  .callout.callout-titled.callout-style-simple .callout-body {
+  .callout.callout-captioned.callout-style-simple .callout-body {
     margin-top: 0.2em;
   }
 
-  .callout:not(.callout-titled) .callout-body {
+  .callout:not(.callout-captioned) .callout-body {
       display: flex;
   }
 
-  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
     padding-left: 1.6em;
   }
 
-  .callout.callout-titled .callout-header {
+  .callout.callout-captioned .callout-header {
     padding-top: 0.2em;
     margin-bottom: -0.2em;
   }
 
-  .callout.callout-titled .callout-title  p {
+  .callout.callout-captioned .callout-caption  p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
     
-  .callout.callout-titled.callout-style-simple .callout-content  p {
+  .callout.callout-captioned.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
 
-  .callout.callout-titled.callout-style-default .callout-content  p {
+  .callout.callout-captioned.callout-style-default .callout-content  p {
     margin-top: 0.7em;
   }
 
-  .callout.callout-style-simple div.callout-title {
+  .callout.callout-style-simple div.callout-caption {
     border-bottom: none;
     font-size: .9rem;
     font-weight: 600;
     opacity: 75%;
   }
 
-  .callout.callout-style-default  div.callout-title {
+  .callout.callout-style-default  div.callout-caption {
     border-bottom: none;
     font-weight: 600;
     opacity: 85%;
@@ -208,7 +205,7 @@
     background-size: 0.9rem 0.9rem;
   }
 
-  .callout-title {
+  .callout-caption {
     display: flex
   }
     
@@ -221,16 +218,16 @@
     display: none !important;
   }
 
-  .callout.callout-titled .callout-body > .callout-content > :last-child {
+  .callout.callout-captioned .callout-body > .callout-content > :last-child {
     margin-bottom: 0.5rem;
   }
 
-  .callout.callout-titled .callout-icon::before {
+  .callout.callout-captioned .callout-icon::before {
     margin-top: .5rem;
     padding-right: .5rem;
   }
 
-  .callout:not(.callout-titled) .callout-icon::before {
+  .callout:not(.callout-captioned) .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
   }
@@ -245,7 +242,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
   }
 
-  div.callout-note.callout-style-default .callout-title {
+  div.callout-note.callout-style-default .callout-caption {
     background-color: #dae6fb
   }
 
@@ -257,7 +254,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
   }
 
-  div.callout-important.callout-style-default .callout-title {
+  div.callout-important.callout-style-default .callout-caption {
     background-color: #f7dddc
   }
 
@@ -269,7 +266,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
   }
 
-  div.callout-warning.callout-style-default .callout-title {
+  div.callout-warning.callout-style-default .callout-caption {
     background-color: #fcefdc
   }
 
@@ -281,7 +278,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
   }
 
-  div.callout-tip.callout-style-default .callout-title {
+  div.callout-tip.callout-style-default .callout-caption {
     background-color: #ccf1e3
   }
 
@@ -293,7 +290,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
   }
 
-  div.callout-caution.callout-style-default .callout-title {
+  div.callout-caution.callout-style-default .callout-caption {
     background-color: #ffe5d0
   }
 
@@ -406,17 +403,28 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2021-09-01</p>
+  <p class="date">9/1/21</p>
 </section>
 <section id="recall-propensity-scores" class="slide level2" data-background-color="#23373B">
 <h2>Recall: Propensity scores</h2>
 <p>Rosenbaum and Rubin showed in observational studies, conditioning on <strong>propensity scores</strong> can lead to unbiased estimates of the exposure effect</p>
+<div>
 <ol type="1">
-<li class="fragment">There are no unmeasured confounders</li>
-<li class="fragment">Every subject has a nonzero probability of receiving either exposure</li>
+<li><strong>There are no unmeasured confounders</strong></li>
+<li>Every subject has a nonzero probability of receiving either exposure</li>
 </ol>
+</div>
 </section>
-<section id="quantifying-unmeasured-confounding" class="slide level2" data-background-color="#23373B">
+<section>
+<section id="quantifying-unmeasured-confounding" class="title-slide slide level1 center">
+<h1>Quantifying Unmeasured Confounding</h1>
+
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+
+<img data-src="img/sens.png" class="r-stretch"></section>
+<section id="quantifying-unmeasured-confounding-1" class="slide level2" data-background-color="#23373B">
 <h2>Quantifying Unmeasured Confounding</h2>
 <ol type="1">
 <li class="fragment">The exposure-outcome</li>
@@ -424,196 +432,257 @@ Lucy D’Agostino McGowan
 <li class="fragment">The unmeasured confounder-outcome effect</li>
 </ol>
 </section>
-<section id="section" class="slide level2 center large" data-background-color="#23373B">
+<section id="quantifying-unmeasured-confounding-2" class="slide level2">
+<h2>Quantifying Unmeasured Confounding</h2>
+
+<img data-src="img/adjust.png" class="r-stretch"><p><a href="https://doi.org/10.1007/s40471-022-00308-6">D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)</a></p>
+</section>
+<section id="section-1" class="slide level2 center large" data-background-color="#23373B">
 <h2></h2>
 <h3 id="what-will-tip-our-confidence-bound-to-cross-zero"><strong>What will tip our confidence bound to cross zero?</strong></h3>
 </section>
-<section id="quantifying-unmeasured-confounding-1" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li>The exposure-outcome</li>
-<li>The exposure-unmeasured</li>
-<li><del>The unmeasured confounder-outcome effect</del></li>
-</ol>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="img/tipr-stuff.png"></p>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-right">
+<figure>
+<p><img data-src="img/logo.png" style="width:25.0%"></p>
+</figure>
 </div>
-</section>
-<section id="quantifying-unmeasured-confounding-2" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li>The exposure-outcome</li>
-<li><del>The exposure-unmeasured</del></li>
-<li>The unmeasured confounder-outcome effect</li>
-</ol>
-</div>
-</section>
-<section id="tipping-point" class="slide level2">
-<h2>Tipping point</h2>
-<p><span class="math display">\[\Huge \beta_{UO}(LB_{obs}, \delta)\]</span> * <span class="math inline">\(\beta_{UO}\)</span>: the <strong>unmeasured confounder-outcome effect</strong></p>
-</section>
-<section id="quantifying-unmeasured-confounding-3" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li><del>The exposure-outcome</del></li>
-<li><del>The exposure-unmeasured</del></li>
-<li>The unmeasured confounder-outcome effect</li>
-</ol>
-</div>
-</section>
-<section id="tipping-point-1" class="slide level2">
-<h2>Tipping point</h2>
-<p><span class="math display">\[\Huge \beta_{UO}(LB_{obs}, \delta)\]</span></p>
+<div class="small">
 <ul>
-<li class="fragment"><span class="math inline">\(LB_{obs}\)</span>: <strong>limiting bound</strong> - the bound closest to the null</li>
+<li class="fragment"><code>{action}_{effect}_with_{what}</code></li>
+<li class="fragment"><code>tip_rr_with_continous()</code></li>
+<li class="fragment"><code>adjust_coef_with_r2()</code></li>
 </ul>
-</section>
-<section id="quantifying-unmeasured-confounding-4" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li>The exposure-outcome</li>
-<li><del>The exposure-unmeasured</del></li>
-<li><del>The unmeasured confounder-outcome effect</del></li>
-</ol>
+</div>
+<div class="tiny">
+<p><a href="https://doi.org/10.21105/joss.04495">D’Agostino McGowan, L., (2022). tipr: An R package for sensitivity analyses for unmeasured confounders. Journal of Open Source Software, 7(77), 4495</a></p>
+</div>
+</div>
 </div>
 </section>
-<section id="tipping-point-2" class="slide level2">
-<h2>Tipping point</h2>
-<p><span class="math display">\[\Huge \beta_{UO}(LB_{obs}, \delta)\]</span></p>
-<ul>
-<li class="fragment"><span class="math inline">\(\delta\)</span>: <strong>standardized mean difference</strong> of the unmeasured confounder between the exposed and unexposed groups</li>
-</ul>
-</section>
-<section id="quantifying-unmeasured-confounding-5" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li><del>The exposure-outcome</del></li>
-<li>The exposure-unmeasured</li>
-<li><del>The unmeasured confounder-outcome effect</del></li>
-</ol>
-</div>
-</section>
-<section id="tipping-point-3" class="slide level2">
-<h2>Tipping Point</h2>
-<p><span class="math display">\[\Huge \beta_{UO}(LB_{obs}, \delta)=\frac{LB_{obs}}{\delta}\]</span></p>
-</section>
-<section id="tipping-point-4" class="slide level2">
-<h2>Tipping Point</h2>
-<p><span class="math display">\[\Huge \delta(LB_{obs}, \beta_{UO})=\frac{LB_{obs}}{\beta_{UO}}\]</span></p>
-</section>
-<section id="section-1" class="slide level2 center huge" data-background-color="#23373B">
+<section id="section-3" class="slide level2 center huge" data-background-color="#23373B">
 <h2></h2>
 <h3 id="tipr"><strong>tipr</strong></h3>
 </section>
-<section id="main-function" class="slide level2">
-<h2>Main function</h2>
-<h3 id="tip_coef"><code>tip_coef()</code></h3>
+<section id="section-4" class="slide level2">
+<h2></h2>
+
+<img data-src="img/metformin.png" class="r-stretch"></section>
+<section id="question" class="slide level2">
+<h2>Question</h2>
+
+<img data-src="img/met-cancer.png" class="r-stretch"></section>
+<section id="analysis" class="slide level2">
+<h2>Analysis</h2>
 <ul>
-<li class="fragment"><code>effect_observed</code>: observed exposure - outcome effect</li>
+<li class="fragment">New-user design</li>
+<li class="fragment"><strong>Matched</strong> 42,217 new metformin users to 42,217 new sulfonylurea users</li>
+<li class="fragment">Fit <strong>adjusted Cox proportional hazards model</strong> on the matched cohort</li>
 </ul>
 </section>
-<section id="quantifying-unmeasured-confounding-6" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li>The exposure-outcome</li>
-<li><del>The exposure-unmeasured</del></li>
-<li><del>The unmeasured confounder-outcome effect</del></li>
-</ol>
-</div>
-</section>
-<section id="main-function-1" class="slide level2">
-<h2>Main function</h2>
-<h3 id="tip_coef-1"><code>tip_coef()</code></h3>
+<section id="results" class="slide level2">
+<h2>Results</h2>
 <ul>
-<li class="fragment"><code>exposure_confounder_effect</code>: scaled mean difference between the unmeasured confounder in the exposed and unexposed population</li>
+<li class="fragment"><strong>Outcome:</strong> Lung Cancer</li>
+<li class="fragment"><strong>Adjusted Hazard Ratio</strong>: 0.87 (0.79, 0.96)</li>
 </ul>
+</section></section>
+<section id="what-if-alcohol-consumption-is-an-unmeasured-confounder" class="title-slide slide level1 center" data-background-color="#23373B">
+<h1>What if <strong>alcohol consumption</strong> is an unmeasured confounder?</h1>
+
 </section>
-<section id="quantifying-unmeasured-confounding-7" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li><del>The exposure-outcome</del></li>
-<li>The exposure-unmeasured</li>
-<li><del>The unmeasured confounder-outcome effect</del></li>
-</ol>
+
+<section>
+<section id="what-if-heavy-alcohol-consumption-is-prevalent-among-4-of-metformin-users-and-6-of-sulfonylurea-users" class="title-slide slide level1 center">
+<h1>What if heavy alcohol consumption is prevalent among <em>4%</em> of Metformin users and <em>6%</em> of Sulfonylurea users?</h1>
+<div class="tiny">
+<p>Meadows SO, Engel CC, Collins RL, Beckman RL, Cefalu M, Hawes-Dawson J, et al.&nbsp;2015 health related behaviors survey: Substance use among US active-duty service members. RAND; 2018.</p>
 </div>
 </section>
-<section id="main-function-2" class="slide level2">
-<h2>Main function</h2>
-<h3 id="tip_coef-2"><code>tip_coef()</code></h3>
-<ul>
-<li class="fragment"><code>confounder_outcome_effect</code>: relationship between the unmeasured confounder and outcome</li>
-</ul>
-</section>
-<section id="quantifying-unmeasured-confounding-8" class="slide level2">
-<h2>Quantifying Unmeasured Confounding</h2>
-<div>
-<ol type="1">
-<li><del>The exposure-outcome</del></li>
-<li><del>The exposure-unmeasured</del></li>
-<li>The unmeasured confounder-outcome effect</li>
-</ol>
-</div>
-</section>
-<section id="main-function-3" class="slide level2">
-<h2>Main function</h2>
-<h3 id="tip_coef-3"><code>tip_coef()</code></h3>
-<div>
-<ul>
-<li><code>effect_observed</code></li>
-</ul>
-</div>
-</section>
-<section id="main-function-4" class="slide level2">
-<h2>Main function</h2>
-<h3 id="tip_coef-specify-one-it-will-estimate-the-other"><code>tip_coef()</code>: <strong>specify</strong> one, it will <strong>estimate</strong> the other</h3>
-<div>
-<ul>
-<li><code>exposure_confounder_effect</code></li>
-<li><code>confounder_outcome_effect</code></li>
-</ul>
-</div>
-</section>
-<section id="example" class="slide level2">
-<h2>Example</h2>
-<p><em>Our causal effect estimate: <strong>3.5 kg (95% CI 2.4 kg, 4.4 kg)</strong></em></p>
+<section id="tipr-example" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">tip_coef</span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">effect_observed =</span> <span class="fl">2.4</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">exposure_confounder_effect =</span> <span class="fl">0.3</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 4
-  effect_observed exposure_confounder_effect confounder_outcome_effect
-            &lt;dbl&gt;                      &lt;dbl&gt;                     &lt;dbl&gt;
-1             2.4                        0.3                         8
-# ℹ 1 more variable: n_unmeasured_confounders &lt;dbl&gt;</code></pre>
-</div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="example-1" class="slide level2">
-<h2>Example</h2>
+<section id="tipr-example-1" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="results-1" class="slide level2">
+<h2>Results</h2>
+<div>
 <ul>
-<li class="fragment"><p>The observed effect (2.4, 4.4) <em>WOULD</em> be tipped by 1 unmeasured confounder with the following specifications:</p></li>
-<li class="fragment"><p>estimated standardized mean difference between the unmeasured confounder in the exposed population and unexposed population: <em>0.3</em></p></li>
-<li class="fragment"><p>estimated association between the unmeasured confounder and the outcome: <em>8</em></p></li>
+<li><strong>Outcome:</strong> Lung Cancer</li>
+<li><strong>Adjusted Hazard Ratio</strong>: 0.87 (0.79, 0.96)</li>
 </ul>
+</div>
+</section>
+<section id="tipr-example-2" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="what-if-heavy-alcohol-consumption-is-prevalent-among-4-of-metformin-users-and-6-of-sulfonylurea-users-1" class="title-slide slide level1 center">
+<h1>What if heavy alcohol consumption is prevalent among <em>4%</em> of Metformin users and <em>6%</em> of Sulfonylurea users?</h1>
+<div class="tiny">
+<p>Meadows SO, Engel CC, Collins RL, Beckman RL, Cefalu M, Hawes-Dawson J, et al.&nbsp;2015 health related behaviors survey: Substance use among US active-duty service members. RAND; 2018.</p>
+</div>
+</section>
+<section id="tipr-example-3" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<p><em>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</em></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tipr-example-4" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  hr_adjusted hr_observed exposed_confounder_prev unexposed_confounder_prev
+        &lt;dbl&gt;       &lt;dbl&gt;                   &lt;dbl&gt;                     &lt;dbl&gt;
+1       0.805        0.79                    0.04                      0.06
+2       0.887        0.87                    0.04                      0.06
+3       0.978        0.96                    0.04                      0.06
+# ℹ 1 more variable: confounder_outcome_effect &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="if-heavy-alcohol-consumption-differed-between-groups-with-4-prevalence-among-metformin-users-and-6-among-sulfonylureas-users-and-had-an-hr-of-2-with-lung-cancer-incidence-the-updated-adjusted-effect-of-metformin-on-lung-cancer-incidence-would-be-an-hr-of-0.89-95-ci-0.810.98.-should-an-unmeasured-confounder-like-this-exist-our-effect-of-metformin-on-lung-cancer-incidence-would-be-attenuated-and-fall-much-closer-to-the-null." class="title-slide slide level1 tiny center">
+<h1>“If heavy alcohol consumption differed between groups, with <em>4%</em> prevalence among metformin users and <em>6%</em> among sulfonylureas users, and had an HR of <em>2</em> with lung cancer incidence the updated adjusted effect of metformin on lung cancer incidence would be an HR of <em>0.89 (95% CI: 0.81–0.98)</em>. Should an unmeasured confounder like this exist, our effect of metformin on lung cancer incidence would be attenuated and fall much closer to the null.</h1>
+
+</section>
+<section id="tipr-example-5" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>sens <span class="ot">&lt;-</span> <span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="fu">seq</span>(<span class="fl">1.1</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tipr-example-6" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">ggplot</span>(sens, <span class="fu">aes</span>(<span class="at">x =</span> confounder_outcome_effect, <span class="at">y =</span> hr_adjusted)) <span class="sc">+</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="11-tipr_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="tipr-example-7" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">tip_hr_with_binary</span>(</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tipr-example-8" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  effect_adjusted effect_observed exposed_confounder_prev unexposed_confounder…¹
+            &lt;dbl&gt;           &lt;dbl&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;
+1               1            0.96                    0.04                   0.06
+# ℹ abbreviated name: ¹​unexposed_confounder_prev
+# ℹ 2 more variables: confounder_outcome_effect &lt;dbl&gt;,
+#   n_unmeasured_confounders &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="if-heavy-alcohol-consumption-differed-between-groups-with-4-prevalence-among-metformin-users-and-6-among-sulfonylureas-users-it-would-need-to-have-an-association-with-lung-cancer-incidence-of-3.27-to-tip-this-analysis-at-the-5-level-rendering-it-inconclusive.-this-effect-is-larger-than-the-understood-association-between-lung-cancer-and-alcohol-consumption." class="title-slide slide level1 tiny center">
+<h1>“If heavy alcohol consumption differed between groups, with <em>4%</em> prevalence among metformin users and <em>6%</em> among sulfonylureas users, it would need to have an association with lung cancer incidence of <em>3.27 to tip this analysis</em> at the 5% level, rendering it inconclusive. This effect is larger than the understood association between lung cancer and alcohol consumption.”</h1>
+
+</section>
+<section id="what-is-known-about-the-unmeasured-confounder" class="slide level2">
+<h2><em>What is known about the unmeasured confounder?</em></h2>
+<div class="columns">
+<div class="small">
+<div class="center">
+<div class="column" style="width:30%;">
+<h3 id="both-exposure-and-outcome-relationship-is-known">Both exposure and outcome relationship is known</h3>
+<ul>
+<li class="fragment"><code>adjust_*</code> functions</li>
+</ul>
+</div>
+<div class="column" style="width:30%;">
+<h3 id="only-one-of-the-exposureoutcome-relationships-is-known">Only one of the exposure/outcome relationships is known</h3>
+<ul>
+<li class="fragment"><code>adjust_*</code> functions in an array</li>
+<li class="fragment"><code>tip_*</code> functions</li>
+</ul>
+</div>
+<div class="column" style="width:30%;">
+<h3 id="nothing-is-known">Nothing is known</h3>
+<ul>
+<li class="fragment"><code>adjust_*</code> functions in an array</li>
+<li class="fragment"><code>tip_*</code> functions in an array</li>
+<li class="fragment"><code>tip_coef_with_r2()</code> (measured confounders)</li>
+<li class="fragment">Robustness value <code>r_value()</code> &amp; E-values <code>e_value()</code></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="your-turn" class="slide level2">
 <h2><em>Your turn</em></h2>
-<p></p><div class="countdown" id="timer_5d1ac0a8" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="countdown" id="timer_9c53327e" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+</div>
+</div>
 <h3 id="use-the-tip_coef-function-to-conduct-a-sensitivity-analysis-for-the-estimate-from-your-previous-exercises.">Use the <code>tip_coef()</code> function to conduct a sensitivity analysis for the estimate from your previous exercises.</h3>
 <div class="footer footer-default">
 
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -645,7 +714,7 @@ Lucy D’Agostino McGowan
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":false},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":false},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -887,23 +956,9 @@ Lucy D’Agostino McGowan
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
-          }
-        }
-        return false;
-      }
       const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
+        target: function(trigger) {
+          return trigger.previousElementSibling;
         }
       });
       clipboard.on('success', function(e) {
@@ -951,7 +1006,7 @@ Lucy D’Agostino McGowan
           },
           interactive: true,
           interactiveBorder: 10,
-          theme: 'light-border',
+          theme: 'quarto-reveal',
           placement: 'bottom-start'
         };
           config['offset'] = [0,0];

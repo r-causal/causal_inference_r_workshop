@@ -3,7 +3,7 @@ title: "Tipping Point Sensitivity Analyses"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
-format: "kakashi-revealjs"
+format: kakashi-revealjs
 knitr:
   opts_chunk: 
     eval: false
@@ -17,12 +17,21 @@ options(
 )
 ```
 
+
 ## Recall: Propensity scores {background-color="#23373B"}
 
 Rosenbaum and Rubin showed in observational studies, conditioning on **propensity scores** can lead to unbiased estimates of the exposure effect
 
-1. There are no unmeasured confounders
+::: nonincremental
+1. **There are no unmeasured confounders**
 2. Every subject has a nonzero probability of receiving either exposure
+:::
+
+# Quantifying Unmeasured Confounding
+
+##
+
+![](img/sens.png)
 
 ## Quantifying Unmeasured Confounding {background-color="#23373B"}
 
@@ -30,164 +39,255 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 1. The exposure-unmeasured 
 1. The unmeasured confounder-outcome effect
 
+## Quantifying Unmeasured Confounding 
+
+![](img/adjust.png)
+
+[D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)](https://doi.org/10.1007/s40471-022-00308-6)
+
+
 ## {background-color="#23373B" .center .large}
 
 ### **What will tip our confidence bound to cross zero?**
 
-## Quantifying Unmeasured Confounding
+## 
 
-::: {.nonincremental}
-1. The exposure-outcome 
-1. The exposure-unmeasured 
-1. ~~The unmeasured confounder-outcome effect~~
+:::: columns
+
+::: column
+![](img/tipr-stuff.png)
 :::
 
----
+::: column
 
-## Quantifying Unmeasured Confounding
 
-::: {.nonincremental}
-1. The exposure-outcome 
-1. ~~The exposure-unmeasured~~
-1. The unmeasured confounder-outcome effect
+![](img/logo.png){width=25% fig-align="right"}
+
+
+::: small
+* `{action}_{effect}_with_{what}`
+* `tip_rr_with_continous()`
+* `adjust_coef_with_r2()`
 :::
 
-## Tipping point
-
-$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
-* $\beta_{UO}$: the **unmeasured confounder-outcome effect**
-
-## Quantifying Unmeasured Confounding
-
-::: {.nonincremental}
-1. ~~The exposure-outcome~~
-1. ~~The exposure-unmeasured~~
-1. The unmeasured confounder-outcome effect
+::: tiny
+[D’Agostino McGowan, L., (2022). tipr: An R package for sensitivity analyses for unmeasured confounders. Journal of Open Source Software, 7(77), 4495](https://doi.org/10.21105/joss.04495)
 :::
 
-## Tipping point
-
-$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
-
-* $LB_{obs}$: **limiting bound** - the bound closest to the null
-
-## Quantifying Unmeasured Confounding
-
-::: {.nonincremental}
-1. The exposure-outcome 
-1. ~~The exposure-unmeasured~~
-1. ~~The unmeasured confounder-outcome effect~~
 :::
-
-## Tipping point
-
-$$\Huge \beta_{UO}(LB_{obs}, \delta)$$
-
-* $\delta$: **standardized mean difference** of the unmeasured confounder between the exposed and unexposed groups
-
-## Quantifying Unmeasured Confounding
-
-::: {.nonincremental}
-1. ~~The exposure-outcome~~
-1. The exposure-unmeasured
-1. ~~The unmeasured confounder-outcome effect~~
-:::
-
-## Tipping Point
-
-$$\Huge \beta_{UO}(LB_{obs}, \delta)=\frac{LB_{obs}}{\delta}$$
-
-## Tipping Point
-
-$$\Huge \delta(LB_{obs}, \beta_{UO})=\frac{LB_{obs}}{\beta_{UO}}$$
+::::
 
 ## {background-color="#23373B" .center .huge}
 
 ### **tipr**
 
-## Main function
+##
 
-### `tip_coef()`
+![](img/metformin.png)
 
-* `effect_observed`: observed exposure - outcome effect 
+## Question
 
-## Quantifying Unmeasured Confounding
+![](img/met-cancer.png)
 
-::: {.nonincremental}
-1. The exposure-outcome
-1. ~~The exposure-unmeasured~~
-1. ~~The unmeasured confounder-outcome effect~~
+## Analysis
+
+* New-user design
+* **Matched** 42,217 new metformin users to 42,217 new sulfonylurea users
+* Fit **adjusted Cox proportional hazards model** on the matched cohort
+
+## Results
+
+* **Outcome:** Lung Cancer
+* **Adjusted Hazard Ratio**: 0.87 (0.79, 0.96)
+
+# What if **alcohol consumption** is an unmeasured confounder? {background-color="#23373B"}
+
+# What if heavy alcohol consumption is prevalent among *4%* of Metformin users and *6%* of Sulfonylurea users?
+
+::: tiny 
+Meadows SO, Engel CC, Collins RL, Beckman RL, Cefalu M,
+Hawes-Dawson J, et al. 2015 health related behaviors survey:
+Substance use among US active-duty service members. RAND; 2018.
 :::
 
-## Main function
+## `tipr` Example
 
-### `tip_coef()`
-* `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
+**What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
 
-## Quantifying Unmeasured Confounding
+```{r}
+#| eval: false
+library(tipr)
+adjust_hr_with_binary(
+  effect_observed = c(0.79, 0.87, 0.96),
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = 2)
+```
 
-::: {.nonincremental}
-1. ~~The exposure-outcome~~
-1. The exposure-unmeasured
-1. ~~The unmeasured confounder-outcome effect~~
+## `tipr` Example
+
+**What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
+
+```{r}
+#| eval: false
+#| code-line-numbers: '3'
+library(tipr)
+adjust_hr_with_binary(
+  effect_observed = c(0.79, 0.87, 0.96),
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = 2)
+```
+
+## Results
+
+::: nonincremental
+* **Outcome:** Lung Cancer
+* **Adjusted Hazard Ratio**: 0.87 (0.79, 0.96)
 :::
 
-## Main function
+## `tipr` Example
 
-### `tip_coef()`
-* `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
+**What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
 
-## Quantifying Unmeasured Confounding
+```{r}
+#| eval: false
+#| code-line-numbers: '4,5'
+library(tipr)
+adjust_hr_with_binary(
+  effect_observed = c(0.79, 0.87, 0.96),
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = 2)
+```
 
-::: {.nonincremental}
-1. ~~The exposure-outcome~~
-1. ~~The exposure-unmeasured~~
-1. The unmeasured confounder-outcome effect
+# What if heavy alcohol consumption is prevalent among *4%* of Metformin users and *6%* of Sulfonylurea users?
+
+::: tiny 
+Meadows SO, Engel CC, Collins RL, Beckman RL, Cefalu M,
+Hawes-Dawson J, et al. 2015 health related behaviors survey:
+Substance use among US active-duty service members. RAND; 2018.
 :::
 
-## Main function
+## `tipr` Example
 
-### `tip_coef()`
+*What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?*
 
-::: {.nonincremental}
-* `effect_observed`
-:::
+```{r}
+#| eval: false
+#| code-line-numbers: '6'
+library(tipr)
+adjust_hr_with_binary(
+  effect_observed = c(0.79, 0.87, 0.96),
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = 2)
+```
 
-## Main function
+## `tipr` Example
 
-### `tip_coef()`:  **specify** one, it will **estimate** the other
+```{r}
+#| echo: false
+#| eval: true
+library(tipr)
+adjust_hr_with_binary(
+  effect_observed = c(0.79, 0.87, 0.96),
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = 2,
+  verbose = FALSE)
+```
 
-::: {.nonincremental}
-* `exposure_confounder_effect`
-* `confounder_outcome_effect` 
-:::
+# “If heavy alcohol consumption differed between groups, with *4%* prevalence among metformin users and *6%* among sulfonylureas users, and had an HR of *2* with lung cancer incidence the updated adjusted effect of metformin on lung cancer incidence would be an HR of *0.89 (95% CI: 0.81–0.98)*. Should an unmeasured confounder like this exist, our effect of metformin on lung cancer incidence would be attenuated and fall much closer to the null. {.tiny}
 
-## Example
+## `tipr` Example
 
-*Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
+```{r}
+#| code-line-numbers: "|6"
+#| eval: true
+library(tipr)
+sens <- adjust_hr_with_binary(
+  effect_observed = 0.96,
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06,
+  confounder_outcome_effect = seq(1.1, 3.5, by = 0.1))
+```
+
+## `tipr` Example
 
 ```{r}
 #| eval: true
-#| output-location: fragment
-library(tipr)
-tip_coef(
-  effect_observed = 2.4,
-  exposure_confounder_effect = 0.3
-)
+library(ggplot2)
+ggplot(sens, aes(x = confounder_outcome_effect, y = hr_adjusted)) + 
+  geom_point() +
+  geom_hline(yintercept = 1, lty = 2)
 ```
 
-## Example
+## `tipr` Example
 
-* The observed effect (2.4, 4.4) *WOULD* be tipped by 1 unmeasured confounder
-with the following specifications:
+```{r}
+#| code-line-numbers: "|2"
+library(tipr)
+tip_hr_with_binary(
+  effect_observed = 0.96,
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06)
+```
 
-* estimated standardized mean difference between the unmeasured confounder
-in the exposed population and unexposed population: *0.3*
+## `tipr` Example
 
-* estimated association between the unmeasured confounder and the outcome: *8*
+```{r}
+#| echo: false
+#| eval: true
+library(tipr)
+tip_hr_with_binary(
+  effect_observed = 0.96,
+  exposed_confounder_prev = .04,
+  unexposed_confounder_prev = .06)
+```
+
+# “If heavy alcohol consumption differed between groups, with *4%* prevalence among metformin users and *6%* among sulfonylureas users, it would need to have an association with lung cancer incidence of *3.27 to tip this analysis* at the 5% level, rendering it inconclusive. This effect is larger than the understood association between lung cancer and alcohol consumption." {.tiny}
+
+## *What is known about the unmeasured confounder?*
+
+:::: {.columns}
+
+::: small
+::: center
+::: {.column width=30%}
+### Both exposure and outcome relationship is known
+
+* `adjust_*` functions
+
+:::
+
+::: {.column width=30%}
+### Only one of the exposure/outcome relationships is known
+
+* `adjust_*` functions in an array
+* `tip_*` functions
+:::
+
+::: {.column width=30%}
+
+### Nothing is known
+* `adjust_*` functions in an array
+* `tip_*` functions in an array
+* `tip_coef_with_r2()` (measured confounders)
+* Robustness value `r_value()` & E-values `e_value()`
+
+:::
+
+:::
+:::
+::::
 
 ## *Your turn*
 
-`r countdown::countdown(minutes = 5)`
+```{r}
+#| eval: true
+#| echo: false
+countdown::countdown(minutes = 5)
+```
 
 ### Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
