@@ -1,0 +1,261 @@
+---
+title: "Causal inference is not just a statistics problem"
+author: "Lucy D'Agostino McGowan"
+institute: "Wake Forest University"
+subtitle: "2023-04-12 (updated: `r Sys.Date()`)"
+format: kakashi-revealjs
+knitr:
+  opts_chunk: 
+    eval: false
+fig-cap-location: bottom
+---
+
+```{r}
+#| include: false
+options(
+  tibble.max_extra_cols = 7, 
+  tibble.width = 60
+)
+```
+
+# Causal Inference is not a statistics problem {background-color="#23373B"}
+
+# Causal Inference is not *just* a statistics problem {background-color="#23373B"}
+
+## *The problem*
+
+
+### We have measured variables, what should we adjust for?
+
+. . .
+
+ **exposure** | **outcome** | **covariate**
+---|---|---
+0.49 | 1.71 | 2.24
+0.07 | 0.68 | 0.92
+0.40 | -1.60 | -0.10
+. | . | .
+. | . | .
+. | . | .
+0.55 | -1.73 | -2.34
+
+## *A bit more info*
+
+:::: columns
+
+::: column
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+library(quartets)
+library(tidyverse)
+ggplot(causal_confounding, aes(x = exposure, y = outcome))+ 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = "y ~ x")
+```
+
+**One unit increase in the exposure yields an average increase in the outcome of 1**
+:::
+
+::: column
+
+```{r}
+#| echo: true
+cor(exposure, covariate)
+```
+
+```{r}
+#| echo: false
+#| eval: true
+cor(causal_confounding$exposure, causal_confounding$covariate) |>
+  round(digits = 2)
+```
+
+**The exposure and measured factor are positively correlated**
+:::
+
+::::
+
+##
+
+:::: columns
+
+::: column
+
+![](img/shake.png)
+:::
+
+::: column
+
+### To adjust or not adjust? That is the question.
+:::
+::::
+
+## *Causal Quartet*
+
+:::: columns
+
+::: column
+
+![collider](img/collider.png){width=75%}
+**collider**
+![confounder](img/confounder.png){width=75%}
+**confounder**
+:::
+
+::: column
+![mediator](img/mediator.png){width=75%}
+**Mediator**
+
+![M-bias](img/m-bias.png){width=75%}
+**M-bias**
+
+:::
+
+::::
+
+##
+
+![](img/quartets-logo.png)
+## *Your turn*
+
+::: small
+::: nonincremental
+* Install the `quartets` package: `install.packages("quartets")`
+* For each of the following 4 datasets, look at the correlation between `exposure` and `covariate`: `causal_collider`, `causal_confounding`, `causal_mediator`, `causal_m_bias`
+* For each of the above 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`
+* For each of the above 4 datasets, fit a linear model to examine the relationship between the `exposure` and the `outcome`
+:::
+:::
+
+```{r}
+#| echo: false
+#| eval: true
+
+countdown::countdown(10)
+```
+
+## *Relationship between exposure and outcome*
+
+```{r}
+#| echo: false
+#| eval: true
+
+ggplot(causal_quartet, aes(x = exposure, y = outcome)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = "y ~ x") + 
+  facet_wrap(~ dataset)
+```
+
+## *Relationship between exposure and covariate*
+
+```{r}
+#| eval: true
+causal_quartet |>
+  group_by(dataset) |>
+  summarise(cor(exposure, covariate))
+```
+
+## Correct effects
+
+![](img/causal-tab.png)
+
+::: tiny
+D'Agostino McGowan L, Gerke T, Barrett M (2023). 
+Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
+:::
+
+## Observed effects
+
+![](img/ate.png)
+
+::: tiny
+D'Agostino McGowan L, Gerke T, Barrett M (2023). 
+Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
+:::
+
+## The solution
+
+:::: columns
+
+::: column
+
+![collider](img/collider.png){width=75%}
+![confounder](img/confounder.png){width=75%}
+:::
+
+::: column
+![](img/mediator.png){width=75%}
+![](img/m-bias.png){width=75%}
+
+:::
+
+::::
+
+## The *partial* solution
+
+::: small
+```{r}
+#| echo: false
+#| eval: true
+
+causal_collider_time
+```
+
+:::
+
+. . .
+
+*Time-varying data*
+
+## Time-varying DAG
+
+![](img/time.png){width=80%}
+
+**True causal effect**: 1
+**Estimated causal effect**: 0.55
+
+## Time-varying DAG
+
+![](img/time2.png)
+
+. . .
+
+**True causal effect**: 1
+**Estimated causal effect**: 1
+
+# `outcome_followup ~ exposure_baseline + covariate_baseline` {.tiny background-color="#23373B"}
+
+## The *partial* solution
+
+![](img/quartet-sol.png)
+
+::: tiny
+D'Agostino McGowan L, Gerke T, Barrett M (2023). 
+Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
+:::
+
+## *On M-Bias*
+
+::: small
+* The relationship between Z and the unmeasured confounders needs to be really large (Liu et al 2012)
+* “To obsess about the possibility of [M-bias] generates bad practical advice in all but the most unusual circumstances” (Rubin 2009)
+* There are (almost) no true zeros (Gelman 2011)
+* Asymptotic theory shows that induction of M-bias is quite sensitive to various deviations from the exact M-Structure (Ding and Miratrix 2014)
+:::
+
+## *Your turn*
+
+::: nonincremental
+* For each of the following 4 datasets, fit a linear linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: `causal_collider_time`, `causal_confounding_time`, `causal_mediator_time`, `causal_m_bias_time`
+:::
+
+```{r}
+#| echo: false
+#| eval: true
+
+countdown::countdown(10)
+```
+

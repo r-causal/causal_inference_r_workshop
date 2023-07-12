@@ -1,0 +1,54 @@
+---
+title: "Causal inference is not just a statistics problem"
+format: html
+---
+
+```{r}
+library(quartets)
+```
+
+If you don't already have it, install the `quartets` package: `install.packages("quartets")`
+
+## Your turn
+
+For each of the following 4 datasets, look at the correlation between `exposure` and `covariate`: 
+
+* `causal_collider`
+* `causal_confounding`
+* `causal_mediator`
+* `causal_m_bias`
+
+
+```{r}
+
+```
+
+For each of the above 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`
+
+```{r}
+
+```
+
+For each of the above 4 datasets, fit a linear model to examine the relationship between the `exposure` and the `outcome`
+
+```{r}
+
+```
+
+## Your turn 2
+
+For each of the following 4 datasets, fit a linear linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: 
+
+* `causal_collider_time`
+* `causal_confounding_time`
+* `causal_mediator_time`
+* `causal_m_bias_time`
+
+## Stretch goal
+
+Try to fit a propensity score model for a continuous exposure predicting `exposure_baseline` using `covariate_baseline`. Create a propensity score weight and use it in a model to estiamte the relationship between `outcome_followup` and `exposure_baseline`
+
+```{r}
+
+```
+
