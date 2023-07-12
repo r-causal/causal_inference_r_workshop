@@ -133,11 +133,11 @@ gt(head(greek_data |> mutate(a = 1), 10)) |>
 #| code-line-numbers: "|3,7"
 #  set all participants to have a = 0
 untreated_data <- greek_data |>
-  mutate(a = 0) #<<
+  mutate(a = 0) 
 
 #  set all participants to have a = 1
 treated_data <- greek_data |>
-  mutate(a = 1) #<<
+  mutate(a = 1) 
 ```
 
 ## 4. Make predictions using the model on the cloned data sets
@@ -145,13 +145,13 @@ treated_data <- greek_data |>
 ```{r}
 #| code-line-numbers: "|2-3,7-8"
 #  predict under the data where everyone is untreated
-predicted_untreated <- greek_model |>#<<
-  augment(newdata = untreated_data) |>#<<
+predicted_untreated <- greek_model |>
+  augment(newdata = untreated_data) |>
   select(untreated = .fitted)
 
 #  predict under the data where everyone is treated
-predicted_treated <- greek_model |>#<<
-  augment(newdata = treated_data) |>#<<
+predicted_treated <- greek_model |>
+  augment(newdata = treated_data) |>
   select(treated = .fitted)
 
 predictions <- bind_cols(
@@ -172,7 +172,7 @@ predictions |>
   summarise(
     mean_treated = mean(treated),
     mean_untreated = mean(untreated),
-    difference = mean_treated - mean_untreated #<<
+    difference = mean_treated - mean_untreated 
   )
 ```
 
