@@ -116,9 +116,10 @@ cor(causal_confounding$exposure, causal_confounding$covariate) |>
 
 ::::
 
-##
+## quartets
 
 ![](img/quartets-logo.png)
+
 ## *Your turn*
 
 ::: small
