@@ -31,6 +31,8 @@
   Analyses](https://causal-inference-r-workshop.netlify.app/11-tipr.html)
 - [12 Whole Game (Your
   Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)
+- [13 Causal Inference is Not Just a Statistics
+  Problem](https://causal-inference-r-workshop.netlify.app/13-quartets.html)
 
 ### Installing materials locally
 
