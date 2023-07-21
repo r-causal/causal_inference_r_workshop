@@ -112,6 +112,7 @@ knitr::include_graphics("img/tidy_ggdagitty.png")
 ```{r}
 #| eval: false
 #| code-line-numbers: "|2|3"
+library(ggdag)
 dagify(
   cancer ~ smoking, 
   coffee ~ smoking
@@ -390,8 +391,15 @@ bind_rows(
 
 . . .
 
+**Forgetting to consider time-ordering (something has to happen before something else to cause it!)**
+
+. . .
+
 **Selection bias and colliders (more later!)**
 
+. . .
+
+**Incorrect functional form for confounders (e.g. BMI often non-linear)**
 
 ## Resources: ggdag vignettes {background-color="#23373B"}
 ### [An Introduction to ggdag](https://ggdag.malco.io/articles/intro-to-ggdag.html)
