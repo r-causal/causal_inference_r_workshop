@@ -33,7 +33,7 @@ seven_dwarfs_prop <- propensity_model |>
 
 ## Your Turn 1 (Matching)
 
-_After updating the code chunks below, change `eval = TRUE` before knitting._
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Create at "matched" data set using the same propensity score model as above and a caliper of 0.2.
 
@@ -52,7 +52,7 @@ matched_df <- ___(matched_dwarfs)
 
 ## Your Turn 2 (Weighting)
 
-_After updating the code chunks below, change `eval = TRUE` before knitting._
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Add the ATE weights to the data frame, `seven_dwarfs_prop`
 

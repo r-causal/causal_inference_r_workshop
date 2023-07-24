@@ -35,7 +35,7 @@ seven_dwarfs_ps <- propensity_model |>
 
 ## Your Turn 1
 
-_After updating the code chunks below, change `eval = TRUE` before knitting._
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Calculate the standardized mean differences with and without weights
 
