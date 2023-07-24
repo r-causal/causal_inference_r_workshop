@@ -10,6 +10,7 @@ library(tidyverse)
 library(broom)
 library(touringplans)
 library(halfmoon)
+library(propensity)
 ```
 
 We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
@@ -29,7 +30,7 @@ propensity_model <- glm(
 
 seven_dwarfs_ps <- propensity_model |>
   augment(type.predict = "response", data = seven_dwarfs) |>
-  mutate(w_ate = 1 / ifelse(extra_magic_morning == 0, 1 - .fitted, .fitted))
+  mutate(w_ate = wt_ate(.fitted, extra_magic_morning))
 ```
 
 ## Your Turn 1
