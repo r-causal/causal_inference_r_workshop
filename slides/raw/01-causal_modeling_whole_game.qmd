@@ -316,8 +316,8 @@ ggplot(
   geom_vline(xintercept = 0.1, color = "black", linewidth = 0.3) +
   theme_minimal(base_size = 20) +
   theme(axis.title.y = element_blank()) +
-  scale_color_manual(values = c("grey85", "#00BFC4")) +
-  scale_fill_manual(values = c("grey85", "#00BFC4")) +
+  scale_color_manual(values = c("#00BFC4", "grey85")) +
+  scale_fill_manual(values = c("#00BFC4", "grey85")) +
   xlim(0, .3)
 ```
 
