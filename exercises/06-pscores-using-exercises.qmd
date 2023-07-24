@@ -77,16 +77,6 @@ Stretch Goal 2:
 
 Update the code below to examine the distribution of the weighted sample. **HINT** the part that needs to be updated is the `weight` parameter in two of the `geom_mirror_histogram()` call.
 
-```{r}
-#| eval: false
-seven_dwarfs_prop_wide <- seven_dwarfs_prop |>
-  pivot_wider(
-    names_from = extra_magic_morning, 
-    values_from = .fitted, 
-    names_prefix = "extra_magic_morning_p"
-  )
-```
-
 
 ```{r}
 #| eval: false
