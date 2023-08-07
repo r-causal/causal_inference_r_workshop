@@ -19,6 +19,14 @@ library(tidyverse)
 library(ggdag)
 
 set.seed(1234)
+coords <- time_ordered_coords(
+  list(
+    c("active", "age", "education", "exercise", "race", "sex", "smokeintensity", 
+"smokeyrs", "wt71"),
+    "qsmk",
+    "wt82_71"
+  )
+)
 
 smk_wt_dag <- dagify(
   # specify causes of quitting smoking and weight gain:
@@ -29,6 +37,7 @@ smk_wt_dag <- dagify(
   # specify causal question:
   exposure = "qsmk", 
   outcome = "wt82_71",
+  coords = coords,
   # set up labels:
   # here, I'll use the same variable names as the data set, but I'll label them
   # with clearer names
