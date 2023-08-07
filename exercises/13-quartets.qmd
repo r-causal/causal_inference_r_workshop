@@ -4,6 +4,7 @@ format: html
 ---
 
 ```{r}
+#| label: setup
 library(quartets)
 ```
 

@@ -8,6 +8,7 @@ format: html
 library(tidyverse)
 library(broom)
 library(touringplans)
+library(propensity)
 ```
 
 For this set of exercises, we'll use propensity scores for continuous exposures.

@@ -8,6 +8,7 @@ format: html
 library(tidyverse)
 library(broom)
 library(touringplans)
+library(propensity)
 
 seven_dwarfs <- seven_dwarfs_train_2018 |>
   filter(hour == 9)

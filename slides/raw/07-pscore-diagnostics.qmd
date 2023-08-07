@@ -153,6 +153,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 ```{r}
 #| eval: true
 #| code-line-numbers: "|2"
+#| output-location: slide
 ggplot(df, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual(

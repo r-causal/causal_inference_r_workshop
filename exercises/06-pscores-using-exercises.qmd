@@ -1,10 +1,11 @@
 ---
-title: "Propensity Score Weighting"
+title: "Using Propensity Scores"
 format: html
 ---
 
 
-```{r setup}
+```{r}
+#| label: setup
 library(tidyverse)
 library(broom)
 library(touringplans)
@@ -32,7 +33,7 @@ seven_dwarfs_prop <- propensity_model |>
 
 ## Your Turn 1 (Matching)
 
-_After updating the code chunks below, change `eval = TRUE` before knitting._
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Create at "matched" data set using the same propensity score model as above and a caliper of 0.2.
 
@@ -51,7 +52,7 @@ matched_df <- ___(matched_dwarfs)
 
 ## Your Turn 2 (Weighting)
 
-_After updating the code chunks below, change `eval = TRUE` before knitting._
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Add the ATE weights to the data frame, `seven_dwarfs_prop`
 
@@ -75,16 +76,6 @@ seven_dwarfs_prop <- seven_dwarfs_prop |>
 Stretch Goal 2: 
 
 Update the code below to examine the distribution of the weighted sample. **HINT** the part that needs to be updated is the `weight` parameter in two of the `geom_mirror_histogram()` call.
-
-```{r}
-#| eval: false
-seven_dwarfs_prop_wide <- seven_dwarfs_prop |>
-  pivot_wider(
-    names_from = extra_magic_morning, 
-    values_from = .fitted, 
-    names_prefix = "extra_magic_morning_p"
-  )
-```
 
 
 ```{r}

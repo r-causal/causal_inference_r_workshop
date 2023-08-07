@@ -92,9 +92,17 @@ nhefs_complete_uc |>
 
 ```{r}
 #| echo: false
-#| fig.height: 5.5
+#| fig.width: 9
 library(ggdag)
 # set up DAG
+coords <- time_ordered_coords(
+  list(
+    c("active", "age", "education", "exercise", "race", "sex", "smokeintensity", 
+"smokeyrs", "wt71"),
+    "qsmk",
+    "wt82_71"
+  )
+)
 smk_wt_dag <- dagify(
   # specify causes of quitting smoking and weight gain:
   qsmk ~ sex + race + age + education + 
@@ -104,6 +112,7 @@ smk_wt_dag <- dagify(
   # specify causal question:
   exposure = "qsmk", 
   outcome = "wt82_71",
+  coords = coords,
   # set up labels:
   # here, I'll use the same variable names as the data set, but I'll label them
   # with clearer names
@@ -128,7 +137,7 @@ smk_wt_dag <- dagify(
     "smokeyrs" = "yrs of\nsmoking"
   )
 ) |>
-  tidy_dagitty(layout = "star")
+  tidy_dagitty()
 
 smk_wt_dag |>
   filter(name %in% c("qsmk", "wt82_71")) |>
@@ -142,7 +151,7 @@ smk_wt_dag |>
 
 ```{r}
 #| echo: false
-#| fig.height: 5.5
+#| fig.width: 9
 smk_wt_dag |>
   ggdag(text = FALSE, use_labels = "label") +
   ylim(min(smk_wt_dag$data$y) - 0.25, max(smk_wt_dag$data$y) + 0.25) +  
@@ -153,6 +162,80 @@ smk_wt_dag |>
 ## {background-color="#23373B" .center}
 
 ### What do I need to control for?
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 15
+library(ggokabeito)
+glyph <- function(data, params, size) {
+    data$shape <- 15
+    data$size <- 12
+    ggplot2::draw_key_point(data, params, size)
+}
+
+smk_wt_dag |>
+    dag_paths() |>
+    mutate(
+        effects = case_when(
+            set == "1" & path == "open path" ~ "true effect",
+            path == "open path" ~ "confounding effect",
+            TRUE ~ NA_character_
+        ),
+        effects = factor(effects, c("true effect", "confounding effect"))
+    ) |>
+    ggplot(aes(x = x, y = y, xend = xend, yend = yend, color = effects, alpha = path)) +
+    geom_dag_edges(aes(edge_alpha = path, edge_colour = effects), show.legend = FALSE) +
+    geom_dag_point(
+        data = function(.x) dplyr::filter(.x, is.na(path)),
+        key_glyph = glyph
+    ) +
+    geom_dag_point(
+        data = function(.x) dplyr::filter(.x, !is.na(path)),
+        key_glyph = glyph
+    ) +
+    facet_wrap(vars(fct_inorder(factor(set)))) +
+    expand_plot(
+        expand_x = expansion(c(0.25, 0.25)),
+        expand_y = expansion(c(0.1, 0.1))
+    ) +
+    theme_dag() +
+    theme(
+        legend.position = "top",
+        legend.spacing.x = unit(8, "mm"),
+        legend.text = element_text(size = rel(2.5)),
+        legend.box.margin = margin(b = 20),
+        strip.text = element_blank()
+    ) +
+    coord_cartesian(clip = "off") +
+    scale_alpha_manual(
+        drop = FALSE,
+        values = c("open path" = 1),
+        na.value = .5,
+        breaks = "open path"
+    ) +
+    ggraph::scale_edge_alpha_manual(
+        drop = FALSE,
+        values = c("open path" = 1),
+        na.value = .5,
+        breaks = "open path"
+    ) +
+    scale_color_okabe_ito(
+        name = NULL,
+        na.value = "grey90",
+        order = c(3, 6),
+        breaks = c("true effect", "confounding effect")
+    ) +
+    scale_edge_color_okabe_ito(
+        name = NULL,
+        na.value = "grey90",
+        order = c(3, 6),
+        breaks = c("true effect", "confounding effect")
+    ) +
+    guides(alpha = "none", edge_alpha = "none")
+```
+
 
 ---
 
@@ -291,7 +374,7 @@ plot_df <- nhefs_complete_uc |>
 #| echo: false
 #| fig.height: 5.5
 ggplot(
-  data = plot_df |> filter(method == "wts"),
+  data = plot_df |> filter(method == "observed"),
   aes(x = abs(smd), y = variable, group = method, color = method, fill = method)
 ) +
   geom_line(orientation = "y", size = 1) +

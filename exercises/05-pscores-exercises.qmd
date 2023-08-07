@@ -4,6 +4,7 @@ format: html
 ---
 
 ```{r}
+#| label: setup
 library(tidyverse)
 library(broom)
 library(touringplans)
@@ -20,7 +21,7 @@ We are interested in examining the relationship between whether there were "Extr
 
 Below is a proposed DAG for this question.
 
-*Knit this document to see the DAG or refer to the slides*.
+*Render this document to see the DAG or refer to the slides*.
 
 ```{r}
 set.seed(1234)
@@ -82,7 +83,7 @@ Here's a data dictionary of the variables we need in the `seven_dwarfs` data set
 
 ## Your Turn
 
-*After updating the code chunks below, change `eval = TRUE` before knitting.*
+*After updating the code chunks below, change `eval: true` before rendering*
 
 Now, fit a propensity score model for `extra_magic_morning` using the above proposed confounders.
 
