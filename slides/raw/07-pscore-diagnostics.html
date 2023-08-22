@@ -420,7 +420,8 @@ Lucy D’Agostino McGowan
 <p><span class="math display">\[\LARGE d = \frac{\bar{x}_{treatment}-\bar{x}_{control}}{\sqrt{\frac{s^2_{treatment}+s^2_{control}}{2}}}\]</span></p>
 </section>
 <section id="smd-in-r" class="slide level2">
-<h2>SMD in R</h2>
+<h2>SMD in R <img data-src="img/hex/halfmoon.png" class="absolute" style="top: 0px; right: 0px; width: 140px; "></h2>
+<p><br></p>
 <p>Calculate standardized mean differences</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|4|6|7|8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(halfmoon)</span>
@@ -434,15 +435,21 @@ Lucy D’Agostino McGowan
 <span id="cb1-9"><a href="#cb1-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="smd-in-r-1" class="slide level2 small">
-<h2>SMD in R</h2>
+<section id="smd-in-r-1" class="slide level2">
+<h2>SMD in R <img data-src="img/hex/halfmoon.png" class="absolute" style="top: 0px; right: 0px; width: 140px; "></h2>
+<p><br></p>
 <p>Plot them! (in a Love plot!)</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|2|3|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(</span>
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|2|3-8|10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(</span>
 <span id="cb2-2"><a href="#cb2-2"></a>  <span class="at">data =</span> smds,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">abs</span>(smd), <span class="at">y =</span> variable, <span class="at">group =</span> weights, <span class="at">color =</span> weights)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>) <span class="sc">+</span>  </span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="fu">geom_love</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">aes</span>(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">x =</span> <span class="fu">abs</span>(smd), </span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="at">y =</span> variable, </span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">group =</span> weights, </span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">color =</span> weights</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  )</span>
+<span id="cb2-9"><a href="#cb2-9"></a>) <span class="sc">+</span>  </span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="fu">geom_love</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="love-plot" class="slide level2">
@@ -451,7 +458,7 @@ Lucy D’Agostino McGowan
 <img data-src="07-pscore-diagnostics_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="your-turn-1" class="slide level2">
 <h2>Your turn 1</h2>
-<p></p><div class="countdown" id="timer_905e464f" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_5224dcf0" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-a-love-plot-for-the-propensity-score-weighting-you-created-in-the-previous-exercise">Create a Love Plot for the propensity score weighting you created in the previous exercise</h3>
 </section>
 <section id="ecdf" class="slide level2">
@@ -504,12 +511,20 @@ Lucy D’Agostino McGowan
 <span id="cb4-7"><a href="#cb4-7"></a>  ) <span class="sc">+</span> </span>
 <span id="cb4-8"><a href="#cb4-8"></a>  <span class="fu">xlab</span>(<span class="st">"Weight in Kg in 1971"</span>) <span class="sc">+</span> </span>
 <span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">ylab</span>(<span class="st">"Proportion &lt;= x (Weighted)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
 </div>
-<img data-src="07-pscore-diagnostics_files/figure-revealjs/unnamed-chunk-7-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="your-turn-2" class="slide level2">
+
+</section>
+<section id="weighted-ecdf-output" class="slide level2 output-location-slide"><h2>Weighted ECDF</h2><div class="cell output-location-slide" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="07-pscore-diagnostics_files/figure-revealjs/unnamed-chunk-7-1.png" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="your-turn-2" class="slide level2">
 <h2><em>Your turn 2</em></h2>
-<p></p><div class="countdown" id="timer_b7902dd3" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_5fa29678" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-an-unweighted-ecdf-examining-the-weather_wdwhigh-confounder-by-whether-or-not-the-day-had-extra-magic-hours.">Create an unweighted ECDF examining the <code>weather_wdwhigh</code> confounder by whether or not the day had Extra Magic Hours.</h3>
 <h3 id="create-a-weighted-ecdf-examining-the-weather_wdwhigh-confounder">Create a weighted ECDF examining the <code>weather_wdwhigh</code> confounder</h3>
 </section>
@@ -543,23 +558,23 @@ Lucy D’Agostino McGowan
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 
-<div id="kthksjfjai" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kthksjfjai table {
+<div id="rkmyjntztw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rkmyjntztw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#kthksjfjai thead, #kthksjfjai tbody, #kthksjfjai tfoot, #kthksjfjai tr, #kthksjfjai td, #kthksjfjai th {
+#rkmyjntztw thead, #rkmyjntztw tbody, #rkmyjntztw tfoot, #rkmyjntztw tr, #rkmyjntztw td, #rkmyjntztw th {
   border-style: none;
 }
 
-#kthksjfjai p {
+#rkmyjntztw p {
   margin: 0;
   padding: 0;
 }
 
-#kthksjfjai .gt_table {
+#rkmyjntztw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -585,12 +600,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_caption {
+#rkmyjntztw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#kthksjfjai .gt_title {
+#rkmyjntztw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -602,7 +617,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#kthksjfjai .gt_subtitle {
+#rkmyjntztw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -614,7 +629,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#kthksjfjai .gt_heading {
+#rkmyjntztw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -626,13 +641,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_bottom_border {
+#rkmyjntztw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_col_headings {
+#rkmyjntztw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -647,7 +662,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_col_heading {
+#rkmyjntztw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -667,7 +682,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#kthksjfjai .gt_column_spanner_outer {
+#rkmyjntztw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -679,15 +694,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#kthksjfjai .gt_column_spanner_outer:first-child {
+#rkmyjntztw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kthksjfjai .gt_column_spanner_outer:last-child {
+#rkmyjntztw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kthksjfjai .gt_column_spanner {
+#rkmyjntztw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -699,11 +714,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#kthksjfjai .gt_spanner_row {
+#rkmyjntztw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#kthksjfjai .gt_group_heading {
+#rkmyjntztw .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -729,7 +744,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#kthksjfjai .gt_empty_group_heading {
+#rkmyjntztw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -744,15 +759,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#kthksjfjai .gt_from_md > :first-child {
+#rkmyjntztw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kthksjfjai .gt_from_md > :last-child {
+#rkmyjntztw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kthksjfjai .gt_row {
+#rkmyjntztw .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -771,7 +786,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#kthksjfjai .gt_stub {
+#rkmyjntztw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -784,7 +799,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#kthksjfjai .gt_stub_row_group {
+#rkmyjntztw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -798,15 +813,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#kthksjfjai .gt_row_group_first td {
+#rkmyjntztw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#kthksjfjai .gt_row_group_first th {
+#rkmyjntztw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#kthksjfjai .gt_summary_row {
+#rkmyjntztw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -816,16 +831,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#kthksjfjai .gt_first_summary_row {
+#rkmyjntztw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_first_summary_row.thick {
+#rkmyjntztw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#kthksjfjai .gt_last_summary_row {
+#rkmyjntztw .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -835,7 +850,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_grand_summary_row {
+#rkmyjntztw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -845,7 +860,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#kthksjfjai .gt_first_grand_summary_row {
+#rkmyjntztw .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -855,7 +870,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_last_grand_summary_row_top {
+#rkmyjntztw .gt_last_grand_summary_row_top {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -865,11 +880,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_striped {
+#rkmyjntztw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kthksjfjai .gt_table_body {
+#rkmyjntztw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -878,7 +893,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_footnotes {
+#rkmyjntztw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -892,7 +907,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_footnote {
+#rkmyjntztw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 1px;
@@ -901,7 +916,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#kthksjfjai .gt_sourcenotes {
+#rkmyjntztw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -915,7 +930,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#kthksjfjai .gt_sourcenote {
+#rkmyjntztw .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -923,63 +938,63 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#kthksjfjai .gt_left {
+#rkmyjntztw .gt_left {
   text-align: left;
 }
 
-#kthksjfjai .gt_center {
+#rkmyjntztw .gt_center {
   text-align: center;
 }
 
-#kthksjfjai .gt_right {
+#rkmyjntztw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kthksjfjai .gt_font_normal {
+#rkmyjntztw .gt_font_normal {
   font-weight: normal;
 }
 
-#kthksjfjai .gt_font_bold {
+#rkmyjntztw .gt_font_bold {
   font-weight: bold;
 }
 
-#kthksjfjai .gt_font_italic {
+#rkmyjntztw .gt_font_italic {
   font-style: italic;
 }
 
-#kthksjfjai .gt_super {
+#rkmyjntztw .gt_super {
   font-size: 65%;
 }
 
-#kthksjfjai .gt_footnote_marks {
+#rkmyjntztw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#kthksjfjai .gt_asterisk {
+#rkmyjntztw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#kthksjfjai .gt_indent_1 {
+#rkmyjntztw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#kthksjfjai .gt_indent_2 {
+#rkmyjntztw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#kthksjfjai .gt_indent_3 {
+#rkmyjntztw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#kthksjfjai .gt_indent_4 {
+#rkmyjntztw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#kthksjfjai .gt_indent_5 {
+#rkmyjntztw .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
