@@ -74,11 +74,12 @@ smk_wt_dag <- dagify(
 1. Write variables as nodes
 1. Write causal pathways as arrows (edges)
 
-## {background-color="#23373B" .center .huge}
+## ![](img/hex/ggdag.png){.absolute top=0 right=0 width=140}
 
-### **ggdag** 
+## ![](img/hex/ggdag.png){.absolute top=0 right=0 width=140}
 
----
+<br />
+
 
 ```{r}
 #| echo: false
@@ -87,7 +88,9 @@ smk_wt_dag <- dagify(
 knitr::include_graphics("img/ggdagitty.png")
 ```
 
----
+## ![](img/hex/ggdag.png){.absolute top=0 right=0 width=140}
+
+<br />
 
 ```{r}
 #| echo: false
@@ -96,7 +99,10 @@ knitr::include_graphics("img/ggdagitty.png")
 knitr::include_graphics("img/ggdagitty_alg.png")
 ```
 
----
+
+## ![](img/hex/ggdag.png){.absolute top=0 right=0 width=140}
+
+<br />
 
 ```{r}
 #| echo: false
@@ -105,7 +111,11 @@ knitr::include_graphics("img/ggdagitty_alg.png")
 knitr::include_graphics("img/ggdagitty_plots.png")
 ```
 
----
+
+## ![](img/hex/ggdag.png){.absolute top=0 right=0 width=140}
+
+<br />
+
 
 ```{r}
 #| echo: false
@@ -114,7 +124,7 @@ knitr::include_graphics("img/ggdagitty_plots.png")
 knitr::include_graphics("img/tidy_ggdagitty.png")
 ```
 
-## Step 1: Specify your DAG
+## Step 1: Specify your DAG 
 
 . . .
 

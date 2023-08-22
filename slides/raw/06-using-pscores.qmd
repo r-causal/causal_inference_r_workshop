@@ -390,7 +390,9 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
-## ATE in R 
+## ATE in R ![](img/hex/propensity.png){.absolute top=0 right=0 width=140}
+
+<br />
 
 Average Treatment Effect (ATE)
 $w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
