@@ -523,7 +523,7 @@ Malcolm Barrett
 <h3 id="specify-a-dag-with-dagify.-write-your-assumption-that-smoking-causes-cancer-as-a-formula.">Specify a DAG with <code>dagify()</code>. Write your assumption that <code>smoking</code> causes <code>cancer</code> as a formula.</h3>
 <h3 id="were-going-to-assume-that-coffee-does-not-cause-cancer-so-theres-no-formula-for-that.-but-we-still-need-to-declare-our-causal-question.-specify-coffee-as-the-exposure-and-cancer-as-the-outcome-both-in-quotations-marks.">We’re going to assume that coffee does not cause cancer, so there’s no formula for that. But we still need to declare our causal question. Specify “coffee” as the exposure and “cancer” as the outcome (both in quotations marks).</h3>
 <h3 id="plot-the-dag-using-ggdag">Plot the DAG using <code>ggdag()</code></h3>
-<p></p><div class="countdown" id="timer_98fb95a5" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_48e176ed" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-1-02-dags-exercises.qmd" class="slide level2">
 <h2><em>Your Turn 1</em> (<code>02-dags-exercises.qmd</code>)</h2>
@@ -579,7 +579,7 @@ Malcolm Barrett
 <h2><em>Your Turn 2</em></h2>
 <h3 id="call-tidy_dagitty-on-coffee_cancer_dag-to-create-a-tidy-dag-then-pass-the-results-to-dag_paths.-whats-different-about-these-data">Call <code>tidy_dagitty()</code> on <code>coffee_cancer_dag</code> to create a tidy DAG, then pass the results to <code>dag_paths()</code>. What’s different about these data?</h3>
 <h3 id="plot-the-open-paths-with-ggdag_paths.-just-give-it-coffee_cancer_dag-rather-than-using-dag_paths-the-quick-plot-function-will-do-that-for-you.-remember-since-we-assume-there-is-no-causal-path-from-coffee-to-lung-cancer-any-open-paths-must-be-confounding-pathways.">Plot the open paths with <code>ggdag_paths()</code>. (Just give it <code>coffee_cancer_dag</code> rather than using <code>dag_paths()</code>; the quick plot function will do that for you.) Remember, since we assume there is <em>no</em> causal path from coffee to lung cancer, any open paths must be confounding pathways.</h3>
-<p></p><div class="countdown" id="timer_4e8ed7b7" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_831dae61" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-2-1" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
@@ -594,13 +594,13 @@ Malcolm Barrett
 # Outcome: cancer
 #
 # A tibble: 5 × 11
-  set   name           x     y direction to      xend   yend
-  &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1 1     addictive  0.494 2.00  -&gt;        coff… -0.423  2.81 
-2 1     addictive  0.494 2.00  -&gt;        smok…  1.50   1.11 
-3 1     cancer     2.41  0.310 &lt;NA&gt;      &lt;NA&gt;  NA     NA    
-4 1     coffee    -0.423 2.81  &lt;NA&gt;      &lt;NA&gt;  NA     NA    
-5 1     smoking    1.50  1.11  -&gt;        canc…  2.41   0.310
+  set   name          x      y direction to      xend   yend
+  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1     addictive 0.616 -1.27  -&gt;        coff…  0.185 -0.127
+2 1     addictive 0.616 -1.27  -&gt;        smok…  1.09  -2.52 
+3 1     cancer    1.52  -3.66  &lt;NA&gt;      &lt;NA&gt;  NA     NA    
+4 1     coffee    0.185 -0.127 &lt;NA&gt;      &lt;NA&gt;  NA     NA    
+5 1     smoking   1.09  -2.52  -&gt;        canc…  1.52  -3.66 
 # ℹ 3 more variables: circular &lt;lgl&gt;, label &lt;chr&gt;,
 #   path &lt;chr&gt;</code></pre>
 </div>
@@ -614,6 +614,30 @@ Malcolm Barrett
 
 </div>
 <img data-src="04-dags_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-18-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-19-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section class="slide level2">
+
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="closing-backdoor-paths" class="slide level2 large">
 <h2>Closing backdoor paths</h2>
 <div class="fragment">
@@ -637,7 +661,7 @@ Malcolm Barrett
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="04-dags_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:80.0%"></p>
+<p><img data-src="04-dags_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -657,7 +681,7 @@ Malcolm Barrett
 <h3 id="now-that-we-know-the-open-confounding-pathways-sometimes-called-backdoor-paths-we-need-to-know-how-to-close-them-first-well-ask-ggdag-for-adjustment-sets-then-we-would-need-to-do-something-in-our-analysis-to-account-for-at-least-one-adjustment-set-e.g.-multivariable-regression-weighting-or-matching-for-the-adjustment-sets.">Now that we know the open, confounding pathways (sometimes called “backdoor paths”), we need to know how to close them! First, we’ll ask {ggdag} for adjustment sets, then we would need to do something in our analysis to account for at least one adjustment set (e.g.&nbsp;multivariable regression, weighting, or matching for the adjustment sets).</h3>
 <h3 id="use-ggdag_adjustment_set-to-visualize-the-adjustment-sets.-add-the-arguments-use_labels-label-and-text-false.">Use <code>ggdag_adjustment_set()</code> to visualize the adjustment sets. Add the arguments <code>use_labels = "label"</code> and <code>text = FALSE</code>.</h3>
 <h3 id="write-an-r-formula-for-each-adjustment-set-as-you-might-if-you-were-fitting-a-model-in-lm-or-glm">Write an R formula for each adjustment set, as you might if you were fitting a model in <code>lm()</code> or <code>glm()</code></h3>
-<p></p><div class="countdown" id="timer_ff1e9b32" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_00419a1f" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-3-1" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
@@ -674,7 +698,7 @@ Malcolm Barrett
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="04-dags_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:80.0%"></p>
+<p><img data-src="04-dags_files/figure-revealjs/unnamed-chunk-23-1.png" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -718,7 +742,7 @@ Malcolm Barrett
 <section id="lets-prove-it-2" class="slide level2">
 <h2>Let’s prove it!</h2>
 
-<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-27-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="choosing-what-variables-to-include" class="slide level2 large">
 <h2>Choosing what variables to include</h2>
 <div class="fragment">
@@ -749,7 +773,50 @@ Malcolm Barrett
 <p><strong>Incorrect functional form for confounders (e.g.&nbsp;BMI often non-linear)</strong></p>
 </div>
 </section>
-<section id="resources-ggdag-vignettes" class="slide level2" data-background-color="#23373B">
+<section id="time-ordering" class="slide level2">
+<h2>Time-ordering</h2>
+
+<img data-src="04-dags_files/figure-revealjs/unnamed-chunk-28-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="section-2" class="slide level2 large center middle" data-background-color="#23373B">
+<h2></h2>
+<h3 id="dont-adjust-for-the-future"><strong>don’t adjust for the future!</strong></h3>
+</section>
+<section id="your-turn-4" class="slide level2">
+<h2><em>Your Turn 4</em></h2>
+<p>Recreate the DAG we’ve been working with using <code>time_ordered_coords()</code>, then visualize the DAG. You don’t need to use any arguments for this function, so <code>coords = time_ordered_coords()</code> will do.</p>
+</section>
+<section id="your-turn-4-1" class="slide level2">
+<h2><em>Your Turn 4</em></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18" data-code-line-numbers="|7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>coffee_cancer_dag_to <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb18-2"><a href="#cb18-2"></a>  cancer <span class="sc">~</span> smoking,</span>
+<span id="cb18-3"><a href="#cb18-3"></a>  smoking <span class="sc">~</span> addictive,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>  coffee <span class="sc">~</span> addictive,</span>
+<span id="cb18-5"><a href="#cb18-5"></a>  <span class="at">exposure =</span> <span class="st">"coffee"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="at">outcome =</span> <span class="st">"cancer"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="at">coords =</span> <span class="fu">time_ordered_coords</span>(),</span>
+<span id="cb18-8"><a href="#cb18-8"></a>  <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb18-9"><a href="#cb18-9"></a>    <span class="st">"coffee"</span> <span class="ot">=</span> <span class="st">"Coffee"</span>, </span>
+<span id="cb18-10"><a href="#cb18-10"></a>    <span class="st">"cancer"</span> <span class="ot">=</span> <span class="st">"Lung Cancer"</span>, </span>
+<span id="cb18-11"><a href="#cb18-11"></a>    <span class="st">"smoking"</span> <span class="ot">=</span> <span class="st">"Smoking"</span>, </span>
+<span id="cb18-12"><a href="#cb18-12"></a>    <span class="st">"addictive"</span> <span class="ot">=</span> <span class="st">"Addictive </span><span class="sc">\n</span><span class="st">Behavior"</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a>  )</span>
+<span id="cb18-14"><a href="#cb18-14"></a>)</span>
+<span id="cb18-15"><a href="#cb18-15"></a></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="co">#TODO: UPDATE LABELS ARGS</span></span>
+<span id="cb18-17"><a href="#cb18-17"></a><span class="fu">ggdag</span>(coffee_cancer_dag_to, <span class="at">use_labels =</span> <span class="st">"label"</span>, <span class="at">text =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="your-turn-4-1-output" class="slide level2 output-location-slide"><h2><em>Your Turn 4</em></h2><div class="cell output-location-slide" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="04-dags_files/figure-revealjs/unnamed-chunk-29-1.png" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="resources-ggdag-vignettes" class="slide level2" data-background-color="#23373B">
 <h2>Resources: ggdag vignettes</h2>
 <h3 id="an-introduction-to-ggdag"><a href="https://ggdag.malco.io/articles/intro-to-ggdag.html">An Introduction to ggdag</a></h3>
 <h3 id="an-introduction-to-directed-acyclic-graphs"><a href="https://ggdag.malco.io/articles/intro-to-dags.html">An Introduction to Directed Acyclic Graphs</a></h3>

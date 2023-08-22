@@ -79,6 +79,33 @@ cancer ~ ______
 cancer ~ ______
 ```
 
+## Your Turn 4
+
+Time-ordering your DAGs is incredibly useful, because it makes it cleaner, easier to read, and easier to understand what to control for --- and *not* control for.
+
+ggdag includes several ways to manually specify coordinates, including `time_ordered_coords()`. This functional automatically determines the time ordering of the DAG based on the causal relationships. After all, something that causes something else *must* come before, otherwise we'd be violating the time-space continuum. 
+
+Recreate the DAG we've been working with using `time_ordered_coords()`, then visualize the DAG. You don't need to use any arguments for this function, so `coords = time_ordered_coords()` will do.
+
+```{r}
+coffee_cancer_dag_to <- dagify(
+  cancer ~ smoking,
+  smoking ~ addictive,
+  coffee ~ addictive,
+  exposure = "coffee",
+  outcome = "cancer",
+  coords = ________,
+  labels = c(
+    "coffee" = "Coffee", 
+    "cancer" = "Lung Cancer", 
+    "smoking" = "Smoking", 
+    "addictive" = "Addictive \nBehavior"
+  )
+)
+
+_____(_____, use_labels = TRUE, use_text = FALSE)
+```
+
 # Take aways
 
 * Draw your assumptions with DAGs! Use `dagify()` to specify them and `ggdag()` and friends to draw them. 
