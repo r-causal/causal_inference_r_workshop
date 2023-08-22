@@ -15,24 +15,24 @@
   `summarise`](https://causal-inference-r-workshop.netlify.app/03-causal-inference-with-group-by-and-summarise.html)
 - [04 Causal
   Diagrams](https://causal-inference-r-workshop.netlify.app/04-dags.html)
-- [05 Introduction to Propensity
-  Scores](https://causal-inference-r-workshop.netlify.app/05-pscores.html)
-- [06 Using Propensity
-  Scores](https://causal-inference-r-workshop.netlify.app/06-using-pscores.html)
-- [07 Checking Propensity
-  Scores](https://causal-inference-r-workshop.netlify.app/07-pscore-diagnostics.html)
-- [08 Fitting the outcome
-  model](https://causal-inference-r-workshop.netlify.app/08-outcome-model.html)
-- [09 Continuous
-  Exposures](https://causal-inference-r-workshop.netlify.app/09-continuous-exposures.html)
-- [10
-  G-Computation](https://causal-inference-r-workshop.netlify.app/10-g-computation.html)
+- [05 Causal Inference is Not Just a Statistics
+  Problem](https://causal-inference-r-workshop.netlify.app/05-quartets.html)
+- [06 Introduction to Propensity
+  Scores](https://causal-inference-r-workshop.netlify.app/06-pscores.html)
+- [07 Using Propensity
+  Scores](https://causal-inference-r-workshop.netlify.app/07-using-pscores.html)
+- [08 Checking Propensity
+  Scores](https://causal-inference-r-workshop.netlify.app/08-pscore-diagnostics.html)
+- [09 Fitting the outcome
+  model](https://causal-inference-r-workshop.netlify.app/09-outcome-model.html)
+- [10 Continuous
+  Exposures](https://causal-inference-r-workshop.netlify.app/10-continuous-exposures.html)
 - [11 Tipping Point Sensitivity
   Analyses](https://causal-inference-r-workshop.netlify.app/11-tipr.html)
 - [12 Whole Game (Your
   Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)
-- [13 Causal Inference is Not Just a Statistics
-  Problem](https://causal-inference-r-workshop.netlify.app/13-quartets.html)
+- [13 Bonus: Selection
+  Bias](https://causal-inference-r-workshop.netlify.app/13-bonus-selection-bias.html)
 
 ### Installing materials locally
 
