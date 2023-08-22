@@ -270,6 +270,156 @@ coffee_cancer_dag |>
   ggdag_paths()
 ```
 
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+coords <- list(x = c(x = 0, y = 2, q = 1), y = c(x = 0, y = 0, q = 1))
+
+fork <- dagify(
+  x ~ q,
+  y ~ q,
+  exposure = "x",
+  outcome = "y",
+  coords = coords
+)
+
+chain <- dagify(
+  q ~ x,
+  y ~ q,
+  exposure = "x",
+  outcome = "y",
+  coords = coords
+)
+
+collider <- dagify(
+  q ~ x + y,
+  exposure = "x",
+  outcome = "y",
+  coords = coords
+)
+
+dag_flows <- map(list(fork = fork, chain = chain, collider = collider), tidy_dagitty) |> 
+  map("data") |> 
+  list_rbind(names_to = "dag") |> 
+  mutate(dag = factor(dag, levels = c("fork", "chain", "collider")))
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(edge_width = 1) + 
+  geom_dag_point() + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag()
+```
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = dag), edge_width = 1, show.legend = FALSE) + 
+  geom_dag_point(color = "grey85") + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag() + 
+  ggraph::scale_edge_color_manual(values = c("steelblue", "forestgreen", "firebrick"))
+```
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = dag), edge_width = 1, show.legend = FALSE) + 
+  geom_dag_point(color = "grey85") + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag() +
+  ggraph::scale_edge_colour_manual(values = c("steelblue", "forestgreen", "grey85"))
+```
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = dag != "fork"), edge_width = 1, show.legend = FALSE) + 
+  geom_dag_point(color = "grey85") + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag() +
+  ggraph::scale_edge_colour_manual(values = c("steelblue", "grey85"))
+```
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = dag != "chain"), edge_width = 1, show.legend = FALSE) + 
+  geom_dag_point(color = "grey85") + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag() +
+  ggraph::scale_edge_colour_manual(values = c("forestgreen", "grey85"))
+```
+
+
+---
+
+```{r}
+#| echo: false
+#| fig.width: 6.5
+
+dag_flows |> 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = dag != "collider"), edge_width = 1, show.legend = FALSE) + 
+  geom_dag_point(color = "grey85") + 
+  geom_dag_text() + 
+  facet_wrap(~ dag) +
+  expand_plot(
+    expand_x = expansion(c(0.2, 0.2)),
+    expand_y = expansion(c(0.2, 0.2))
+  ) +
+  theme_dag() +
+  ggraph::scale_edge_colour_manual(values = c("firebrick", "grey85"))
+```
+
+
 ## Closing backdoor paths {.large}
 
 . . .
@@ -409,6 +559,58 @@ bind_rows(
 . . .
 
 **Incorrect functional form for confounders (e.g. BMI often non-linear)**
+
+## Time-ordering
+
+```{r}
+#| echo: false
+#| fig.width: 10
+map(list(fork = fork, chain = chain, collider = collider), tidy_dagitty, layout = "time_ordered") |> 
+    map("data") |> 
+    list_rbind(names_to = "dag") |> 
+    mutate(dag = factor(dag, levels = c("fork", "chain", "collider"))) |> ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+    geom_dag_edges(edge_width = 1) + 
+    geom_dag_point() + 
+    geom_dag_text() + 
+    facet_wrap(~ dag) +
+    expand_plot(
+        expand_x = expansion(c(.1, .1)),
+        expand_y = expansion(c(0.2, 0.2))
+    ) +
+    theme_dag()
+```
+
+## {background-color="#23373B" .large .center .middle}
+
+### **don't adjust for the future!**
+
+## *Your Turn 4*
+
+Recreate the DAG we've been working with using `time_ordered_coords()`, then visualize the DAG. You don't need to use any arguments for this function, so `coords = time_ordered_coords()` will do.
+
+## *Your Turn 4*
+
+```{r}
+#| output-location: slide
+#| code-line-numbers: "|7"
+coffee_cancer_dag_to <- dagify(
+  cancer ~ smoking,
+  smoking ~ addictive,
+  coffee ~ addictive,
+  exposure = "coffee",
+  outcome = "cancer",
+  coords = time_ordered_coords(),
+  labels = c(
+    "coffee" = "Coffee", 
+    "cancer" = "Lung Cancer", 
+    "smoking" = "Smoking", 
+    "addictive" = "Addictive \nBehavior"
+  )
+)
+
+#TODO: UPDATE LABELS ARGS
+ggdag(coffee_cancer_dag_to, use_labels = "label", text = FALSE)
+```
 
 ## Resources: ggdag vignettes {background-color="#23373B"}
 ### [An Introduction to ggdag](https://ggdag.malco.io/articles/intro-to-ggdag.html)
