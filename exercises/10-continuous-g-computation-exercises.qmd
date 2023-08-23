@@ -1,5 +1,5 @@
 ---
-title: "Continuous exposures"
+title: "Continuous exposures and g-computation"
 format: html
 ---
 
