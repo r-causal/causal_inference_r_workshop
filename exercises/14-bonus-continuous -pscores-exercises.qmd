@@ -1,0 +1,205 @@
+---
+title: "Continuous exposures"
+format: html
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(broom)
+library(touringplans)
+library(propensity)
+```
+
+For this set of exercises, we'll use propensity scores for continuous exposures.
+
+In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`avg_spostmin`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`avg_sactmin`) at 9 am? Here’s our DAG:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(ggdag)
+
+coord_dag <- list(
+  x = c(wdw_ticket_season = -1, close = -1, weather_wdwhigh = -2, extra_magic_morning = 0, avg_spostmin = 1, avg_sactmin = 2),
+  y = c(wdw_ticket_season = -1, close = 1, weather_wdwhigh = 0.25, extra_magic_morning = 0, avg_spostmin = 0, avg_sactmin = 0)
+)
+
+labels <- c(
+  avg_sactmin = "Average actual wait",
+  avg_spostmin = "Average posted wait ",
+  extra_magic_morning = "Extra Magic Morning",
+  wdw_ticket_season = "Ticket Season",
+  weather_wdwhigh = "Historic high temperature",
+  close = "Time park closed"
+)
+
+wait_time_dag <- dagify(
+  avg_sactmin ~ avg_spostmin + close + wdw_ticket_season + weather_wdwhigh + extra_magic_morning,
+  avg_spostmin ~ weather_wdwhigh + close + wdw_ticket_season + extra_magic_morning,
+  coords = coord_dag,
+  labels = labels
+)
+
+wait_time_dag |>
+  ggdag(use_labels = "label", text = FALSE) +
+  theme_void() +
+  scale_x_continuous(
+    limits = c(-2.25, 2.25), 
+    breaks = c(-2, -1, 0, 1, 2), 
+    labels = c("\n(one year ago)", "\n(6 months ago)", "\n(3 months ago)", "8am-9am\n(Today)", "9am-10am\n(Today)")
+  ) +
+  theme(axis.text.x = element_text())
+```
+
+First, let’s wrangle our data to address our question: do posted wait times at 8 affect actual weight times at 9? We’ll join the baseline data (all covariates and posted wait time at 8) with the outcome (average actual time). We also have a lot of missingness for `avg_sactmin`, so we’ll drop unobserved values for now.
+
+You don't need to update any code here, so just run this.
+
+```{r}
+eight <- seven_dwarfs_train_2018 |>
+  filter(hour == 8) |>
+  select(-avg_sactmin)
+
+nine <- seven_dwarfs_train_2018 |>
+  filter(hour == 9) |>
+  select(date, avg_sactmin)
+
+wait_times <- eight |>
+  left_join(nine, by = "date") |>
+  drop_na(avg_sactmin)
+```
+
+# Your Turn 1
+
+First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `avg_spostmin` with our covariates, then use the fitted predictions of `avg_spostmin` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
+
+1. Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
+2. Use `augment()` to add model predictions to the data frame
+3. In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
+
+```{r}
+denominator_model <- lm(
+  __________, 
+  data = wait_times
+)
+
+denominators <- denominator_model |>
+  ______(data = wait_times) |>
+  mutate(
+    denominator = dnorm(
+      avg_spostmin, 
+      mean = ______, 
+      sd = mean(______, na.rm = TRUE)
+    )
+  ) |>
+  select(date, denominator)
+```
+
+# Your Turn 2
+
+As with the example in the slides, we have a lot of extreme values for our weights
+
+```{r}
+denominators |>
+  mutate(wts = 1 / denominator) |>
+  ggplot(aes(wts)) +
+  geom_density(col = "#E69F00", fill = "#E69F0095") + 
+  scale_x_log10() + 
+  theme_minimal(base_size = 20) + 
+  xlab("Weights")
+```
+
+Let’s now fit the marginal density to use for stabilized weights:
+
+1. Fit an intercept-only model of posted weight times to use as the numerator model
+2. Calculate the numerator weights using `dnorm()` as above.
+3. Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
+
+```{r}
+numerator_model <- lm(
+  ___ ~ ___, 
+  data = wait_times
+)
+
+numerators <- numerator_model |>
+  augment(data = wait_times) |>
+  mutate(
+    numerator = dnorm(
+      avg_spostmin, 
+      ___, 
+      mean(___, na.rm = TRUE)
+    )
+  ) |>
+  select(date, numerator)
+
+wait_times_wts <- wait_times |>
+  left_join(numerators, by = "date") |>
+  left_join(denominators, by = "date") |>
+  mutate(swts = ___)
+```
+
+Take a look at the weights now that we've stabilized them:
+
+```{r}
+ggplot(wait_times_wts, aes(swts)) +
+  geom_density(col = "#E69F00", fill = "#E69F0095") + 
+  scale_x_log10() + 
+  theme_minimal(base_size = 20) + 
+  xlab("Stabilized Weights")
+```
+
+Note that their mean is now about 1! That means the psuedo-population created by the weights is the same size as the observed population (the number of days we have wait time data, in this case).
+
+```{r}
+round(mean(wait_times_wts$swts), digits = 2)
+```
+
+
+# Your Turn 3
+
+Now, let's fit the outcome model!
+
+1. Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created. 
+
+```{r}
+lm(___ ~ ___, weights = ___, data = wait_times_wts) |>
+  tidy() |>
+  filter(term == "avg_spostmin") |>
+  mutate(estimate = estimate * 10)
+```
+
+## Stretch goal: Boostrapped intervals
+
+Bootstrap confidence intervals for our estimate.
+
+There's nothing new here. Just remember, you need to bootstrap the entire modeling process!
+
+```{r}
+set.seed(1234)
+library(rsample)
+
+fit_model <- function(split, ...) { 
+  .df <- analysis(split) 
+  
+  # fill in the rest!
+}
+
+model_estimate <- bootstraps(wait_times, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, ______))
+
+# using bias-corrected confidence intervals
+boot_estimate <- int_bca(_______, results, .fn = fit_model)
+
+boot_estimate
+```
+
+***
+
+# Take aways
+
+* We can calculate propensity scores for continuous exposures. Here, we use `dnorm(true_value, predicted_value, mean(estimated_sigma, rm.na = TRUE))` to use the normal density to transform predictions to a propensity-like scale. We can also use other approaches like quantile binning of the exposure, calculating probability-based propensity scores using categorical regression models. 
+* Continuous exposures are prone to mispecification and usually need to be stabilized. A simple stabilization is to invert the propensity score by stabilization weights using an intercept-only model such as `lm(exposure ~ 1)`
+* Stabilization is useful for any type of exposure where the weights are unbounded. Weights like the ATO, making them less susceptible to extreme weights.
+* Using propensity scores for continuous exposures in outcome models is identical to using them with binary exposures.
