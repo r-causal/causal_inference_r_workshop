@@ -1,5 +1,5 @@
 ---
-title: "G-Computation"
+title: "Bonus: Selection bias"
 author: "Malcolm Barrett"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
