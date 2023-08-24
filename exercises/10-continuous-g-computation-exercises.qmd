@@ -8,10 +8,10 @@ format: html
 library(tidyverse)
 library(broom)
 library(touringplans)
-library(propensity)
+library(splines)
 ```
 
-For this set of exercises, we'll use propensity scores for continuous exposures.
+For this set of exercises, we'll use g-computation to calculate a causal effect for continuous exposures.
 
 In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`avg_spostmin`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`avg_sactmin`) at 9 am? Here’s our DAG:
 
@@ -73,124 +73,102 @@ wait_times <- eight |>
 
 # Your Turn 1
 
-First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `avg_spostmin` with our covariates, then use the fitted predictions of `avg_spostmin` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
+For the parametric G-formula, we'll use a single model to fit a causal model of Posted Waiting Times (`avg_spostmin`) on Actual Waiting Times (`avg_sactmin`) where we  include all covariates, much as we normally fit regression models. However, instead of interpreting the coefficients, we'll calculate the estimate by predicting on cloned data sets.
 
-1. Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
-2. Use `augment()` to add model predictions to the data frame
-3. In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
+Two additional differences in our model: we'll use a natural cubic spline on the exposure, `avg_spostmin`, using `ns()` from the splines package, and we'll include an interaction term between `avg_spostmin` and `extra_magic_mornin g`. These complicate the interpretation of the coefficient of the model in normal regression but have virtually no downside (as long as we have a reasonable sample size) in g-computation, because we still get an easily interpretable result.
+
+First, let's fit the model. 
+
+1.Use `lm()` to create a model with the outcome, exposure, and confounders identified in the DAG. 
+2. Save the model as `standardized_model`
 
 ```{r}
-denominator_model <- lm(
-  __________, 
-  data = wait_times
+_______ ___ _______(
+  avg_sactmin ~ ns(_______, df = 5)*extra_magic_morning + _______ + _______ + _______, 
+  data = seven_dwarfs
 )
-
-denominators <- denominator_model |>
-  ______(data = wait_times) |>
-  mutate(
-    denominator = dnorm(
-      avg_spostmin, 
-      mean = ______, 
-      sd = mean(______, na.rm = TRUE)
-    )
-  ) |>
-  select(date, denominator)
 ```
 
 # Your Turn 2
 
-As with the example in the slides, we have a lot of extreme values for our weights
+Now that we've fit a model, we need to clone our data set. To do this, we'll simply mutate it so that in one set, all participants have `avg_spostmin` set to 30 minutes and in another, all participants have `avg_spostmin` set to 60 minutes. 
+
+1. Create the cloned data sets, called `thirty` and `sixty`.
+2. For both data sets, use `standardized_model` and `augment()` to get the predicted values. Use the `newdata` argument in `augment()` with the relevant cloned data set. Then, select only the fitted value. Rename `.fitted` to either `thirty_posted_minutes` or `sixty_posted_minutes` (use the pattern `select(new_name = old_name)`).
+3. Save the predicted data sets as`predicted_thirty` and `predicted_sixty`.
 
 ```{r}
-denominators |>
-  mutate(wts = 1 / denominator) |>
-  ggplot(aes(wts)) +
-  geom_density(col = "#E69F00", fill = "#E69F0095") + 
-  scale_x_log10() + 
-  theme_minimal(base_size = 20) + 
-  xlab("Weights")
+_______ <- seven_dwarfs |>
+  _______
+
+_______ <- seven_dwarfs |>
+  _______
+
+predicted_thirty <- standardized_model |>
+  _______(newdata = _______) |>
+  _______
+
+predicted_sixty <- standardized_model |>
+  _______(newdata = _______) |>
+  _______
 ```
-
-Let’s now fit the marginal density to use for stabilized weights:
-
-1. Fit an intercept-only model of posted weight times to use as the numerator model
-2. Calculate the numerator weights using `dnorm()` as above.
-3. Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
-
-```{r}
-numerator_model <- lm(
-  ___ ~ ___, 
-  data = wait_times
-)
-
-numerators <- numerator_model |>
-  augment(data = wait_times) |>
-  mutate(
-    numerator = dnorm(
-      avg_spostmin, 
-      ___, 
-      mean(___, na.rm = TRUE)
-    )
-  ) |>
-  select(date, numerator)
-
-wait_times_wts <- wait_times |>
-  left_join(numerators, by = "date") |>
-  left_join(denominators, by = "date") |>
-  mutate(swts = ___)
-```
-
-Take a look at the weights now that we've stabilized them:
-
-```{r}
-ggplot(wait_times_wts, aes(swts)) +
-  geom_density(col = "#E69F00", fill = "#E69F0095") + 
-  scale_x_log10() + 
-  theme_minimal(base_size = 20) + 
-  xlab("Stabilized Weights")
-```
-
-Note that their mean is now about 1! That means the psuedo-population created by the weights is the same size as the observed population (the number of days we have wait time data, in this case).
-
-```{r}
-round(mean(wait_times_wts$swts), digits = 2)
-```
-
 
 # Your Turn 3
 
-Now, let's fit the outcome model!
+Finally, we'll get the mean differences between the values. 
 
-1. Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created. 
+1. Bind `predicted_thirty` and  `predicted_sixty` using `bind_cols()`
+2. Summarize the predicted values to create three new variables: `mean_thirty`, `mean_sixty`, and `difference`. The first two should be the means of `thirty_posted_minutes` and `sixty_posted_minutes`. `difference` should be `mean_sixty` minus `mean_thirty`.
 
 ```{r}
-lm(___ ~ ___, weights = ___, data = wait_times_wts) |>
-  tidy() |>
-  filter(term == "avg_spostmin") |>
-  mutate(estimate = estimate * 10)
+_______ |>
+  _______(
+    mean_thirty = _______,
+    mean_sixty = _______,
+    difference = _______
+  )
 ```
+
+That's it! `difference` is our effect estimate, marginalized over the spline terms, interaction effects, and confounders.
 
 ## Stretch goal: Boostrapped intervals
 
-Bootstrap confidence intervals for our estimate.
+Like propensity-based models, we need to do a little more work to get correct standard errors and confidence intervals. In this stretch goal, use rsample to bootstrap the estimates we got from the G-computation model.
 
-There's nothing new here. Just remember, you need to bootstrap the entire modeling process!
+Remember, you need to bootstrap the entire modeling process, including the regression model, cloning the data sets, and calculating the effects.
 
 ```{r}
 set.seed(1234)
 library(rsample)
 
-fit_model <- function(split, ...) { 
+fit_gcomp <- function(split, ...) { 
   .df <- analysis(split) 
   
-  # fill in the rest!
+  # fit outcome model. remember to model using `.df` instead of `seven_dwarfs`
+  
+  
+  # clone datasets. remember to clone `.df` instead of `seven_dwarfs`
+  
+  
+  # predict actual wait time for each cloned dataset
+
+  
+  # calculate ATE
+  bind_cols(predicted_yes, predicted_no) |>
+    summarize(
+      mean_thirty = mean(thirty_posted_minutes),
+      mean_sixty = mean(sixty_posted_minutes),
+      difference = mean_sixty - mean_thirty
+    ) |>
+    # rsample expects a `term` and `estimate` column
+    pivot_longer(everything(), names_to = "term", values_to = "estimate")
 }
 
-model_estimate <- bootstraps(wait_times, 1000, apparent = TRUE) |>
+gcomp_results <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
   mutate(results = map(splits, ______))
 
 # using bias-corrected confidence intervals
-boot_estimate <- int_bca(_______, results, .fn = fit_model)
+boot_estimate <- int_bca(_______, results, .fn = fit_gcomp)
 
 boot_estimate
 ```
@@ -199,7 +177,5 @@ boot_estimate
 
 # Take aways
 
-* We can calculate propensity scores for continuous exposures. Here, we use `dnorm(true_value, predicted_value, mean(estimated_sigma, rm.na = TRUE))` to use the normal density to transform predictions to a propensity-like scale. We can also use other approaches like quantile binning of the exposure, calculating probability-based propensity scores using categorical regression models. 
-* Continuous exposures are prone to mispecification and usually need to be stabilized. A simple stabilization is to invert the propensity score by stabilization weights using an intercept-only model such as `lm(exposure ~ 1)`
-* Stabilization is useful for any type of exposure where the weights are unbounded. Weights like the ATO, making them less susceptible to extreme weights.
-* Using propensity scores for continuous exposures in outcome models is identical to using them with binary exposures.
+* To fit the parametric G-formula, fit a standardized model with all covariates. Then, use cloned data sets with values set to each level of the exposure you want to study. 
+* Use the model to predict the values for that level of the exposure and compute the effect estimate you want
