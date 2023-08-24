@@ -26,14 +26,15 @@ Direct Adjustment
 
 ...
 
-## Estimands
+## Estimands 
 
 ::: {.tiny}
-Greifer, N., & Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577.
+Greifer, N., & Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577. See also [Choosing Estimands](https://www.r-causal.org/chapters/chapter-10#choosing-estimands) in our book.
 :::
 
-![](img/estimand.png)
-
+::: {.center}
+![](img/estimand.png){width="70%"}
+:::
 
 ## Propensity scores {background-color="#23373B" .large}
 
