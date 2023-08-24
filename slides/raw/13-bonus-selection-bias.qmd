@@ -1,5 +1,5 @@
 ---
-title: "G-Computation"
+title: "Bonus: Colliders, selection bias, and loss to follow-up"
 author: "Malcolm Barrett"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
@@ -20,183 +20,6 @@ library(causaldata)
 set.seed(1000)
 ```
 
-## {background-color="#23373B" .huge .center}
-
-Normal regression estimates associations. But we want *causal* estimates: what would happen if *everyone* in the study were exposed to x vs if *no one* was exposed.
-
-## G-Computation/G-Formula {background-color="#23373B"}
-
-1. Fit a model for `y ~ x + z` where z is all covariates
-2. Create a duplicate of your data set for each level of `x` 
-3. Set the value of x to a single value for each cloned data set (e.g `x = 1` for one, `x = 0` for the other)
-
-## G-Computation/G-Formula {background-color="#23373B" .large}
-
-4. Make predictions using the model on the cloned data sets
-5. Calculate the estimate you want, e.g. `mean(x_1) - mean(x_0)`
-
-## *Advantages of the parametric G-formula*
-
-. . .
-
-**Often more statistically precise than propensity-based methods**
-
-. . .
-
-
-**Incredibly flexible**
-
-. . .
-
-**Basis of other important causal models, e.g. causal survival analysis and TMLE**
-
-## Greek Pantheon data (`greek_data`)
-
-```{r}
-#| echo: false
-library(gt)
-gt(head(greek_data, 10))
-```
-
-\+ 10 more rows
-
-## 1. Fit a model for `y ~ a + l`
-
-```{r}
-greek_model <- lm(y ~ a + l, data = greek_data)
-```
-
-## 2. Create a duplicate of your data set for each level of `a` 
-
-```{r}
-#| echo: false
-gt(head(greek_data, 10))
-```
-
-## 2. Create a duplicate of your data set for each level of `a` 
-
-:::: {.columns}
-
-::: {.column width="50%"}
-```{r}
-#| echo: false
-gt(head(greek_data, 10))
-```
-:::
-
-::: {.column width="50%"}
-```{r}
-#| echo: false
-gt(head(greek_data, 10))
-```
-:::
-
-::::
-
-## 3. Set the value of `a` to a single value for each cloned data set
-
-:::: {.columns}
-
-::: {.column width="50%"}
-```{r}
-#| echo: false
-gt(head(greek_data |> mutate(a = 0), 10)) |>
-  tab_style(
-    style = list(
-      cell_fill(color = "#CEE9FF"),
-      cell_text(weight = "bold")
-      ),
-    locations = cells_body(columns = a)
-  )
-```
-:::
-
-::: {.column width="50%"}
-```{r}
-#| echo: false
-gt(head(greek_data |> mutate(a = 1), 10)) |>
-  tab_style(
-    style = list(
-      cell_fill(color = "#CEE9FF"),
-      cell_text(weight = "bold")
-      ),
-    locations = cells_body(columns = a)
-  )
-```
-:::
-
-::::
-
-## 3. Set the value of `a` to a single value for each cloned data set
-
-```{r}
-#| code-line-numbers: "|3,7"
-#  set all participants to have a = 0
-untreated_data <- greek_data |>
-  mutate(a = 0) 
-
-#  set all participants to have a = 1
-treated_data <- greek_data |>
-  mutate(a = 1) 
-```
-
-## 4. Make predictions using the model on the cloned data sets
-
-```{r}
-#| code-line-numbers: "|2-3,7-8"
-#  predict under the data where everyone is untreated
-predicted_untreated <- greek_model |>
-  augment(newdata = untreated_data) |>
-  select(untreated = .fitted)
-
-#  predict under the data where everyone is treated
-predicted_treated <- greek_model |>
-  augment(newdata = treated_data) |>
-  select(treated = .fitted)
-
-predictions <- bind_cols(
-  predicted_untreated, 
-  predicted_treated
-) 
-```
-
----
-
-## 5. Calculate the estimate you want
-
-```{r}
-#| eval: false
-#| code-line-numbers: "|5"
-#| output-location: fragment
-predictions |>
-  summarise(
-    mean_treated = mean(treated),
-    mean_untreated = mean(untreated),
-    difference = mean_treated - mean_untreated 
-  )
-```
-
-```{r}
-#| echo: false
-predictions |>
-  summarise(
-    mean_treated = mean(treated),
-    mean_untreated = mean(untreated),
-    difference = mean_treated - mean_untreated
-  ) |>
-  mutate(across(everything(), round, digits = 1))
-```
-
-## *Your Turn*
-
-### Work through Your Turns 1-3 in `07-g-computation-exercises.qmd`
-
-`r countdown::countdown(minutes = 10)`
-
-## {background-color="#23373B" .huge .center} 
-
-### **Detour**: Colliders, selection bias, and loss to follow-up
-
 ## Confounders and chains
 
 ```{r}
@@ -215,6 +38,7 @@ ggdag_collider_triangle() +
   theme_dag() +
   expand_plot(expansion(.2), expansion(.2))
 ```
+
 ## Colliders
 
 ```{r}
@@ -303,6 +127,6 @@ l2fu |>
 
 ## *Your Turn*
 
-### Work through Your Turns 4-6 in `07-g-computation-exercises.qmd`
+### Work through Your Turns 1-3 in `13-bonus-selection-bias.qmd`
 
 `r countdown::countdown(minutes = 10)`

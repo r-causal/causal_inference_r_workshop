@@ -1,5 +1,5 @@
 ---
-title: "Propensity scores for continuous exposures"
+title: "Continuous exposures with propensity scores"
 author: "Malcolm Barrett"
 format: "kakashi-revealjs"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
@@ -17,9 +17,13 @@ library(tidyverse)
 library(broom)
 library(causaldata)
 library(touringplans)
+library(propensity)
 
 set.seed(1000)
 ```
+
+## {background-color="#23373B" .huge .center}
+### *Warning!* Propensity score weights are sensitive to positivity violations for continuous exposures. 
 
 ## {background-color="#23373B" .huge .center}
 ### **The story so far**
@@ -34,11 +38,11 @@ set.seed(1000)
 
 ## Continous exposures {background-color="#23373B"}
 
-1. Use a model like `lm(x ~ z)` for the propensity score model
-2. Scale weights to probability-like scale using `dnorm(true_value, fitted_value, estimated_sd)`
+1. Use a model like `lm(x ~ z)` for the propensity score model.
+2. Use `wt_ate()` with `.fitted` and `.sigma`; transforms using `dnorm()` to get on probability-like scale.
 3. Apply the weights to the outcome model as normal!
 
-## Alternative: quantile binning {background-color="#23373B"}
+## Alternative: quantile binning {background-color="#23373B" .small} 
 
 1. Bin the continuous exposure into quantiles and use categorical regression like a multinomial model to calculate probabilities.
 2. Calculate the weights where the propensity score is the probability you fall into the quantile you actually fell into. Same as the binary ATE!
@@ -54,17 +58,18 @@ model <- lm(
 )
 ```
 
-## 2. Calculate the weights with `dnorm()`
+## 2. Calculate the weights with `wt_ate()`
 
 ```{r}
 #| eval: false
-#| code-line-numbers: "|3-7"
+#| code-line-numbers: "|3-8"
 model |>
   augment(data = df) |>
-  mutate(denominator = dnorm( 
+  mutate(wts = wt_ate( 
     exposure, 
-    mean = .fitted, 
-    sd = mean(.sigma, na.rm = TRUE) 
+    .fitted, 
+    # .sigma is from augment()
+    .sigma = .sigma
   )) 
 ```
 
@@ -79,7 +84,7 @@ nhefs_light_smokers <- nhefs_complete |>
 
 ```{r}
 #| code-line-numbers: "|1-2|3-6"
-nhefs_denominator_model <- lm(
+nhefs_model <- lm(
   smkintensity82_71 ~ sex + race + age + I(age^2) + 
     education + smokeintensity + I(smokeintensity^2) + 
     smokeyrs + I(smokeyrs^2) + exercise + active + 
@@ -88,25 +93,24 @@ nhefs_denominator_model <- lm(
 )
 ```
 
-## 2. Calculate the weights with `dnorm()`
+## 2. Calculate the weights with `wt_ate()`
 
 ```{r}
-#| code-line-numbers: "|3-6"
-nhefs_denominators <- nhefs_denominator_model |> 
+#| code-line-numbers: "|3-7"
+nhefs_wts <- nhefs_model |> 
   augment(data = nhefs_light_smokers) |> 
-  mutate(denominator = dnorm(
+  mutate(wts = wt_ate(
     smkintensity82_71, 
     .fitted,
-    mean(.sigma, na.rm = TRUE)
-  )) |> 
-  select(id, denominator)
+    .sigma = .sigma
+  )) 
 ```
 
 
-## 2. Calculate the weights with `dnorm()`
+## 2. Calculate the weights with `wt_ate()`
 
 ```{r}
-nhefs_denominators
+nhefs_wts
 ```
 
 ## Do *posted* wait times at 8 am affect *actual* wait times at 9 am?
@@ -190,7 +194,7 @@ dagify(
 
 ### Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
 ### Use `augment()` to add model predictions to the data frame
-### In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
+### In `wt_ate()`, calculate the weights using `avg_postmin`, `.fitted`, and `.sigma`
 
 `r countdown::countdown(minutes = 5)`
 
@@ -212,7 +216,7 @@ wait_times <- eight |>
 ```
 
 ```{r}
-denominator_model <- lm(
+post_time_model <- lm(
   avg_spostmin ~
     close + extra_magic_morning + 
     weather_wdwhigh + wdw_ticket_season, 
@@ -223,22 +227,18 @@ denominator_model <- lm(
 ## *Your Turn 1*
 
 ```{r}
-denominators <- denominator_model |>
+wait_times_wts <- post_time_model |>
   augment(data = wait_times) |>
-  mutate(
-    denominator = dnorm(
-      avg_spostmin, .fitted, mean(.sigma, na.rm = TRUE)
-    )
-  ) |>
-  select(date, denominator)
+  mutate(wts = wt_ate(
+    avg_spostmin, .fitted, .sigma = .sigma
+  ))
 ```
 
 ## *Stabilizing extreme weights*
 
 ```{r}
 #| echo: false
-nhefs_denominators |>
-  mutate(wts = 1 / denominator) |>
+nhefs_wts |>
   ggplot(aes(wts)) +
   geom_density(col = "#E69F00", fill = "#E69F0095") + 
   scale_x_log10() + 
@@ -248,49 +248,29 @@ nhefs_denominators |>
 
 ## Stabilizing extreme weights {background-color="#23373B"}
 
-1. Fit an intercept-only model (e.g. `lm(x ~ 1)`)
-2. Calculate weights from this model
-3. Divide these weights by the propensity score weights 
+1. Fit an intercept-only model (e.g. `lm(x ~ 1)`) or use mean and SD of `x`
+2. Calculate weights from this model.
+3. Divide these weights by the propensity score weights. `wt_ate(.., stabilize = TRUE)` does this all!
 
-## 1. Fit an intercept-only model
-
-```{r}
-#| code-line-numbers: "|2"
-nhefs_numerator_model <- lm(
-  smkintensity82_71 ~ 1, 
-  data = nhefs_light_smokers
-)
-```
-
-## 2. Calculate weights from this model
+## Calculate stabilized weights 
 
 ```{r}
-#| code-line-numbers: "|1"
-nhefs_numerators <- nhefs_numerator_model |>
+#| code-line-numbers: "|7"
+nhefs_swts <- nhefs_model |>
   augment(data = nhefs_light_smokers) |>
-  mutate(numerator = dnorm(
+  mutate(swts = wt_ate(
     smkintensity82_71, 
-    mean = .fitted, 
-    sd = mean(.sigma, na.rm = TRUE))
-  ) |>
-  select(id, numerator)
-```
-
-## 3. Divide these weights by the propensity score weights 
-
-```{r}
-#| code-line-numbers: "|4"
-nhefs_light_smokers <- nhefs_light_smokers |>
-  left_join(nhefs_numerators, by = "id") |>
-  left_join(nhefs_denominators, by = "id") |>
-  mutate(swts = numerator / denominator) 
+    .fitted, 
+    .sigma = .sigma,
+    stabilize = TRUE
+  ))
 ```
 
 ## Stabilizing extreme weights
 
 ```{r}
 #| echo: false
-ggplot(nhefs_light_smokers, aes(swts)) +
+ggplot(nhefs_swts, aes(swts)) +
   geom_density(col = "#E69F00", fill = "#E69F0095") + 
   scale_x_log10() + 
   theme_minimal(base_size = 20) + 
@@ -299,41 +279,22 @@ ggplot(nhefs_light_smokers, aes(swts)) +
 
 ## *Your Turn 2*
 
-### Fit an intercept-only model of posted weight times to use as the numerator model
-### Calculate the numerator weights using `dnorm()` as above.
-### Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
+### Re-fit the above using stabilized weights
 
-`r countdown::countdown(minutes = 5)`
+`r countdown::countdown(minutes = 3)`
 
 ## *Your Turn 2*
 
 ```{r}
-numerator_model <- lm(
-  avg_spostmin ~ 1, 
-  data = wait_times
-)
-```
-
----
-
-## Your Turn 2
-
-```{r}
-numerators <- numerator_model |>
+wait_times_swts <- post_time_model |>
   augment(data = wait_times) |>
-  mutate(
-    numerator = dnorm(
-      avg_spostmin, .fitted, mean(.sigma, na.rm = TRUE)
-    )
-  ) |>
-  select(date, numerator)
-
-wait_times_wts <- wait_times |>
-  left_join(numerators, by = "date") |>
-  left_join(denominators, by = "date") |>
-  mutate(swts = numerator / denominator) 
+  mutate(swts = wt_ate(
+    avg_spostmin, 
+    .fitted,
+    .sigma = .sigma,
+    stabilize = TRUE
+  ))
 ```
-
 
 ## Fitting the outcome model {background-color="#23373B"}
 
@@ -346,7 +307,7 @@ wait_times_wts <- wait_times |>
 lm(
   wt82_71 ~ smkintensity82_71, 
   weights = swts, 
-  data = nhefs_light_smokers
+  data = nhefs_swts
 ) |>
   tidy() |>
   filter(term == "smkintensity82_71") |>
@@ -365,10 +326,20 @@ lm(
 lm(
   avg_sactmin ~ avg_spostmin, 
   weights = swts, 
-  data = wait_times_wts
+  data = wait_times_swts
 ) |>
   tidy() |>
   filter(term == "avg_spostmin") |>
   mutate(estimate = estimate * 10)
 ```
 
+
+## Diagnosing issues {background-color="#23373B"}
+
+1. Extreme weights even after stabilization
+2. Bootstrap: non-normal distribution
+3. Bootstrap: estimate different from original model
+
+## More info {background-color="#23373B"}
+
+### https://github.com/LucyMcGowan/writing-positivity-continous-ps

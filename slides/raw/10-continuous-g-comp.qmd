@@ -1,0 +1,281 @@
+---
+title: "Continuous exposures and g-computation"
+author: "Malcolm Barrett"
+date: "2021-09-01 (updated: `r Sys.Date()`)"
+format: "kakashi-revealjs"
+---
+
+```{r}
+#| label: setup
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+
+library(tidyverse)
+library(broom)
+library(causaldata)
+
+set.seed(1000)
+```
+
+## {background-color="#23373B" .huge .center}
+
+Normal regression estimates associations. But we want *causal* estimates: what would happen if *everyone* in the study were exposed to x vs if *no one* was exposed.
+
+## G-Computation/G-Formula {background-color="#23373B"}
+
+1. Fit a model for `y ~ x + z` where z is all covariates
+2. Create a duplicate of your data set for each level of `x` 
+3. Set the value of x to a single value for each cloned data set (e.g `x = 1` for one, `x = 0` for the other)
+
+## G-Computation/G-Formula {background-color="#23373B" .large}
+
+4. Make predictions using the model on the cloned data sets
+5. Calculate the estimate you want, e.g. `mean(x_1) - mean(x_0)`
+
+## *Advantages of the parametric G-formula*
+
+. . .
+
+**Often more statistically precise than propensity-based methods**
+
+. . .
+
+
+**Incredibly flexible**
+
+. . .
+
+**Basis of other important causal models, e.g. causal survival analysis and TMLE**
+
+## Greek Pantheon data (`greek_data`)
+
+```{r}
+#| echo: false
+library(gt)
+gt(head(greek_data, 10))
+```
+
+\+ 10 more rows
+
+## 1. Fit a model for `y ~ a + l`
+
+```{r}
+greek_model <- lm(y ~ a + l, data = greek_data)
+```
+
+## 2. Create a duplicate of your data set for each level of `a` 
+
+```{r}
+#| echo: false
+gt(head(greek_data, 10))
+```
+
+## 2. Create a duplicate of your data set for each level of `a` 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+gt(head(greek_data, 10))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+gt(head(greek_data, 10))
+```
+:::
+
+::::
+
+## 3. Set the value of `a` to a single value for each cloned data set
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+gt(head(greek_data |> mutate(a = 0), 10)) |>
+  tab_style(
+    style = list(
+      cell_fill(color = "#CEE9FF"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(columns = a)
+  )
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+gt(head(greek_data |> mutate(a = 1), 10)) |>
+  tab_style(
+    style = list(
+      cell_fill(color = "#CEE9FF"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(columns = a)
+  )
+```
+:::
+
+::::
+
+## 3. Set the value of `a` to a single value for each cloned data set
+
+```{r}
+#| code-line-numbers: "|3,7"
+#  set all participants to have a = 0
+untreated_data <- greek_data |>
+  mutate(a = 0) 
+
+#  set all participants to have a = 1
+treated_data <- greek_data |>
+  mutate(a = 1) 
+```
+
+## 4. Make predictions using the model on the cloned data sets
+
+```{r}
+#| code-line-numbers: "|2-3,7-8"
+#  predict under the data where everyone is untreated
+predicted_untreated <- greek_model |>
+  augment(newdata = untreated_data) |>
+  select(untreated = .fitted)
+
+#  predict under the data where everyone is treated
+predicted_treated <- greek_model |>
+  augment(newdata = treated_data) |>
+  select(treated = .fitted)
+
+predictions <- bind_cols(
+  predicted_untreated, 
+  predicted_treated
+) 
+```
+
+---
+
+## 5. Calculate the estimate you want
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|5"
+#| output-location: fragment
+predictions |>
+  summarise(
+    mean_treated = mean(treated),
+    mean_untreated = mean(untreated),
+    difference = mean_treated - mean_untreated
+  )
+```
+
+```{r}
+#| echo: false
+predictions |>
+  summarise(
+    mean_treated = mean(treated),
+    mean_untreated = mean(untreated),
+    difference = mean_treated - mean_untreated
+  ) |>
+  mutate(across(everything(), round, digits = 1))
+```
+
+## {background-color="#23373B" .huge .center} 
+**Continuous exposures**
+
+## {background-color="#23373B" .huge .center} 
+
+**We recommend g-computation over propensity scores for continuous exposures because of stability issues**
+
+## Do *posted* wait times at 8 am affect *actual* wait times at 9 am?
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig.width: 6.5
+library(tidyverse)
+library(ggdag)
+library(ggokabeito)
+
+geom_dag_label_repel <- function(..., seed = 10) {
+  ggdag::geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = seed,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3,
+    ...
+  ) 
+}
+
+coord_dag <- list(
+  x = c(Season = -1, close = -1, weather = -2, extra = 0, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather = 0, extra = 0, x = 0, y = 0)
+)
+
+labels <- c(
+  extra = "Extra Magic Morning",
+  x = "Average posted wait ",
+  y = "Average acutal wait",
+  Season = "Ticket Season",
+  weather = "Historic high temperature",
+  close = "Time park closed"
+)
+
+dagify(
+    y ~ x + close + Season + weather + extra,
+    x ~ weather + close + Season + extra,
+    extra ~ weather + close + Season,
+    coords = coord_dag,
+    labels = labels,
+    exposure = "x",
+    outcome = "y"
+) |>
+    tidy_dagitty() |>
+    node_status() |>
+    ggplot(
+        aes(x, y, xend = xend, yend = yend, color = status)
+    ) +
+    geom_dag_edges_arc(curvature = c(rep(0, 7), .2, 0, .2, .2, 0), edge_colour = "grey70") +
+    geom_dag_point() +
+    geom_dag_label_repel(seed = 1602) + 
+    scale_color_okabe_ito(na.value = "grey90") +
+    theme_dag() +
+    theme(
+        legend.position = "none",
+        axis.text.x = element_text()
+    ) +
+    coord_cartesian(clip = "off") +
+    scale_x_continuous(
+        limits = c(-2.25, 2.25),
+        breaks = c(-2, -1, 0, 1, 2),
+        labels = c(
+            "\n(one year ago)",
+            "\n(6 months ago)",
+            "\n(3 months ago)",
+            "8am-9am\n(Today)",
+            "9am-10am\n(Today)"
+        )
+    )
+```
+
+
+## *Your Turn*
+
+### Work through Your Turns 1-3 in `10-continuous-g-computation-exercises.qmd`
+
+`r countdown::countdown(minutes = 10)`
+
+
