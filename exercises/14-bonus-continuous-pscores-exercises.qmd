@@ -76,25 +76,20 @@ wait_times <- eight |>
 First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `avg_spostmin` with our covariates, then use the fitted predictions of `avg_spostmin` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
 
 1. Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
-2. Use `augment()` to add model predictions to the data frame
-3. In `dnorm()`, use `.fitted` as the mean and the mean of `.sigma` as the SD to calculate the propensity score for the denominator.
+2. Use `augment()` to add model predictions to the data frame.
+3. In `wt_ate()`, calculate the weights using `avg_postmin`, `.fitted`, and `.sigma`.
 
 ```{r}
-denominator_model <- lm(
+post_time_model <- lm(
   __________, 
   data = wait_times
 )
 
-denominators <- denominator_model |>
+wait_times_wts <- post_time_model |>
   ______(data = wait_times) |>
-  mutate(
-    denominator = dnorm(
-      avg_spostmin, 
-      mean = ______, 
-      sd = mean(______, na.rm = TRUE)
-    )
-  ) |>
-  select(date, denominator)
+  mutate(wts = ______(
+    ______, ______, .sigma = ______
+  ))
 ```
 
 # Your Turn 2
@@ -102,7 +97,7 @@ denominators <- denominator_model |>
 As with the example in the slides, we have a lot of extreme values for our weights
 
 ```{r}
-denominators |>
+wait_times_wts |>
   mutate(wts = 1 / denominator) |>
   ggplot(aes(wts)) +
   geom_density(col = "#E69F00", fill = "#E69F0095") + 
@@ -113,49 +108,28 @@ denominators |>
 
 Let’s now fit the marginal density to use for stabilized weights:
 
-1. Fit an intercept-only model of posted weight times to use as the numerator model
-2. Calculate the numerator weights using `dnorm()` as above.
-3. Finally, calculate the stabilized weights, `swts`, using the `numerator` and `denominator` weights
+1. Re-fit the above using stabilized weights
 
 ```{r}
-numerator_model <- lm(
-  ___ ~ ___, 
-  data = wait_times
-)
-
-numerators <- numerator_model |>
+wait_times_swts <- post_time_model |>
   augment(data = wait_times) |>
-  mutate(
-    numerator = dnorm(
-      avg_spostmin, 
-      ___, 
-      mean(___, na.rm = TRUE)
-    )
-  ) |>
-  select(date, numerator)
-
-wait_times_wts <- wait_times |>
-  left_join(numerators, by = "date") |>
-  left_join(denominators, by = "date") |>
-  mutate(swts = ___)
+    mutate(swts = _____(
+    _____, 
+    _____,
+    .sigma = .sigma,
+    _____ = _____
+  ))
 ```
 
 Take a look at the weights now that we've stabilized them:
 
 ```{r}
-ggplot(wait_times_wts, aes(swts)) +
+ggplot(wait_times_swts, aes(swts)) +
   geom_density(col = "#E69F00", fill = "#E69F0095") + 
   scale_x_log10() + 
   theme_minimal(base_size = 20) + 
   xlab("Stabilized Weights")
 ```
-
-Note that their mean is now about 1! That means the psuedo-population created by the weights is the same size as the observed population (the number of days we have wait time data, in this case).
-
-```{r}
-round(mean(wait_times_wts$swts), digits = 2)
-```
-
 
 # Your Turn 3
 
@@ -164,7 +138,7 @@ Now, let's fit the outcome model!
 1. Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created. 
 
 ```{r}
-lm(___ ~ ___, weights = ___, data = wait_times_wts) |>
+lm(___ ~ ___, weights = ___, data = wait_times_swts) |>
   tidy() |>
   filter(term == "avg_spostmin") |>
   mutate(estimate = estimate * 10)
@@ -199,7 +173,8 @@ boot_estimate
 
 # Take aways
 
-* We can calculate propensity scores for continuous exposures. Here, we use `dnorm(true_value, predicted_value, mean(estimated_sigma, rm.na = TRUE))` to use the normal density to transform predictions to a propensity-like scale. We can also use other approaches like quantile binning of the exposure, calculating probability-based propensity scores using categorical regression models. 
-* Continuous exposures are prone to mispecification and usually need to be stabilized. A simple stabilization is to invert the propensity score by stabilization weights using an intercept-only model such as `lm(exposure ~ 1)`
+* We can calculate propensity scores for continuous exposures. `wt_ate()` uses `dnorm()` to use the normal density to transform predictions to a propensity-like scale; we need to give `wt_ate()` `.sigma` as to calculate do this. We can also use other approaches like quantile binning of the exposure, calculating probability-based propensity scores using categorical regression models. 
+* Continuous exposures are prone to mispecification and usually need to be stabilized. A simple stabilization is to invert the propensity score by stabilization weights using an intercept-only model such as `lm(exposure ~ 1)`. `wt_ate()` can do this for you automatically with `stabilize = TRUE`. This also applies to other types of exposures.
 * Stabilization is useful for any type of exposure where the weights are unbounded. Weights like the ATO, making them less susceptible to extreme weights.
 * Using propensity scores for continuous exposures in outcome models is identical to using them with binary exposures.
+* Because propensity scores for continuous exposures are prone to positivity violation, check the bootstrap distribution of your estimate for skew and to see if the mean estimate is different from your regression model. If these problems are present, you may need to use another approach like g-computation.
