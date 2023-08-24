@@ -129,6 +129,8 @@ sim |>
 ### Group the dataset by `confounder` and `exposure`
 ### Calculate the mean of the `outcome` for the groups
 
+`r countdown::countdown(minutes = 3)`
+
 ## *Your Turn 1*
 
 ```{r}
@@ -221,6 +223,8 @@ sim2 |>
   ) |>
   summarise(estimate = x_1 - x_0) 
 ```
+
+`r countdown::countdown(minutes = 2)`
 
 ## Simulation
 
@@ -318,6 +322,8 @@ lm(outcome ~ exposure, data = sim3)
 ### Use `ntile()` from dplyr to calculate a binned version of `confounder` called `confounder_q`. We'll create a variable with 5 bins.
 ### Group the dataset by the binned variable you just created and exposure
 ### Calculate the mean of the outcome for the groups
+
+`r countdown::countdown(minutes = 3)`
 
 ## *Your Turn 3*
 
