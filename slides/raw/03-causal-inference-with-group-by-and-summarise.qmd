@@ -154,7 +154,8 @@ sim |>
     values_from = avg_y,  
     names_prefix = "x_"
   ) |>
-  summarise(estimate = x_1 - x_0) 
+  summarise(estimate = x_1 - x_0) |>
+  summarise(estimate = mean(estimate)) # note, we would need to weight this if the confounder groups were not equal sized
 ```
 
 . . .
@@ -221,7 +222,8 @@ sim2 |>
     values_from = avg_y,  
     names_prefix = "x_"
   ) |>
-  summarise(estimate = x_1 - x_0) 
+  summarise(estimate = x_1 - x_0, .groups = "drop") |>
+  summarise(estimate = mean(estimate)) 
 ```
 
 `r countdown::countdown(minutes = 2)`
@@ -271,13 +273,14 @@ lm(outcome ~ exposure, data = big_sim2)
 ```{r}
 #| code-line-numbers: "|2"
 #| output-location: fragment
-sim2 |>
+big_sim2 |>
   group_by(confounder_1, confounder_2, exposure) |>
   summarise(avg_y = mean(outcome)) |>
   pivot_wider(names_from = exposure,
               values_from = avg_y,  
               names_prefix = "x_") |>
-  summarise(estimate = x_1 - x_0) 
+  summarise(estimate = x_1 - x_0, .groups = "drop") |>
+  summarise(estimate = mean(estimate))  
 ```
 
 
@@ -339,7 +342,8 @@ sim3 |>
     values_from = avg_y,  
     names_prefix = "x_"
   ) |>
-  summarise(estimate = x_1 - x_0) 
+  summarise(estimate = x_1 - x_0) |>
+  summarise(estimate = mean(estimate))
 ```
 
 ## {background-color="#23373B" .center .huge}

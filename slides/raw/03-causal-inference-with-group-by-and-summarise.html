@@ -545,7 +545,7 @@ Coefficients:
 <h2><em>Your Turn 1</em> (<code>03-ci-with-group-by-and-summarise-exercises.qmd</code>)</h2>
 <h3 id="group-the-dataset-by-confounder-and-exposure">Group the dataset by <code>confounder</code> and <code>exposure</code></h3>
 <h3 id="calculate-the-mean-of-the-outcome-for-the-groups">Calculate the mean of the <code>outcome</code> for the groups</h3>
-<p></p><div class="countdown" id="timer_9b22e929" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_17a8ab58" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-1" class="slide level2">
 <h2><em>Your Turn 1</em></h2>
@@ -578,15 +578,15 @@ Coefficients:
 <span id="cb11-6"><a href="#cb11-6"></a>    <span class="at">values_from =</span> avg_y,  </span>
 <span id="cb11-7"><a href="#cb11-7"></a>    <span class="at">names_prefix =</span> <span class="st">"x_"</span></span>
 <span id="cb11-8"><a href="#cb11-8"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-9"><a href="#cb11-9"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(estimate)) <span class="co"># note, we would need to weight this if the confounder groups were not equal sized</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  confounder estimate
-       &lt;int&gt;    &lt;dbl&gt;
-1          0 -0.00752
-2          1 -0.151  </code></pre>
+<pre><code># A tibble: 1 × 1
+  estimate
+     &lt;dbl&gt;
+1  -0.0794</code></pre>
 </div>
 </div>
 <div class="fragment">
@@ -669,21 +669,18 @@ Coefficients:
 <span id="cb17-6"><a href="#cb17-6"></a>    <span class="at">values_from =</span> avg_y,  </span>
 <span id="cb17-7"><a href="#cb17-7"></a>    <span class="at">names_prefix =</span> <span class="st">"x_"</span></span>
 <span id="cb17-8"><a href="#cb17-8"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-9"><a href="#cb17-9"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0, <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(estimate)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 3
-# Groups:   confounder_1 [2]
-  confounder_1 confounder_2 estimate
-         &lt;int&gt;        &lt;int&gt;    &lt;dbl&gt;
-1            0            0 -0.309  
-2            0            1  0.0466 
-3            1            0 -0.0271 
-4            1            1 -0.00275</code></pre>
+<pre><code># A tibble: 1 × 1
+  estimate
+     &lt;dbl&gt;
+1  -0.0731</code></pre>
 </div>
 </div>
-<p></p><div class="countdown" id="timer_c45b9d8d" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_c6fe8263" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="simulation-6" class="slide level2">
 <h2>Simulation</h2>
@@ -745,24 +742,21 @@ Coefficients:
 <section id="simulation-8" class="slide level2">
 <h2>Simulation</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>sim2 <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb23" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>big_sim2 <span class="sc">|&gt;</span></span>
 <span id="cb23-2"><a href="#cb23-2"></a>  <span class="fu">group_by</span>(confounder_1, confounder_2, exposure) <span class="sc">|&gt;</span></span>
 <span id="cb23-3"><a href="#cb23-3"></a>  <span class="fu">summarise</span>(<span class="at">avg_y =</span> <span class="fu">mean</span>(outcome)) <span class="sc">|&gt;</span></span>
 <span id="cb23-4"><a href="#cb23-4"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> exposure,</span>
 <span id="cb23-5"><a href="#cb23-5"></a>              <span class="at">values_from =</span> avg_y,  </span>
 <span id="cb23-6"><a href="#cb23-6"></a>              <span class="at">names_prefix =</span> <span class="st">"x_"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-7"><a href="#cb23-7"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-7"><a href="#cb23-7"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0, <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(estimate))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 3
-# Groups:   confounder_1 [2]
-  confounder_1 confounder_2 estimate
-         &lt;int&gt;        &lt;int&gt;    &lt;dbl&gt;
-1            0            0 -0.309  
-2            0            1  0.0466 
-3            1            0 -0.0271 
-4            1            1 -0.00275</code></pre>
+<pre><code># A tibble: 1 × 1
+  estimate
+     &lt;dbl&gt;
+1   0.0187</code></pre>
 </div>
 </div>
 </section>
@@ -824,7 +818,7 @@ Coefficients:
 <h3 id="use-ntile-from-dplyr-to-calculate-a-binned-version-of-confounder-called-confounder_q.-well-create-a-variable-with-5-bins.">Use <code>ntile()</code> from dplyr to calculate a binned version of <code>confounder</code> called <code>confounder_q</code>. We’ll create a variable with 5 bins.</h3>
 <h3 id="group-the-dataset-by-the-binned-variable-you-just-created-and-exposure">Group the dataset by the binned variable you just created and exposure</h3>
 <h3 id="calculate-the-mean-of-the-outcome-for-the-groups-2">Calculate the mean of the outcome for the groups</h3>
-<p></p><div class="countdown" id="timer_03285137" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_ab912373" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-3-1" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
@@ -838,18 +832,15 @@ Coefficients:
 <span id="cb29-7"><a href="#cb29-7"></a>    <span class="at">values_from =</span> avg_y,  </span>
 <span id="cb29-8"><a href="#cb29-8"></a>    <span class="at">names_prefix =</span> <span class="st">"x_"</span></span>
 <span id="cb29-9"><a href="#cb29-9"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb29-10"><a href="#cb29-10"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-10"><a href="#cb29-10"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> x_1 <span class="sc">-</span> x_0) <span class="sc">|&gt;</span></span>
+<span id="cb29-11"><a href="#cb29-11"></a>  <span class="fu">summarise</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(estimate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  confounder_q estimate
-         &lt;int&gt;    &lt;dbl&gt;
-1            1   0.104 
-2            2  -0.0293
-3            3   0.0201
-4            4   0.0674
-5            5   0.201 </code></pre>
+<pre><code># A tibble: 1 × 1
+  estimate
+     &lt;dbl&gt;
+1   0.0728</code></pre>
 </div>
 </div>
 </section>
