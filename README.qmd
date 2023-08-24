@@ -25,10 +25,11 @@ knitr::opts_chunk$set(
 * [07 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/07-using-pscores.html)
 * [08 Checking Propensity Scores](https://causal-inference-r-workshop.netlify.app/08-pscore-diagnostics.html)
 * [09 Fitting the outcome model](https://causal-inference-r-workshop.netlify.app/09-outcome-model.html)
-* [10 Continuous Exposures](https://causal-inference-r-workshop.netlify.app/10-continuous-exposures.html)
+* [10 Continuous Exposures and G-Computation](https://causal-inference-r-workshop.netlify.app/10-continuous-g-comp.html)
 * [11 Tipping Point Sensitivity Analyses](https://causal-inference-r-workshop.netlify.app/11-tipr.html)
 * [12 Whole Game (Your Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)
 * [13 Bonus: Selection Bias](https://causal-inference-r-workshop.netlify.app/13-bonus-selection-bias.html)
+* [14 Bonus: Continous Exposures with Propensity Scores](https://causal-inference-r-workshop.netlify.app/14-bonus-continuous-pscores.html)
 
 ### Installing materials locally
 
