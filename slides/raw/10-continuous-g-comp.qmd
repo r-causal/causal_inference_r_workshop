@@ -188,12 +188,11 @@ predictions |>
 ```
 
 ## {background-color="#23373B" .huge .center} 
-
-Continuous exposures
+**Continuous exposures**
 
 ## {background-color="#23373B" .huge .center} 
 
-We recommend g-computation over propensity scores for continuous exposures because of stability issues
+**We recommend g-computation over propensity scores for continuous exposures because of stability issues**
 
 ## Do *posted* wait times at 8 am affect *actual* wait times at 9 am?
 
