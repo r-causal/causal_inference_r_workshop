@@ -539,8 +539,13 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-4" class="slide level2">
-<h2>Simulation</h2>
+<section id="your-turn-1-03-ci-with-group-by-and-summarise-exercises.qmd" class="slide level2">
+<h2><em>Your Turn 1</em> (<code>03-ci-with-group-by-and-summarise-exercises.qmd</code>)</h2>
+<h3 id="group-the-dataset-by-confounder-and-exposure">Group the dataset by <code>confounder</code> and <code>exposure</code></h3>
+<h3 id="calculate-the-mean-of-the-outcome-for-the-groups">Calculate the mean of the <code>outcome</code> for the groups</h3>
+</section>
+<section id="your-turn-1" class="slide level2">
+<h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sim <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">group_by</span>(confounder, exposure) <span class="sc">|&gt;</span></span>
@@ -559,8 +564,8 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-5" class="slide level2">
-<h2>Simulation</h2>
+<section id="your-turn-1-1" class="slide level2">
+<h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>sim <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">group_by</span>(confounder, exposure) <span class="sc">|&gt;</span></span>
@@ -588,7 +593,7 @@ Coefficients:
 <section id="two-binary-confounders" class="slide level2 center" data-background-color="#23373B">
 <h2>Two binary confounders</h2>
 </section>
-<section id="simulation-6" class="slide level2">
+<section id="simulation-4" class="slide level2">
 <h2>Simulation</h2>
 <div class="columns tiny">
 <div class="column fragment" style="width:50%;">
@@ -630,7 +635,7 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-7" class="slide level2">
+<section id="simulation-5" class="slide level2">
 <h2>Simulation</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> sim2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -645,8 +650,13 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-8" class="slide level2">
-<h2>Simulation</h2>
+<section id="your-turn-2" class="slide level2">
+<h2><em>Your Turn 2</em></h2>
+<h3 id="group-the-dataset-by-the-confounders-and-exposure">Group the dataset by the confounders and exposure</h3>
+<h3 id="calculate-the-mean-of-the-outcome-for-the-groups-1">Calculate the mean of the outcome for the groups</h3>
+</section>
+<section id="your-turn-2-1" class="slide level2">
+<h2><em>Your Turn 2</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb17" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>sim2 <span class="sc">|&gt;</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">group_by</span>(confounder_1, confounder_2, exposure) <span class="sc">|&gt;</span></span>
@@ -671,13 +681,13 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-9" class="slide level2">
+<section id="simulation-6" class="slide level2">
 <h2>Simulation</h2>
 <div class="columns tiny">
 <div class="column" style="width:50%;">
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19" data-code-line-numbers="|1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100000</span> </span>
-<span id="cb19-2"><a href="#cb19-2"></a>sim2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb19-2"><a href="#cb19-2"></a>big_sim2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb19-3"><a href="#cb19-3"></a>  <span class="at">confounder_1 =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>),</span>
 <span id="cb19-4"><a href="#cb19-4"></a>  <span class="at">confounder_2 =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>), </span>
 <span id="cb19-5"><a href="#cb19-5"></a>  </span>
@@ -713,14 +723,14 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-10" class="slide level2">
+<section id="simulation-7" class="slide level2">
 <h2>Simulation</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> sim2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> big_sim2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = outcome ~ exposure, data = sim2)
+lm(formula = outcome ~ exposure, data = big_sim2)
 
 Coefficients:
 (Intercept)     exposure  
@@ -728,7 +738,7 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-11" class="slide level2">
+<section id="simulation-8" class="slide level2">
 <h2>Simulation</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb23" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>sim2 <span class="sc">|&gt;</span></span>
@@ -745,17 +755,17 @@ Coefficients:
 # Groups:   confounder_1 [2]
   confounder_1 confounder_2 estimate
          &lt;int&gt;        &lt;int&gt;    &lt;dbl&gt;
-1            0            0  0.00565
+1            0            0 -0.309  
 2            0            1  0.0466 
-3            1            0  0.0185 
-4            1            1  0.00388</code></pre>
+3            1            0 -0.0271 
+4            1            1 -0.00275</code></pre>
 </div>
 </div>
 </section>
 <section id="continuous-confounder" class="slide level2 center" data-background-color="#23373B">
 <h2>Continuous confounder?</h2>
 </section>
-<section id="simulation-12" class="slide level2">
+<section id="simulation-9" class="slide level2">
 <h2>Simulation</h2>
 <div class="columns tiny">
 <div class="column" style="width:50%;">
@@ -790,7 +800,7 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-13" class="slide level2">
+<section id="simulation-10" class="slide level2">
 <h2>Simulation</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> sim3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -805,10 +815,16 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="simulation-14" class="slide level2">
-<h2>Simulation</h2>
+<section id="your-turn-3" class="slide level2">
+<h2><em>Your Turn 3</em></h2>
+<h3 id="use-ntile-from-dplyr-to-calculate-a-binned-version-of-confounder-called-confounder_q.-well-create-a-variable-with-5-bins.">Use <code>ntile()</code> from dplyr to calculate a binned version of <code>confounder</code> called <code>confounder_q</code>. We’ll create a variable with 5 bins.</h3>
+<h3 id="group-the-dataset-by-the-binned-variable-you-just-created-and-exposure">Group the dataset by the binned variable you just created and exposure</h3>
+<h3 id="calculate-the-mean-of-the-outcome-for-the-groups-2">Calculate the mean of the outcome for the groups</h3>
+</section>
+<section id="your-turn-3-1" class="slide level2">
+<h2><em>Your Turn 3</em></h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb29" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>sim3 <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb29" data-code-line-numbers="|2|3-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>sim3 <span class="sc">|&gt;</span></span>
 <span id="cb29-2"><a href="#cb29-2"></a>  <span class="fu">mutate</span>(<span class="at">confounder_q =</span> <span class="fu">ntile</span>(confounder, <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb29-3"><a href="#cb29-3"></a>  <span class="fu">group_by</span>(confounder_q, exposure) <span class="sc">|&gt;</span></span>
 <span id="cb29-4"><a href="#cb29-4"></a>  <span class="fu">summarise</span>(<span class="at">avg_y =</span> <span class="fu">mean</span>(outcome)) <span class="sc">|&gt;</span></span>

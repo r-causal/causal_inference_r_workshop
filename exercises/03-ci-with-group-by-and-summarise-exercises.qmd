@@ -1,0 +1,117 @@
+---
+title: "Causal Inference with `group_by()` and `summarize()`"
+format: html
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+set.seed(1)
+```
+
+## Your Turn 1
+
+Run this code to generate the simulated data set
+
+```{r}
+n <- 1000 
+sim <- tibble(
+  confounder = rbinom(n, 1, 0.5),
+  p_exposure = case_when(
+    confounder == 1 ~ 0.75,
+    confounder == 0 ~ 0.25
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n)
+)
+```
+
+1. Group the dataset by `confounder` and `exposure`
+2. Calculate the mean of the `outcome` for the groups
+
+```{r}
+sim |>
+  group_by(______, ______) |>
+  summarise(avg_y = mean(______)) |>
+  # pivot the data so we can get the difference
+  # between the exposure groups
+  pivot_wider(
+    names_from = exposure,
+    values_from = avg_y,  
+    names_prefix = "x_"
+  ) |>
+  summarise(estimate = x_1 - x_0) 
+```
+
+## Your Turn 2
+
+Run the following code to generate `sim2`
+
+```{r}
+n <- 1000
+sim2 <- tibble(
+  confounder_1 = rbinom(n, 1, 0.5),
+  confounder_2 = rbinom(n, 1, 0.5), 
+  
+  p_exposure = case_when(
+    confounder_1 == 1 & confounder_2 == 1 ~ 0.75,
+    confounder_1 == 0 & confounder_2 == 1 ~ 0.9,
+    confounder_1 == 1 & confounder_2 == 0 ~ 0.2,
+    confounder_1 == 0 & confounder_2 == 0 ~ 0.1,
+  ),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder_1 + confounder_2 + rnorm(n) 
+)
+```
+
+1. Group the dataset by the confounders and exposure
+2. Calculate the mean of the outcome for the groups
+
+```{r}
+sim2 |>
+  group_by(_____, _____, _____) |>
+  summarise(avg_y = mean(_____)) |>
+  pivot_wider(names_from = exposure,
+              values_from = avg_y,  
+              names_prefix = "x_") |>
+  summarise(estimate = x_1 - x_0) 
+
+```
+
+## Your Turn 3
+
+Run the following code to generate `sim3`
+
+```{r}
+n <- 10000 
+sim3 <- tibble(
+  confounder = rnorm(n), 
+  p_exposure = exp(confounder) / (1 + exp(confounder)),
+  exposure = rbinom(n, 1, p_exposure),
+  outcome = confounder + rnorm(n) 
+)
+```
+
+1. Use `ntile()` from dplyr to calculate a binned version of `confounder` called `confounder_q`. We'll create a variable with 5 bins.
+2. Group the dataset by the binned variable you just created and exposure
+3. Calculate the mean of the outcome for the groups
+
+```{r}
+sim3 |>
+  mutate(confounder_q = _____(_____, 5)) |>
+  group_by(_____, _____) |>
+  summarise(avg_y = mean(_____)) |>
+  pivot_wider(
+    names_from = exposure,
+    values_from = avg_y,  
+    names_prefix = "x_"
+  ) |>
+  summarise(estimate = x_1 - x_0) 
+
+```
+
+# Take aways
+
+* Sometimes correlation *is* causation!
+* In simple cases, grouping by confounding variables can get us the right answer without a statistical model
+* Propensity scores generalize the idea of summarizing exposure effects to any number of confounders. Although we'll use models for this process, the foundations are the same.

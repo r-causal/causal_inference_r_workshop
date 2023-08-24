@@ -124,7 +124,12 @@ sim |>
   summarise(estimate = x_1 - x_0) 
 ```
 
-## Simulation
+## *Your Turn 1* (`03-ci-with-group-by-and-summarise-exercises.qmd`)
+
+### Group the dataset by `confounder` and `exposure`
+### Calculate the mean of the `outcome` for the groups
+
+## *Your Turn 1*
 
 ```{r}
 #| code-line-numbers: "|2"
@@ -134,7 +139,7 @@ sim |>
   summarise(avg_y = mean(outcome))
 ```
 
-## Simulation
+## *Your Turn 1*
 
 ```{r}
 #| code-line-numbers: "|2"
@@ -196,7 +201,12 @@ sim2 |>
 lm(outcome ~ exposure, data = sim2)
 ```
 
-## Simulation
+## *Your Turn 2*
+
+### Group the dataset by the confounders and exposure
+### Calculate the mean of the outcome for the groups
+
+## *Your Turn 2*
 
 ```{r}
 #| code-line-numbers: "|2"
@@ -212,8 +222,6 @@ sim2 |>
   summarise(estimate = x_1 - x_0) 
 ```
 
----
-
 ## Simulation
 
 :::: {.columns .tiny}
@@ -222,7 +230,7 @@ sim2 |>
 ```{r}
 #| code-line-numbers: "|1"
 n <- 100000 
-sim2 <- tibble(
+big_sim2 <- tibble(
   confounder_1 = rbinom(n, 1, 0.5),
   confounder_2 = rbinom(n, 1, 0.5), 
   
@@ -241,7 +249,7 @@ sim2 <- tibble(
 ::: {.column width="50%"}
 ```{r}
 #| echo: false
-sim2 |>
+big_sim2 |>
   select(confounder_1, confounder_2, exposure, outcome)
 ```
 :::
@@ -251,7 +259,7 @@ sim2 |>
 ## Simulation
 
 ```{r}
-lm(outcome ~ exposure, data = sim2)
+lm(outcome ~ exposure, data = big_sim2)
 ```
 
 ## Simulation
@@ -305,10 +313,16 @@ sim3 |>
 lm(outcome ~ exposure, data = sim3)
 ```
 
-## Simulation
+## *Your Turn 3*
+
+### Use `ntile()` from dplyr to calculate a binned version of `confounder` called `confounder_q`. We'll create a variable with 5 bins.
+### Group the dataset by the binned variable you just created and exposure
+### Calculate the mean of the outcome for the groups
+
+## *Your Turn 3*
 
 ```{r}
-#| code-line-numbers: "|2"
+#| code-line-numbers: "|2|3-4"
 #| output-location: fragment
 sim3 |>
   mutate(confounder_q = ntile(confounder, 5)) |>
