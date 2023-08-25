@@ -45,9 +45,27 @@ Bootstrap this result 1000 times.
 set.seed(1234)
 
 ipw_results <- ____(___, 1000, apparent = TRUE) |>
-  mutate(results = map(splits, _____)) 
+  mutate(boot_fits = map(splits, _____)) 
 ```
 
+Check out the distribution of estimates (**no need to change this code**)
+
+```{r}
+#| eval: false
+ipw_results |>
+  mutate(
+    estimate = map_dbl(
+      boot_fits,
+      # pull the `estimate` for `qsmk` for each fit
+      \(.fit) .fit |>
+        filter(term == "qsmk") |>
+        pull(estimate)
+    )
+  ) |>
+  ggplot(aes(estimate)) +
+  geom_histogram(fill = "#D55E00FF", color = "white", alpha = 0.8) + 
+  theme_minimal()
+```
 
 Calculate the confidence interval
 

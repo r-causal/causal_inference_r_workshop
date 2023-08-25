@@ -9,6 +9,7 @@ library(tidyverse)
 library(broom)
 library(touringplans)
 library(ggdag)
+library(ggokabeito)
 ```
 
 For Your Turn, we'll be looking at an example using Walt Disney World ride data from the touringplans package.
@@ -25,39 +26,63 @@ Below is a proposed DAG for this question.
 
 ```{r}
 set.seed(1234)
-# set up DAG coordinates
+
 coord_dag <- list(
-  x = c(season = 0, close = 0, weather_wdwhigh = -1, x = 1, y = 2),
-  y = c(season = -1, close = 1, weather_wdwhigh = 0.25, x = 0, y = 0)
+  x = c(Season = 0, close = 0, weather = -1, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather = 0, x = 0, y = 0)
 )
 
-# nicer labels for the nodes
 labels <- c(
   x = "Extra Magic Morning",
   y = "Average wait",
-  season = "Ticket Season",
-  weather_wdwhigh = "Historic high temperature",
+  Season = "Ticket Season",
+  weather = "Historic high temperature",
   close = "Time park closed"
 )
 
-# visualize the dag
 dagify(
-  y ~ x + close + season + weather_wdwhigh,
-  x ~ weather_wdwhigh + close + season,
+  y ~ x + close + Season + weather,
+  x ~ weather + close + Season,
   coords = coord_dag,
-  labels = labels
+  labels = labels,
+  exposure = "x",
+  outcome = "y"
 ) |>
-  ggdag(use_labels = "label", text = FALSE) +
-  theme_void() +
-  scale_x_continuous(
-    limits = c(-1.25, 2.25), 
-    breaks = c(-1, 0, 1, 2), 
-    labels = c(
-      "\n(one year ago)", "\n(6 months ago)",
-      "\n(3 months ago)", "9am - 10am\n(Today)"
-    )
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
   ) +
-  theme(axis.text.x = element_text())
+  geom_dag_edges_arc(curvature = c(rep(0, 5), .3, 0)) +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = 1630,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3
+  ) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text()
+  ) +
+  coord_cartesian(clip = "off") +
+  scale_x_continuous(
+    limits = c(-1.25, 2.25),
+    breaks = c(-1, 0, 1, 2),
+    labels = c(
+      "\n(one year ago)",
+      "\n(6 months ago)",
+      "\n(3 months ago)",
+      "5pm - 6pm\n(Today)"
+    )
+  )
 ```
 
 Here we are proposing that there are three confounders: the historic high temperature on the day, the time the park closed, and the ticket season: value, regular, or peak.

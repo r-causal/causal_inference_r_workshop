@@ -8,6 +8,7 @@ format: html
 library(tidyverse)
 library(broom)
 library(propensity)
+library(causaldata)
 ```
 
 In this example, we'll consider loss to follow-up in the NHEFS study. We'll use the binary exposure we used earlier in the workshop: does quitting smoking (`smk`) increase weight (`wt82_71`)? This time, however, we'll adjust for loss to followup (people who dropped out of the study between observation periods) using inverse probability of censoring weights.
