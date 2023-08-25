@@ -20,37 +20,67 @@ In the touringplans data set, we have information about the posted waiting times
 #| message: false
 #| warning: false
 library(ggdag)
+library(ggokabeito)
 
 coord_dag <- list(
-  x = c(wdw_ticket_season = -1, close = -1, weather_wdwhigh = -2, extra_magic_morning = 0, avg_spostmin = 1, avg_sactmin = 2),
-  y = c(wdw_ticket_season = -1, close = 1, weather_wdwhigh = 0.25, extra_magic_morning = 0, avg_spostmin = 0, avg_sactmin = 0)
+  x = c(Season = -1, close = -1, weather = -2, extra = 0, x = 1, y = 2),
+  y = c(Season = -1, close = 1, weather = 0, extra = 0, x = 0, y = 0)
 )
 
 labels <- c(
-  avg_sactmin = "Average actual wait",
-  avg_spostmin = "Average posted wait ",
-  extra_magic_morning = "Extra Magic Morning",
-  wdw_ticket_season = "Ticket Season",
-  weather_wdwhigh = "Historic high temperature",
+  extra = "Extra Magic Morning",
+  x = "Average posted wait ",
+  y = "Average acutal wait",
+  Season = "Ticket Season",
+  weather = "Historic high temperature",
   close = "Time park closed"
 )
 
-wait_time_dag <- dagify(
-  avg_sactmin ~ avg_spostmin + close + wdw_ticket_season + weather_wdwhigh + extra_magic_morning,
-  avg_spostmin ~ weather_wdwhigh + close + wdw_ticket_season + extra_magic_morning,
+dagify(
+  y ~ x + close + Season + weather + extra,
+  x ~ weather + close + Season + extra,
+  extra ~ weather + close + Season,
   coords = coord_dag,
-  labels = labels
-)
-
-wait_time_dag |>
-  ggdag(use_labels = "label", text = FALSE) +
-  theme_void() +
-  scale_x_continuous(
-    limits = c(-2.25, 2.25), 
-    breaks = c(-2, -1, 0, 1, 2), 
-    labels = c("\n(one year ago)", "\n(6 months ago)", "\n(3 months ago)", "8am-9am\n(Today)", "9am-10am\n(Today)")
+  labels = labels,
+  exposure = "x",
+  outcome = "y"
+) |>
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
   ) +
-  theme(axis.text.x = element_text())
+  geom_dag_edges_arc(curvature = c(rep(0, 7), .2, 0, .2, .2, 0), edge_colour = "grey70") +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = 1602,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3
+  )  + 
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text()
+  ) +
+  coord_cartesian(clip = "off") +
+  scale_x_continuous(
+    limits = c(-2.25, 2.25),
+    breaks = c(-2, -1, 0, 1, 2),
+    labels = c(
+      "\n(one year ago)",
+      "\n(6 months ago)",
+      "\n(3 months ago)",
+      "8am-9am\n(Today)",
+      "9am-10am\n(Today)"
+    )
+  )
 ```
 
 First, let’s wrangle our data to address our question: do posted wait times at 8 affect actual weight times at 9? We’ll join the baseline data (all covariates and posted wait time at 8) with the outcome (average actual time). We also have a lot of missingness for `avg_sactmin`, so we’ll drop unobserved values for now.

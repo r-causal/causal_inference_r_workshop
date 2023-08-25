@@ -164,7 +164,7 @@ dagify(
   ggplot(
     aes(x, y, xend = xend, yend = yend, color = status)
   ) +
-  geom_dag_edges_arc(curvature = c(rep(0, 5), .3)) +
+  geom_dag_edges_arc(curvature = c(rep(0, 5), .3, 0)) +
   geom_dag_point() +
   geom_dag_label_repel(seed = 1630) +
   scale_color_okabe_ito(na.value = "grey90") +
