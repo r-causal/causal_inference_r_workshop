@@ -427,49 +427,122 @@ Malcolm Barrett
 <h2>1. Create a function to run your analysis once on a sample of your data</h2>
 <div class="small">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-2|4-9|11-14|16-18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>fit_ipw <span class="ot">&lt;-</span> <span class="cf">function</span>(split, ...) {</span>
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-2|5-13|16-18|21-22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>fit_ipw <span class="ot">&lt;-</span> <span class="cf">function</span>(split, ...) {</span>
 <span id="cb2-2"><a href="#cb2-2"></a>  .df <span class="ot">&lt;-</span> <span class="fu">analysis</span>(split)</span>
 <span id="cb2-3"><a href="#cb2-3"></a>  </span>
 <span id="cb2-4"><a href="#cb2-4"></a>  <span class="co"># fit propensity score model</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a>  propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> ...</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(), </span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="at">data =</span> .df</span>
-<span id="cb2-9"><a href="#cb2-9"></a>  )</span>
-<span id="cb2-10"><a href="#cb2-10"></a>  </span>
-<span id="cb2-11"><a href="#cb2-11"></a>  <span class="co"># calculate inverse probability weights</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a>  .df <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .df) <span class="sc">|&gt;</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a>    <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">ifelse</span>(exposure <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> .fitted, .fitted))</span>
-<span id="cb2-15"><a href="#cb2-15"></a>  </span>
-<span id="cb2-16"><a href="#cb2-16"></a>  <span class="co"># fit correctly bootsrapped ipw model</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a>  <span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> .df, <span class="at">weights =</span> wts) <span class="sc">|&gt;</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a>    <span class="fu">tidy</span>()</span>
-<span id="cb2-19"><a href="#cb2-19"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6"></a>    qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
+<span id="cb2-7"><a href="#cb2-7"></a>      race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
+<span id="cb2-8"><a href="#cb2-8"></a>      smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb2-9"><a href="#cb2-9"></a>      smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
+<span id="cb2-10"><a href="#cb2-10"></a>      wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(), </span>
+<span id="cb2-12"><a href="#cb2-12"></a>    <span class="at">data =</span> .df</span>
+<span id="cb2-13"><a href="#cb2-13"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15"></a>  <span class="co"># calculate inverse probability weights</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>  .df <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .df) <span class="sc">|&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, qsmk, <span class="at">exposure_type =</span> <span class="st">"binary"</span>))</span>
+<span id="cb2-19"><a href="#cb2-19"></a>  </span>
+<span id="cb2-20"><a href="#cb2-20"></a>  <span class="co"># fit correctly bootstrapped ipw model</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a>  <span class="fu">lm</span>(wt82_71 <span class="sc">~</span> qsmk, <span class="at">data =</span> .df, <span class="at">weights =</span> wts) <span class="sc">|&gt;</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>    <span class="fu">tidy</span>()</span>
+<span id="cb2-23"><a href="#cb2-23"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 <section id="use-rsample-to-bootstrap-our-causal-effect" class="slide level2">
 <h2>2. Use {rsample} to bootstrap our causal effect</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(rsample)</span>
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|4-8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(rsample)</span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="co"># fit ipw model to bootstrapped samples</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>ipw_results <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(df, <span class="dv">1000</span>, <span class="at">apparent =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="fu">mutate</span>(<span class="at">results =</span> <span class="fu">map</span>(splits, fit_ipw)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4"></a>bootstrapped_nhefs <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  nhefs_complete_uc, </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">times =</span> <span class="dv">1000</span>, </span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">apparent =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>bootstrapped_nhefs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="use-rsample-to-bootstrap-our-causal-effect-output" class="slide level2 output-location-slide"><h2>2. Use {rsample} to bootstrap our causal effect</h2><div class="cell output-location-slide" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># Bootstrap sampling with apparent sample 
+# A tibble: 1,001 × 2
+   splits             id           
+   &lt;list&gt;             &lt;chr&gt;        
+ 1 &lt;split [1566/587]&gt; Bootstrap0001
+ 2 &lt;split [1566/555]&gt; Bootstrap0002
+ 3 &lt;split [1566/590]&gt; Bootstrap0003
+ 4 &lt;split [1566/599]&gt; Bootstrap0004
+ 5 &lt;split [1566/580]&gt; Bootstrap0005
+ 6 &lt;split [1566/574]&gt; Bootstrap0006
+ 7 &lt;split [1566/572]&gt; Bootstrap0007
+ 8 &lt;split [1566/569]&gt; Bootstrap0008
+ 9 &lt;split [1566/562]&gt; Bootstrap0009
+10 &lt;split [1566/581]&gt; Bootstrap0010
+# ℹ 991 more rows</code></pre>
+</div>
+</div></section><section id="use-rsample-to-bootstrap-our-causal-effect-1" class="slide level2">
+<h2>2. Use {rsample} to bootstrap our causal effect</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">fit_ipw</span>(bootstrapped_nhefs<span class="sc">$</span>splits[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)     1.83     0.288      6.34 2.93e-10
+2 qsmk            3.44     0.407      8.44 7.05e-17</code></pre>
+</div>
 </div>
 </section>
+<section id="use-rsample-to-bootstrap-our-causal-effect-2" class="slide level2">
+<h2>2. Use {rsample} to bootstrap our causal effect</h2>
+<div class="cell" data-layout-align="center" data-hash="09-outcome-model_cache/revealjs/unnamed-chunk-6_c36ed8a218cdecbdeba4d712e8ce45bb">
+<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>ipw_results <span class="ot">&lt;-</span> bootstrapped_nhefs <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">mutate</span>(<span class="at">boot_fits =</span> <span class="fu">map</span>(splits, fit_ipw)) </span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>ipw_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="use-rsample-to-bootstrap-our-causal-effect-2-output" class="slide level2 output-location-slide"><h2>2. Use {rsample} to bootstrap our causal effect</h2><div class="cell output-location-slide" data-layout-align="center" data-hash="09-outcome-model_cache/revealjs/unnamed-chunk-6_c36ed8a218cdecbdeba4d712e8ce45bb">
+<div class="cell-output cell-output-stdout">
+<pre><code># Bootstrap sampling with apparent sample 
+# A tibble: 1,001 × 3
+   splits             id            boot_fits       
+   &lt;list&gt;             &lt;chr&gt;         &lt;list&gt;          
+ 1 &lt;split [1566/587]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
+ 2 &lt;split [1566/555]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
+ 3 &lt;split [1566/590]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
+ 4 &lt;split [1566/599]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
+ 5 &lt;split [1566/580]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
+ 6 &lt;split [1566/574]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
+ 7 &lt;split [1566/572]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
+ 8 &lt;split [1566/569]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
+ 9 &lt;split [1566/562]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
+10 &lt;split [1566/581]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
+# ℹ 991 more rows</code></pre>
+</div>
+</div></section><section id="use-rsample-to-bootstrap-our-causal-effect-3" class="slide level2">
+<h2>2. Use {rsample} to bootstrap our causal effect</h2>
+
+<img data-src="09-outcome-model_files/figure-revealjs/unnamed-chunk-7-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="pull-out-the-causal-effect" class="slide level2">
 <h2>3. Pull out the causal effect</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># get t-statistic-based CIs</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>boot_estimate <span class="ot">&lt;-</span> <span class="fu">int_t</span>(ipw_results, results) <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"exposure"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># get t-statistic-based CIs</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>boot_estimate <span class="ot">&lt;-</span> <span class="fu">int_t</span>(ipw_results, boot_fits) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"exposure"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="your-turn" class="slide level2">
 <h2><em>Your Turn</em></h2>
-<p></p><div class="countdown" id="timer_0c369917" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">12</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_ee2d5071" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">12</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-a-function-called-ipw_fit-that-fits-the-propensity-score-model-and-the-weighted-outcome-model-for-the-effect-between-extra_magic_morning-and-avg_spostmin">Create a function called <code>ipw_fit</code> that fits the propensity score model and the weighted outcome model for the effect between <code>extra_magic_morning</code> and <code>avg_spostmin</code></h3>
 <h3 id="using-the-bootstraps-and-int_t-functions-to-estimate-the-final-effect.">Using the <code>bootstraps()</code> and <code>int_t()</code> functions to estimate the final effect.</h3>
 <div class="footer footer-default">

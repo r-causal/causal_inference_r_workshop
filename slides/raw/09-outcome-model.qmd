@@ -3,22 +3,27 @@ title: "Fitting the outcome model"
 author: "Malcolm Barrett"
 date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
-knitr:
-  opts_chunk: 
-    eval: false
 ---
 
 ```{r}
+#| label: setup
 #| include: false
 options(
   tibble.max_extra_cols = 6, 
   tibble.width = 60
 )
+library(tidyverse)
+library(broom)
+library(propensity)
+library(causaldata)
+nhefs_complete_uc <- nhefs_complete |>
+  filter(censored == 0)
 ```
 
 ## Outcome Model {.large}
 
 ```{r}
+#| eval: false
 library(broom)
 
 lm(outcome ~ exposure, data = df, weights = wts) |>
@@ -42,13 +47,17 @@ lm(outcome ~ exposure, data = df, weights = wts) |>
 ::: {.small}
 
 ```{r}
-#| code-line-numbers: "|1-2|4-9|11-14|16-18"
+#| code-line-numbers: "|1-2|5-13|16-18|21-22"
 fit_ipw <- function(split, ...) {
   .df <- analysis(split)
   
   # fit propensity score model
   propensity_model <- glm(
-    exposure ~ confounder_1 + confounder_2 + ...
+    qsmk ~ sex + 
+      race + age + I(age^2) + education + 
+      smokeintensity + I(smokeintensity^2) + 
+      smokeyrs + I(smokeyrs^2) + exercise + active + 
+      wt71 + I(wt71^2), 
     family = binomial(), 
     data = .df
   )
@@ -56,10 +65,10 @@ fit_ipw <- function(split, ...) {
   # calculate inverse probability weights
   .df <- propensity_model |>
     augment(type.predict = "response", data = .df) |>
-    mutate(wts = 1 / ifelse(exposure == 0, 1 - .fitted, .fitted))
+    mutate(wts = wt_ate(.fitted, qsmk, exposure_type = "binary"))
   
-  # fit correctly bootsrapped ipw model
-  lm(outcome ~ exposure, data = .df, weights = wts) |>
+  # fit correctly bootstrapped ipw model
+  lm(wt82_71 ~ qsmk, data = .df, weights = wts) |>
     tidy()
 }
 ```
@@ -68,13 +77,57 @@ fit_ipw <- function(split, ...) {
 ## 2. Use {rsample} to bootstrap our causal effect
 
 ```{r}
-#| code-line-numbers: "|4|5"
+#| code-line-numbers: "|4-8"
+#| output-location: slide
 library(rsample)
 
 # fit ipw model to bootstrapped samples
-ipw_results <- bootstraps(df, 1000, apparent = TRUE) |>
-  mutate(results = map(splits, fit_ipw)) 
+bootstrapped_nhefs <- bootstraps(
+  nhefs_complete_uc, 
+  times = 1000, 
+  apparent = TRUE
+)
+
+bootstrapped_nhefs
 ```
+
+## 2. Use {rsample} to bootstrap our causal effect
+
+```{r}
+fit_ipw(bootstrapped_nhefs$splits[[1]])
+```
+
+## 2. Use {rsample} to bootstrap our causal effect
+
+```{r}
+#| cache: true
+#| output-location: slide
+#| code-line-numbers: "|2"
+ipw_results <- bootstrapped_nhefs |> 
+  mutate(boot_fits = map(splits, fit_ipw)) 
+
+ipw_results
+```
+
+## 2. Use {rsample} to bootstrap our causal effect
+
+```{r}
+#| echo: false
+ipw_results |>
+  mutate(
+    estimate = map_dbl(
+      boot_fits,
+      # pull the `estimate` for `qsmk` for each fit
+      \(.fit) .fit |>
+        filter(term == "qsmk") |>
+        pull(estimate)
+    )
+  ) |>
+  ggplot(aes(estimate)) +
+  geom_histogram(fill = "#D55E00FF", color = "white", alpha = 0.8) + 
+  theme_minimal()
+```
+
 
 ## 3. Pull out the causal effect
 
@@ -82,7 +135,7 @@ ipw_results <- bootstraps(df, 1000, apparent = TRUE) |>
 #| code-line-numbers: "|2"
 #| eval: false
 # get t-statistic-based CIs
-boot_estimate <- int_t(ipw_results, results) |> 
+boot_estimate <- int_t(ipw_results, boot_fits) |> 
   filter(term == "exposure")
 ```
 
