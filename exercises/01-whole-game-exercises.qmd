@@ -90,6 +90,7 @@ smk_wt_dag <- dagify(
   # specify causal question:
   exposure = "qsmk", 
   outcome = "wt82_71",
+  coords = time_ordered_coords(),
   # set up labels:
   # here, I'll use the same variable names as the data set, but I'll label them
   # with clearer names
@@ -113,7 +114,8 @@ smk_wt_dag <- dagify(
     "smokeintensity" = "smoking\nintensity",
     "smokeyrs" = "yrs of\nsmoking"
   )
-) |>tidy_dagitty(layout = "star")
+) |>
+  tidy_dagitty()
 
 smk_wt_dag
 ```
@@ -313,9 +315,13 @@ fit_ipw <- function(split, ...) {
   # calculate inverse probability weights
   .df <- propensity_model |>
     augment(type.predict = "response", data = .df) |>
-    mutate(wts = wt_ate(.fitted, qsmk))
+    mutate(wts = wt_ate(
+      .fitted,
+      qsmk, 
+      exposure_type = "binary"
+    ))
   
-  # fit correctly bootsrapped ipw model
+  # fit correctly bootstrapped ipw model
   lm(wt82_71 ~ qsmk, data = .df, weights = wts) |>
     tidy()
 }
