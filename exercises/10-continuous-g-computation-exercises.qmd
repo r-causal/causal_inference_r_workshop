@@ -184,7 +184,7 @@ fit_gcomp <- function(split, ...) {
   
   
   # calculate ATE
-  bind_cols(predicted_yes, predicted_no) |>
+  bind_cols(predicted_thirty, predicted_sixty) |>
     summarize(
       mean_thirty = mean(thirty_posted_minutes),
       mean_sixty = mean(sixty_posted_minutes),
