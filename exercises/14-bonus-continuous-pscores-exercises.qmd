@@ -128,7 +128,6 @@ As with the example in the slides, we have a lot of extreme values for our weigh
 
 ```{r}
 wait_times_wts |>
-  mutate(wts = 1 / denominator) |>
   ggplot(aes(wts)) +
   geom_density(col = "#E69F00", fill = "#E69F0095") + 
   scale_x_log10() + 
