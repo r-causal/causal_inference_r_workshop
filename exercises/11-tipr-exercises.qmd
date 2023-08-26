@@ -12,7 +12,7 @@ We are interested in examining the relationship between whether there were "Extr
 
 ## Your turn
 
-Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
+Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises. Use the lower bound of the confidence interval for the effect and `0.1` for the exposure-confounder effect.
 
 ```{r}
 

@@ -292,7 +292,7 @@ tip_hr_with_binary(
 
 ### `tip_coef()`
 
-* `effect_observed`: observed exposure - outcome effect **4.45 minutes (95% CI: 0.17, 8.37)**
+* `effect_observed`: observed exposure - outcome effect **4.32 minutes (95% CI: 0.0009, 8.36)**
 
 ## Disney Data
 
@@ -306,44 +306,6 @@ tip_hr_with_binary(
 ### `tip_coef()`
 * `confounder_outcome_effect`: relationship between the unmeasured confounder and outcome
 
-
-## Disney Data
-
-### `tip_coef()`:  **specify** one, it will **estimate** the other
-
-::: {.nonincremental}
-* `exposure_confounder_effect`
-* `confounder_outcome_effect` 
-:::
-
-## Disney Data
-
-*Our causal effect estimate: **4.45 minutes (95% CI: 0.17, 8.37)***
-
-::: small
-```{r}
-#| eval: true
-#| echo: false
-#| output-location: fragment
-library(tipr)
-tip_coef(
-  effect_observed = 0.17,
-  exposure_confounder_effect = 0.1,
-  verbose = FALSE
-)
-```
-:::
-
-```{r}
-#| eval: false
-#| output-location: fragment
-library(tipr)
-tip_coef(
-  effect_observed = 0.17,
-  exposure_confounder_effect = 0.1
-)
-```
-
 ## *Your turn*
 
 ```{r}
@@ -352,4 +314,4 @@ tip_coef(
 countdown::countdown(minutes = 5)
 ```
 
-### Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises.
+### Use the `tip_coef()` function to conduct a sensitivity analysis for the estimate from your previous exercises. Use the lower bound of the confidence interval for the effect and `0.1` for the exposure-confounder effect.
