@@ -10,6 +10,7 @@ library(tidyverse)
 library(broom)
 library(touringplans)
 library(rsample)
+library(propensity)
 
 seven_dwarfs <- seven_dwarfs_train_2018 |>
   filter(hour == 9)
@@ -56,9 +57,9 @@ ipw_results |>
   mutate(
     estimate = map_dbl(
       boot_fits,
-      # pull the `estimate` for `qsmk` for each fit
+      # pull the `estimate` for `extra_magic_morning` for each fit
       \(.fit) .fit |>
-        filter(term == "qsmk") |>
+        filter(term == "extra_magic_morning") |>
         pull(estimate)
     )
   ) |>
@@ -73,6 +74,8 @@ Calculate the confidence interval
 #| eval: false
 boot_estimate <- ____(____, ____) |>
   filter(term == ____)
+
+boot_estimate
 ```
 
 
