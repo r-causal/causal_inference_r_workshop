@@ -77,7 +77,6 @@ sim2 |>
               names_prefix = "x_") |>
   summarise(estimate = x_1 - x_0, .groups = "drop") |>
   summarise(estimate = mean(estimate))  
-
 ```
 
 ## Your Turn 3
@@ -108,8 +107,8 @@ sim3 |>
     values_from = avg_y,  
     names_prefix = "x_"
   ) |>
-  summarise(estimate = x_1 - x_0) 
-
+  summarise(estimate = x_1 - x_0)  |>
+  summarise(estimate = mean(estimate))  
 ```
 
 # Take aways
