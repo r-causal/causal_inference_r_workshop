@@ -103,7 +103,7 @@ coffee_cancer_dag_to <- dagify(
   )
 )
 
-_____(_____, use_labels = TRUE, use_text = FALSE)
+_____(_____, use_labels = "label", text = FALSE)
 ```
 
 # Take aways
