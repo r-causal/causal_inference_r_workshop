@@ -203,23 +203,23 @@ dagify(
 ```{r}
 #| include: false
 eight <- seven_dwarfs_train_2018 |>
-  filter(hour == 8) |>
-  select(-avg_sactmin)
+  filter(wait_hour == 8) |>
+  select(-wait_minutes_posted_avg)
 
 nine <- seven_dwarfs_train_2018 |>
-  filter(hour == 9) |>
-  select(date, avg_sactmin)
+  filter(wait_hour == 9) |>
+  select(date, wait_minutes_posted_avg)
 
 wait_times <- eight |>
   left_join(nine, by = "date") |>
-  drop_na(avg_sactmin)
+  drop_na(wait_minutes_posted_avg)
 ```
 
 ```{r}
 post_time_model <- lm(
-  avg_spostmin ~
-    close + extra_magic_morning + 
-    weather_wdwhigh + wdw_ticket_season, 
+  wait_minutes_posted_avg ~
+    park_close + park_extra_magic_morning + 
+    day_temperature_high + day_ticket_season, 
   data = wait_times
 )
 ```
@@ -289,7 +289,7 @@ ggplot(nhefs_swts, aes(swts)) +
 wait_times_swts <- post_time_model |>
   augment(data = wait_times) |>
   mutate(swts = wt_ate(
-    avg_spostmin, 
+    wait_minutes_posted_avg, 
     .fitted,
     .sigma = .sigma,
     stabilize = TRUE
@@ -324,12 +324,12 @@ lm(
 
 ```{r}
 lm(
-  avg_sactmin ~ avg_spostmin, 
+  wait_minutes_actual_avg ~ wait_minutes_posted_avg, 
   weights = swts, 
   data = wait_times_swts
 ) |>
   tidy() |>
-  filter(term == "avg_spostmin") |>
+  filter(term == "wait_minutes_posted_avg") |>
   mutate(estimate = estimate * 10)
 ```
 
