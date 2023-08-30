@@ -192,9 +192,9 @@ dagify(
 
 ## *Your Turn 1*
 
-### Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
+### Fit a model using `lm()` with `wait_minutes_posted_avg` as the outcome and the confounders identified in the DAG.
 ### Use `augment()` to add model predictions to the data frame
-### In `wt_ate()`, calculate the weights using `avg_postmin`, `.fitted`, and `.sigma`
+### In `wt_ate()`, calculate the weights using `wait_minutes_posted_avg`, `.fitted`, and `.sigma`
 
 `r countdown::countdown(minutes = 5)`
 
@@ -208,10 +208,10 @@ eight <- seven_dwarfs_train_2018 |>
 
 nine <- seven_dwarfs_train_2018 |>
   filter(wait_hour == 9) |>
-  select(date, wait_minutes_posted_avg)
+  select(park_date, wait_minutes_posted_avg)
 
 wait_times <- eight |>
-  left_join(nine, by = "date") |>
+  left_join(nine, by = "park_date") |>
   drop_na(wait_minutes_posted_avg)
 ```
 
@@ -219,7 +219,7 @@ wait_times <- eight |>
 post_time_model <- lm(
   wait_minutes_posted_avg ~
     park_close + park_extra_magic_morning + 
-    day_temperature_high + day_ticket_season, 
+    park_temperature_high + park_ticket_season, 
   data = wait_times
 )
 ```
@@ -230,7 +230,7 @@ post_time_model <- lm(
 wait_times_wts <- post_time_model |>
   augment(data = wait_times) |>
   mutate(wts = wt_ate(
-    avg_spostmin, .fitted, .sigma = .sigma
+    wait_minutes_posted_avg, .fitted, .sigma = .sigma
   ))
 ```
 

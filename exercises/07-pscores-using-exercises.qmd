@@ -21,7 +21,7 @@ seven_dwarfs <- seven_dwarfs_train_2018 |>
   filter(wait_hour == 9)
 
 propensity_model <- glm(
-  park_extra_magic_morning ~ day_ticket_season + park_close + day_temperature_high,
+  park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
   data = seven_dwarfs,
   family = binomial()
 )

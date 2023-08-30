@@ -94,10 +94,10 @@ eight <- seven_dwarfs_train_2018 |>
 
 nine <- seven_dwarfs_train_2018 |>
   filter(wait_hour == 9) |>
-  select(date, wait_minutes_actual_avg)
+  select(park_date, wait_minutes_actual_avg)
 
 wait_times <- eight |>
-  left_join(nine, by = "date") |>
+  left_join(nine, by = "park_date") |>
   drop_na(wait_minutes_actual_avg)
 ```
 

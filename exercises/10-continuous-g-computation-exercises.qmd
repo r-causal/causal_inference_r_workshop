@@ -13,7 +13,7 @@ library(splines)
 
 For this set of exercises, we'll use g-computation to calculate a causal effect for continuous exposures.
 
-In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`avg_spostmin`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`avg_sactmin`) at 9 am? Here’s our DAG:
+In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`wait_minutes_posted_avg`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`wait_minutes_actual_avg`) at 9 am? Here’s our DAG:
 
 ```{r}
 #| echo: false
@@ -89,15 +89,15 @@ You don't need to update any code here, so just run this.
 
 ```{r}
 eight <- seven_dwarfs_train_2018 |>
-  filter(hour == 8) |>
+  filter(wait_hour == 8) |>
   select(-wait_minutes_actual_avg)
 
 nine <- seven_dwarfs_train_2018 |>
-  filter(hour == 9) |>
-  select(date, wait_minutes_actual_avg)
+  filter(wait_hour == 9) |>
+  select(park_date, wait_minutes_actual_avg)
 
 wait_times <- eight |>
-  left_join(nine, by = "date") |>
+  left_join(nine, by = "park_date") |>
   drop_na(wait_minutes_actual_avg)
 ```
 
