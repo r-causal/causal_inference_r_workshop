@@ -102,9 +102,9 @@ Here's a data dictionary of the variables we need in the `seven_dwarfs` data set
 |--------------------------------|--------------------------|
 | Posted Wait Time (outcome)     | `wait_minutes_posted_avg`|
 | Extra Magic Morning (exposure) | `park_extra_magic_morning`    |
-| Ticket Season                  | `day_ticket_season`      |
+| Ticket Season                  | `park_ticket_season`      |
 | Closing Time                   | `park_close`                  |
-| Historic Temperature           | `day_temperature_high`        |
+| Historic Temperature           | `park_temperature_high`        |
 
 ## Your Turn
 
