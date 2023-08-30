@@ -181,7 +181,7 @@ dagify(
       "\n(one year ago)",
       "\n(6 months ago)",
       "\n(3 months ago)",
-      "5pm - 6pm\n(Today)"
+      "9am - 10am\n(Today)"
     )
   )
 ```
