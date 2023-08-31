@@ -13,7 +13,7 @@ library(rsample)
 library(propensity)
 
 seven_dwarfs <- seven_dwarfs_train_2018 |>
-  filter(hour == 9)
+  filter(wait_hour == 9)
 ```
 
 We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am (the **outcome**).
@@ -57,9 +57,9 @@ ipw_results |>
   mutate(
     estimate = map_dbl(
       boot_fits,
-      # pull the `estimate` for `extra_magic_morning` for each fit
+      # pull the `estimate` for `park_extra_magic_morning` for each fit
       \(.fit) .fit |>
-        filter(term == "extra_magic_morning") |>
+        filter(term == "park_extra_magic_morning") |>
         pull(estimate)
     )
   ) |>

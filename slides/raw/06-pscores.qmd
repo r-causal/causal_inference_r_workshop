@@ -181,7 +181,7 @@ dagify(
       "\n(one year ago)",
       "\n(6 months ago)",
       "\n(3 months ago)",
-      "5pm - 6pm\n(Today)"
+      "9am - 10am\n(Today)"
     )
   )
 ```
@@ -190,7 +190,7 @@ dagify(
 
 `r countdown::countdown(minutes = 10)`
 
-### Using the **confounders** identified in the previous DAG, fit a propensity score model for `extra_magic_morning`
+### Using the **confounders** identified in the previous DAG, fit a propensity score model for `park_extra_magic_morning`
 ### *Stretch*: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without
 
 

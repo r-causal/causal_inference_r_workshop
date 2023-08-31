@@ -178,8 +178,8 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 `r countdown::countdown(minutes = 10)`
 
-### Create an unweighted ECDF examining the `weather_wdwhigh` confounder by whether or not the day had Extra Magic Hours.
-### Create a weighted ECDF examining the `weather_wdwhigh` confounder
+### Create an unweighted ECDF examining the `park_temperature_high` confounder by whether or not the day had Extra Magic Hours.
+### Create a weighted ECDF examining the `park_temperature_high` confounder
 
 
 ## {background-color="#23373B" .center .huge}

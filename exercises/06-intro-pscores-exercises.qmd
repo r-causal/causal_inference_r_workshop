@@ -80,7 +80,7 @@ dagify(
       "\n(one year ago)",
       "\n(6 months ago)",
       "\n(3 months ago)",
-      "5pm - 6pm\n(Today)"
+      "9am - 10am\n(Today)"
     )
   )
 ```
@@ -93,24 +93,24 @@ First we need to subset the data to only include average wait times between 9 an
 
 ```{r}
 seven_dwarfs <- seven_dwarfs_train_2018 |>
-  filter(hour == 9)
+  filter(wait_hour == 9)
 ```
 
 Here's a data dictionary of the variables we need in the `seven_dwarfs` data set:
 
 | Variable                       | Column in `seven_dwarfs` |
 |--------------------------------|--------------------------|
-| Posted Wait Time (outcome)     | `avg_spostmin`           |
-| Extra Magic Morning (exposure) | `extra_magic_morning`    |
-| Ticket Season                  | `wdw_ticket_season`      |
-| Closing Time                   | `close`                  |
-| Historic Temperature           | `weather_wdwhigh`        |
+| Posted Wait Time (outcome)     | `wait_minutes_posted_avg`|
+| Extra Magic Morning (exposure) | `park_extra_magic_morning`    |
+| Ticket Season                  | `park_ticket_season`      |
+| Closing Time                   | `park_close`                  |
+| Historic Temperature           | `park_temperature_high`        |
 
 ## Your Turn
 
 *After updating the code chunks below, change `eval: true` before rendering*
 
-Now, fit a propensity score model for `extra_magic_morning` using the above proposed confounders.
+Now, fit a propensity score model for `park_extra_magic_morning` using the above proposed confounders.
 
 ```{r}
 #| eval: false
@@ -131,7 +131,7 @@ df <- propensity_model |>
 
 Stretch Goal 1:
 
-Examine two histograms of the propensity scores, one days with Extra Magic Morning (`extra_magic_morning == 1`) and one for days without it (`extra_magic_morning == 0`).
+Examine two histograms of the propensity scores, one days with Extra Magic Morning (`park_extra_magic_morning == 1`) and one for days without it (`park_extra_magic_morning == 0`).
 How do these compare?
 
 ```{r}

@@ -18,10 +18,10 @@ Below is the propensity score model you created in the previous exercise.
 
 ```{r}
 seven_dwarfs <- seven_dwarfs_train_2018 |>
-  filter(hour == 9)
+  filter(wait_hour == 9)
 
 propensity_model <- glm(
-  extra_magic_morning ~ wdw_ticket_season + close + weather_wdwhigh,
+  park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
   data = seven_dwarfs,
   family = binomial()
 )
@@ -82,7 +82,7 @@ Update the code below to examine the distribution of the weighted sample. **HINT
 #| warning: false
 ggplot(
   seven_dwarfs_prop, 
-  aes(.fitted, fill = factor(extra_magic_morning))
+  aes(.fitted, fill = factor(park_extra_magic_morning))
 ) +
   geom_mirror_histogram(bins = 50, alpha = .5) +
   geom_mirror_histogram(aes(weight = ____), alpha = .5, bins = 50) +

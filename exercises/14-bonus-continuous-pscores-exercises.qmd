@@ -13,7 +13,7 @@ library(propensity)
 
 For this set of exercises, we'll use propensity scores for continuous exposures.
 
-In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`avg_spostmin`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`avg_sactmin`) at 9 am? Here’s our DAG:
+In the touringplans data set, we have information about the posted waiting times for rides. We also have a limited amount of data on the observed, actual times. The question that we will consider is this: Do posted wait times (`wait_minutes_posted_avg`) for the Seven Dwarves Mine Train at 8 am affect actual wait times (`wait_minutes_actual_avg`) at 9 am? Here’s our DAG:
 
 ```{r}
 #| echo: false
@@ -83,31 +83,31 @@ dagify(
   )
 ```
 
-First, let’s wrangle our data to address our question: do posted wait times at 8 affect actual weight times at 9? We’ll join the baseline data (all covariates and posted wait time at 8) with the outcome (average actual time). We also have a lot of missingness for `avg_sactmin`, so we’ll drop unobserved values for now.
+First, let’s wrangle our data to address our question: do posted wait times at 8 affect actual weight times at 9? We’ll join the baseline data (all covariates and posted wait time at 8) with the outcome (average actual time). We also have a lot of missingness for `wait_minutes_actual_avg`, so we’ll drop unobserved values for now.
 
 You don't need to update any code here, so just run this.
 
 ```{r}
 eight <- seven_dwarfs_train_2018 |>
-  filter(hour == 8) |>
-  select(-avg_sactmin)
+  filter(wait_hour == 8) |>
+  select(-wait_minutes_actual_avg)
 
 nine <- seven_dwarfs_train_2018 |>
-  filter(hour == 9) |>
-  select(date, avg_sactmin)
+  filter(wait_hour == 9) |>
+  select(park_date, wait_minutes_actual_avg)
 
 wait_times <- eight |>
-  left_join(nine, by = "date") |>
-  drop_na(avg_sactmin)
+  left_join(nine, by = "park_date") |>
+  drop_na(wait_minutes_actual_avg)
 ```
 
 # Your Turn 1
 
-First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `avg_spostmin` with our covariates, then use the fitted predictions of `avg_spostmin` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
+First, let’s calculate the propensity score model, which will be the denominator in our stabilized weights (more to come on that soon). We’ll fit a model using `lm()` for `wait_minutes_posted_avg` with our covariates, then use the fitted predictions of `wait_minutes_posted_avg` (`.fitted`, `.sigma`) to calculate the density using `dnorm()`.
 
-1. Fit a model using `lm()` with `avg_spostmin` as the outcome and the confounders identified in the DAG.
+1. Fit a model using `lm()` with `wait_minutes_posted_avg` as the outcome and the confounders identified in the DAG.
 2. Use `augment()` to add model predictions to the data frame.
-3. In `wt_ate()`, calculate the weights using `avg_postmin`, `.fitted`, and `.sigma`.
+3. In `wt_ate()`, calculate the weights using `wait_minutes_posted_avg`, `.fitted`, and `.sigma`.
 
 ```{r}
 post_time_model <- lm(
@@ -169,7 +169,7 @@ Now, let's fit the outcome model!
 ```{r}
 lm(___ ~ ___, weights = ___, data = wait_times_swts) |>
   tidy() |>
-  filter(term == "avg_spostmin") |>
+  filter(term == "wait_minutes_posted_avg") |>
   mutate(estimate = estimate * 10)
 ```
 

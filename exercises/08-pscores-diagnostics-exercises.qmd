@@ -19,17 +19,17 @@ Below is the propensity score model and weights you created in the previous exer
 
 ```{r}
 seven_dwarfs <- seven_dwarfs_train_2018 |>
-  filter(hour == 9)
+  filter(wait_hour == 9)
 
 propensity_model <- glm(
-  extra_magic_morning ~ wdw_ticket_season + close + weather_wdwhigh,
+  park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
   data = seven_dwarfs,
   family = binomial()
 )
 
 seven_dwarfs_ps <- propensity_model |>
   augment(type.predict = "response", data = seven_dwarfs) |>
-  mutate(w_ate = wt_ate(.fitted, extra_magic_morning))
+  mutate(w_ate = wt_ate(.fitted, park_extra_magic_morning))
 ```
 
 ## Your Turn 1
@@ -41,7 +41,7 @@ Calculate the standardized mean differences with and without weights
 ```{r}
 #| eval: false
 smds <- seven_dwarfs_ps |>
-  mutate(close = as.numeric(close)) |>
+  mutate(park_close = as.numeric(park_close)) |>
   tidy_smd(
   .vars = ____,
   .group = ____,
@@ -62,7 +62,7 @@ ggplot(
 
 ## Your Turn 2
 
-Create an unweighted ECDF for `weather_wdwhigh` by whether or not the day had Extra Magic Hours.
+Create an unweighted ECDF for `park_temperature_high` by whether or not the day had Extra Magic Hours.
 
 ```{r}
 #| eval: false
@@ -77,7 +77,7 @@ ggplot(seven_dwarfs_ps, aes(x = ____, group = ____, color = factor(____))) +
   ylab("Proportion <= x") 
 ```
 
-Create an weighted ECDF for `weather_wdwhigh` by whether or not the day had Extra Magic Hours.
+Create an weighted ECDF for `park_temperature_high` by whether or not the day had Extra Magic Hours.
 
 ```{r}
 #| eval: false
