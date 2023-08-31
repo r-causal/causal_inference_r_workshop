@@ -475,16 +475,16 @@ Malcolm Barrett
 # A tibble: 1,001 × 2
    splits             id           
    &lt;list&gt;             &lt;chr&gt;        
- 1 &lt;split [1566/587]&gt; Bootstrap0001
- 2 &lt;split [1566/555]&gt; Bootstrap0002
- 3 &lt;split [1566/590]&gt; Bootstrap0003
- 4 &lt;split [1566/599]&gt; Bootstrap0004
- 5 &lt;split [1566/580]&gt; Bootstrap0005
- 6 &lt;split [1566/574]&gt; Bootstrap0006
- 7 &lt;split [1566/572]&gt; Bootstrap0007
- 8 &lt;split [1566/569]&gt; Bootstrap0008
- 9 &lt;split [1566/562]&gt; Bootstrap0009
-10 &lt;split [1566/581]&gt; Bootstrap0010
+ 1 &lt;split [1566/584]&gt; Bootstrap0001
+ 2 &lt;split [1566/580]&gt; Bootstrap0002
+ 3 &lt;split [1566/560]&gt; Bootstrap0003
+ 4 &lt;split [1566/595]&gt; Bootstrap0004
+ 5 &lt;split [1566/577]&gt; Bootstrap0005
+ 6 &lt;split [1566/544]&gt; Bootstrap0006
+ 7 &lt;split [1566/590]&gt; Bootstrap0007
+ 8 &lt;split [1566/572]&gt; Bootstrap0008
+ 9 &lt;split [1566/575]&gt; Bootstrap0009
+10 &lt;split [1566/584]&gt; Bootstrap0010
 # ℹ 991 more rows</code></pre>
 </div>
 </div></section><section id="use-rsample-to-bootstrap-our-causal-effect-1" class="slide level2">
@@ -495,8 +495,8 @@ Malcolm Barrett
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)     1.83     0.288      6.34 2.93e-10
-2 qsmk            3.44     0.407      8.44 7.05e-17</code></pre>
+1 (Intercept)     1.54     0.294      5.26 1.65e- 7
+2 qsmk            3.39     0.413      8.20 4.92e-16</code></pre>
 </div>
 </div>
 </section>
@@ -542,8 +542,8 @@ Malcolm Barrett
 </section>
 <section id="your-turn" class="slide level2">
 <h2><em>Your Turn</em></h2>
-<p></p><div class="countdown" id="timer_ee2d5071" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">12</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
-<h3 id="create-a-function-called-ipw_fit-that-fits-the-propensity-score-model-and-the-weighted-outcome-model-for-the-effect-between-extra_magic_morning-and-avg_spostmin">Create a function called <code>ipw_fit</code> that fits the propensity score model and the weighted outcome model for the effect between <code>extra_magic_morning</code> and <code>avg_spostmin</code></h3>
+<p></p><div class="countdown" id="timer_ab504ce1" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">12</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<h3 id="create-a-function-called-ipw_fit-that-fits-the-propensity-score-model-and-the-weighted-outcome-model-for-the-effect-between-park_extra_magic_morning-and-wait_minutes_posted_avg">Create a function called <code>ipw_fit</code> that fits the propensity score model and the weighted outcome model for the effect between <code>park_extra_magic_morning</code> and <code>wait_minutes_posted_avg</code></h3>
 <h3 id="using-the-bootstraps-and-int_t-functions-to-estimate-the-final-effect.">Using the <code>bootstraps()</code> and <code>int_t()</code> functions to estimate the final effect.</h3>
 <div class="footer footer-default">
 

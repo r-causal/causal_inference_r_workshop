@@ -688,9 +688,9 @@ Malcolm Barrett
 <section id="using-rsample-to-bootstrap-our-causal-effect" class="slide level2">
 <h2>Using {rsample} to bootstrap our causal effect</h2>
 <div class="fragment">
-<div class="cell" data-layout-align="center" data-hash="01-causal_modeling_whole_game_cache/revealjs/boot_cache_c1ae9350162d3ec56b38e7754b023d10">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb17" data-code-line-numbers="|2-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># fit ipw model to bootstrapped samples</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>ipw_results <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(nhefs_complete, <span class="dv">1000</span>, <span class="at">apparent =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>ipw_results <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(nhefs_complete_uc, <span class="dv">1000</span>, <span class="at">apparent =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
 <span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">mutate</span>(<span class="at">results =</span> <span class="fu">map</span>(splits, fit_ipw)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>

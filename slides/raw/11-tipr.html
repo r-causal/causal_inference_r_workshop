@@ -393,7 +393,7 @@
 
 <section id="title-slide" data-background-color="#23373B" data-color="#EDEEF" class="quarto-title-block center">
   <h1 class="title">Tipping Point Sensitivity Analyses</h1>
-  <p class="subtitle">2021-09-01 (updated: 2023-08-24)</p>
+  <p class="subtitle">2021-09-01 (updated: 2023-08-31)</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -678,7 +678,7 @@ Lucy D’Agostino McGowan
 <h2>Disney Data</h2>
 <h3 id="tip_coef"><code>tip_coef()</code></h3>
 <ul>
-<li class="fragment"><code>effect_observed</code>: observed exposure - outcome effect <strong>4.45 minutes (95% CI: 0.17, 8.37)</strong></li>
+<li class="fragment"><code>effect_observed</code>: observed exposure - outcome effect <strong>4.32 minutes (95% CI: 0.0009, 8.36)</strong></li>
 </ul>
 </section>
 <section id="disney-data-1" class="slide level2">
@@ -695,52 +695,17 @@ Lucy D’Agostino McGowan
 <li class="fragment"><code>confounder_outcome_effect</code>: relationship between the unmeasured confounder and outcome</li>
 </ul>
 </section>
-<section id="disney-data-3" class="slide level2">
-<h2>Disney Data</h2>
-<h3 id="tip_coef-specify-one-it-will-estimate-the-other"><code>tip_coef()</code>: <strong>specify</strong> one, it will <strong>estimate</strong> the other</h3>
-<div>
-<ul>
-<li><code>exposure_confounder_effect</code></li>
-<li><code>confounder_outcome_effect</code></li>
-</ul>
-</div>
-</section>
-<section id="disney-data-4" class="slide level2">
-<h2>Disney Data</h2>
-<p><em>Our causal effect estimate: <strong>4.45 minutes (95% CI: 0.17, 8.37)</strong></em></p>
-<div class="small">
-<div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 4
-  effect_observed exposure_confounder_effect confounder_outcome_effect
-            &lt;dbl&gt;                      &lt;dbl&gt;                     &lt;dbl&gt;
-1            0.17                        0.1                       1.7
-# ℹ 1 more variable: n_unmeasured_confounders &lt;dbl&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">tip_coef</span>(</span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.17</span>,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="at">exposure_confounder_effect =</span> <span class="fl">0.1</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-
-</div>
-</section>
 <section id="your-turn" class="slide level2">
 <h2><em>Your turn</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_3f0e9b49" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_2ac03c39" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 </div>
 </div>
-<h3 id="use-the-tip_coef-function-to-conduct-a-sensitivity-analysis-for-the-estimate-from-your-previous-exercises.">Use the <code>tip_coef()</code> function to conduct a sensitivity analysis for the estimate from your previous exercises.</h3>
+<h3 id="use-the-tip_coef-function-to-conduct-a-sensitivity-analysis-for-the-estimate-from-your-previous-exercises.-use-the-lower-bound-of-the-confidence-interval-for-the-effect-and-0.1-for-the-exposure-confounder-effect.">Use the <code>tip_coef()</code> function to conduct a sensitivity analysis for the estimate from your previous exercises. Use the lower bound of the confidence interval for the effect and <code>0.1</code> for the exposure-confounder effect.</h3>
 <div class="footer footer-default">
 
 </div>

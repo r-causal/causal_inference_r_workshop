@@ -500,7 +500,6 @@ fit_ipw <- function(split, ...) {
 
 ```{r}
 #| label: boot_cache
-#| cache: true
 #| code-line-numbers: "|2-3"
 # fit ipw model to bootstrapped samples
 ipw_results <- bootstraps(nhefs_complete_uc, 1000, apparent = TRUE) |>

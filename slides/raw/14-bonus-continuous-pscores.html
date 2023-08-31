@@ -520,18 +520,18 @@ Malcolm Barrett
 <img data-src="14-bonus-continuous-pscores_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="your-turn-1" class="slide level2">
 <h2><em>Your Turn 1</em></h2>
-<h3 id="fit-a-model-using-lm-with-avg_spostmin-as-the-outcome-and-the-confounders-identified-in-the-dag.">Fit a model using <code>lm()</code> with <code>avg_spostmin</code> as the outcome and the confounders identified in the DAG.</h3>
+<h3 id="fit-a-model-using-lm-with-wait_minutes_posted_avg-as-the-outcome-and-the-confounders-identified-in-the-dag.">Fit a model using <code>lm()</code> with <code>wait_minutes_posted_avg</code> as the outcome and the confounders identified in the DAG.</h3>
 <h3 id="use-augment-to-add-model-predictions-to-the-data-frame">Use <code>augment()</code> to add model predictions to the data frame</h3>
-<h3 id="in-wt_ate-calculate-the-weights-using-avg_postmin-.fitted-and-.sigma">In <code>wt_ate()</code>, calculate the weights using <code>avg_postmin</code>, <code>.fitted</code>, and <code>.sigma</code></h3>
-<p></p><div class="countdown" id="timer_addf4267" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<h3 id="in-wt_ate-calculate-the-weights-using-wait_minutes_posted_avg-.fitted-and-.sigma">In <code>wt_ate()</code>, calculate the weights using <code>wait_minutes_posted_avg</code>, <code>.fitted</code>, and <code>.sigma</code></h3>
+<p></p><div class="countdown" id="timer_e12dfe1d" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-1-1" class="slide level2">
 <h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>post_time_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-2"><a href="#cb8-2"></a>  avg_spostmin <span class="sc">~</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a>    close <span class="sc">+</span> extra_magic_morning <span class="sc">+</span> </span>
-<span id="cb8-4"><a href="#cb8-4"></a>    weather_wdwhigh <span class="sc">+</span> wdw_ticket_season, </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  wait_minutes_posted_avg <span class="sc">~</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>    park_close <span class="sc">+</span> park_extra_magic_morning <span class="sc">+</span> </span>
+<span id="cb8-4"><a href="#cb8-4"></a>    park_temperature_high <span class="sc">+</span> park_ticket_season, </span>
 <span id="cb8-5"><a href="#cb8-5"></a>  <span class="at">data =</span> wait_times</span>
 <span id="cb8-6"><a href="#cb8-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -542,7 +542,7 @@ Malcolm Barrett
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>wait_times_wts <span class="ot">&lt;-</span> post_time_model <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">augment</span>(<span class="at">data =</span> wait_times) <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    avg_spostmin, .fitted, <span class="at">.sigma =</span> .sigma</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    wait_minutes_posted_avg, .fitted, <span class="at">.sigma =</span> .sigma</span>
 <span id="cb9-5"><a href="#cb9-5"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -578,7 +578,7 @@ Malcolm Barrett
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="re-fit-the-above-using-stabilized-weights">Re-fit the above using stabilized weights</h3>
-<p></p><div class="countdown" id="timer_92ed2855" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_b591aacf" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-2-1" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
@@ -586,7 +586,7 @@ Malcolm Barrett
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>wait_times_swts <span class="ot">&lt;-</span> post_time_model <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">augment</span>(<span class="at">data =</span> wait_times) <span class="sc">|&gt;</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">mutate</span>(<span class="at">swts =</span> <span class="fu">wt_ate</span>(</span>
-<span id="cb11-4"><a href="#cb11-4"></a>    avg_spostmin, </span>
+<span id="cb11-4"><a href="#cb11-4"></a>    wait_minutes_posted_avg, </span>
 <span id="cb11-5"><a href="#cb11-5"></a>    .fitted,</span>
 <span id="cb11-6"><a href="#cb11-6"></a>    <span class="at">.sigma =</span> .sigma,</span>
 <span id="cb11-7"><a href="#cb11-7"></a>    <span class="at">stabilize =</span> <span class="cn">TRUE</span></span>
@@ -621,24 +621,24 @@ Malcolm Barrett
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="estimate-the-relationship-between-posted-wait-times-and-actual-wait-times-using-the-stabilized-weights-we-just-created.">Estimate the relationship between posted wait times and actual wait times using the stabilized weights we just created.</h3>
-<p></p><div class="countdown" id="timer_911b84ca" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_c7ee5ebd" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-3-1" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">lm</span>(</span>
-<span id="cb14-2"><a href="#cb14-2"></a>  avg_sactmin <span class="sc">~</span> avg_spostmin, </span>
+<span id="cb14-2"><a href="#cb14-2"></a>  wait_minutes_actual_avg <span class="sc">~</span> wait_minutes_posted_avg, </span>
 <span id="cb14-3"><a href="#cb14-3"></a>  <span class="at">weights =</span> swts, </span>
 <span id="cb14-4"><a href="#cb14-4"></a>  <span class="at">data =</span> wait_times_swts</span>
 <span id="cb14-5"><a href="#cb14-5"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb14-6"><a href="#cb14-6"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"avg_spostmin"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"wait_minutes_posted_avg"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb14-8"><a href="#cb14-8"></a>  <span class="fu">mutate</span>(<span class="at">estimate =</span> estimate <span class="sc">*</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 5
-  term         estimate std.error statistic   p.value
-  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 avg_spostmin    -3.47    0.0836     -4.15 0.0000805</code></pre>
+  term                  estimate std.error statistic p.value
+  &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 wait_minutes_posted_…     2.39    0.0659      3.63 4.93e-4</code></pre>
 </div>
 </div>
 </section>
