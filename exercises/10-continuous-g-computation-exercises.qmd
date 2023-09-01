@@ -9,6 +9,9 @@ library(tidyverse)
 library(broom)
 library(touringplans)
 library(splines)
+
+seven_dwarfs <- seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9)
 ```
 
 For this set of exercises, we'll use g-computation to calculate a causal effect for continuous exposures.
