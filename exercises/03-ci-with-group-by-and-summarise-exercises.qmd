@@ -72,9 +72,11 @@ sim2 <- tibble(
 sim2 |>
   group_by(_____, _____, _____) |>
   summarise(avg_y = mean(_____)) |>
-  pivot_wider(names_from = exposure,
-              values_from = avg_y,  
-              names_prefix = "x_") |>
+  pivot_wider(
+    names_from = exposure,
+    values_from = avg_y,  
+    names_prefix = "x_"
+  ) |>
   summarise(estimate = x_1 - x_0, .groups = "drop") |>
   summarise(estimate = mean(estimate))  
 ```
