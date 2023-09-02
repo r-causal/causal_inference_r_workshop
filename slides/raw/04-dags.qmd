@@ -618,7 +618,6 @@ coffee_cancer_dag_to <- dagify(
   )
 )
 
-#TODO: UPDATE LABELS ARGS
 ggdag(coffee_cancer_dag_to, use_labels = "label", text = FALSE)
 ```
 
