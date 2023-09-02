@@ -36,8 +36,8 @@ Let's look at the distribution of weight gain between the two groups.
 ```{r}
 nhefs_complete_uc |>
   ggplot(aes(wt82_71, fill = factor(qsmk))) + 
-  geom_vline(xintercept = 0, color = "grey60", size = 1) +
-  geom_density(color = "white", alpha = .75, size = .5) +
+  geom_vline(xintercept = 0, color = "grey60", linewidth = 1) +
+  geom_density(color = "white", alpha = .75, linewidth = .5) +
   scale_color_okabe_ito(order = c(1, 5)) + 
   theme_minimal() +
   theme(legend.position = "bottom") + 
@@ -48,19 +48,6 @@ nhefs_complete_uc |>
 ```
 
 There's a difference--former smokers do seemed to have gained a bit more weight--but there's also a lot of variation. Let's look at the numeric summaries.
-
-```{r}
-# ~2.5 kg gained for quit vs. not quit
-nhefs_complete_uc |>
-  group_by(qsmk) |>
-  summarize(
-    mean_weight_change = mean(wt82_71), 
-    sd = sd(wt82_71),
-    .groups = "drop"
-  )
-```
-
----
 
 ```{r}
 # ~2.5 kg gained for quit vs. not quit

@@ -5,6 +5,7 @@ format: html
 
 ```{r}
 #| label: setup
+library(tidyverse)
 library(quartets)
 ```
 
