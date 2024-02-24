@@ -38,9 +38,12 @@
 
 ### Installing materials locally
 
-We will be using Posit Cloud for the workshop, but if you would like to
-install the required packages and course materials, we have an R package
-called
+We will provide a link to a Posit Cloud space for the workshop. However,
+we recommend also installing the materials locally so you have two
+options.
+
+To install the required packages and course materials, we have an R
+package called
 {[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)} to
 help you do that! You can install
 {[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)}
