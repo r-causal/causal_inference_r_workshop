@@ -247,54 +247,6 @@ $$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
 (Z / p) + ((1 - Z) / (1 - p))
 ```
 
-
-
-## Target estimands: ATT & ATC {background-color="#23373B"}
-
-. . .
-
-Average Treatment Effect Among the Treated (ATT)
-$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
-
-```{r}
-#| eval: false
-((p * Z) / p) + ((p * (1 - Z)) / (1 - p))
-```
-
-## Target estimands: ATT & ATC {background-color="#23373B"}
-
-Average Treatment Effect Among the Controls (ATC)
-$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
-
-```{r}
-#| eval: false
-(((1 - p) * Z) / p) + (((1 - p) * (1 - Z)) / (1 - p))
-```
-
-## Target estimands: ATM & ATO {background-color="#23373B"}
-
-. . .
-
-Average Treatment Effect Among the Evenly Matchable (ATM)
-$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
-
-
-```{r}
-#| eval: false
-pmin(p, 1 - p) / (Z * p + (1 - Z) * (1 - p))
-```
-
-## Target estimands: ATM & ATO {background-color="#23373B"}
-
-Average Treatment Effect Among the Overlap Population
-$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
-
-
-```{r}
-#| eval: false
-(1 - p) * Z + p * (1 - Z)
-```
-
 ## Histogram of propensity scores
 
 ```{r}
@@ -350,6 +302,28 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
+## Target estimands: ATT & ATC {background-color="#23373B"}
+
+. . .
+
+Average Treatment Effect Among the Treated (ATT)
+$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
+
+```{r}
+#| eval: false
+((p * Z) / p) + ((p * (1 - Z)) / (1 - p))
+```
+
+## Target estimands: ATT & ATC {background-color="#23373B"}
+
+Average Treatment Effect Among the Controls (ATC)
+$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
+
+```{r}
+#| eval: false
+(((1 - p) * Z) / p) + (((1 - p) * (1 - Z)) / (1 - p))
+```
+
 ## ATT
 
 ```{r}
@@ -382,6 +356,31 @@ ggplot(df, aes(.fitted)) +
   scale_y_continuous(labels = abs) +
   scale_fill_manual(values = c("green", "blue")) +
   theme(legend.position = "bottom")
+```
+
+
+## Target estimands: ATM & ATO {background-color="#23373B"}
+
+. . .
+
+Average Treatment Effect Among the Evenly Matchable (ATM)
+$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
+
+
+```{r}
+#| eval: false
+pmin(p, 1 - p) / (Z * p + (1 - Z) * (1 - p))
+```
+
+## Target estimands: ATM & ATO {background-color="#23373B"}
+
+Average Treatment Effect Among the Overlap Population
+$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
+
+
+```{r}
+#| eval: false
+(1 - p) * Z + p * (1 - Z)
 ```
 
 ## ATM
