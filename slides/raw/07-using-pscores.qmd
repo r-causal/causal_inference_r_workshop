@@ -138,13 +138,16 @@ ggplot(aes(x = x, y = y, color = color)) +
 
 ```{r}
 #| output-location: fragment
+#| code-line-numbers: "|2|3-7|"
 library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
-  data = nhefs_complete)
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
+  data = nhefs_complete
+)
 m
 ```
 
@@ -153,7 +156,7 @@ m
 ```{r}
 #| output-location: fragment
 matched_data <- get_matches(m, id = "i")
-glimpse(matched_data)
+as_tibble(matched_data)
 ```
 
 ## Target estimands
@@ -182,14 +185,16 @@ ggplot(aes(x = x, y = y, color = color)) +
 
 ```{r}
 #| output-location: fragment
-library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+#| code-line-numbers: "|8"
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
   data = nhefs_complete,
-  estimand = "ATC")
+  estimand = "ATC"
+)
 m
 ```
 
@@ -242,15 +247,16 @@ ggplot(aes(x = x, y = y, color = color)) +
 ```{r}
 #| code-line-numbers: "|8-9"
 #| output-location: slide
-library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
   data = nhefs_complete,
   link = "linear.logit", 
-  caliper = 0.1) 
+  caliper = 0.1
+) 
 m
 ```
 
@@ -262,7 +268,7 @@ Observations with propensity scores (on the linear logit scale) within 0.1 stand
 
 ```{r}
 matched_data <- get_matches(m, id = "i")
-glimpse(matched_data)
+as_tibble(matched_data)
 ```
 
 ## *Your Turn 1*
@@ -270,7 +276,7 @@ glimpse(matched_data)
 ```{r}
 #| echo: false
 #| eval: true
-countdown::countdown(minutes = 10)
+countdown::countdown(minutes = 6)
 ```
 
 ### Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
@@ -287,39 +293,21 @@ Direct Adjustment
 
 ...
 
-## Target estimands: ATE {background-color="#23373B"}
-
-Average Treatment Effect (ATE)
-
-$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
-
-```{r}
-#| eval: false
-(Z / p) + ((1 - Z) / (1 - p))
-```
-
 ## Histogram of propensity scores
 
 ```{r}
 #| include: false
+library(propensity)
 df <- propensity_model |>
   augment(type.predict = "response", data = nhefs_complete) |>
-  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted),
-    w_ate = (qsmk / .fitted) + 
-      ((1 - qsmk) / (1 - .fitted)),
-    w_att = ((.fitted * qsmk) / .fitted) + 
-      ((.fitted * (1 - qsmk)) / (1 - .fitted)),
-    w_atc = (((1 - .fitted) * qsmk) / .fitted) + 
-      (((1 - .fitted) * (1 - qsmk)) / (1 - .fitted)),
-    w_atm = pmin(.fitted, 1 - .fitted) / 
-      (qsmk * .fitted + (1 - qsmk) * (1 - .fitted)),
-    w_ato = (1 - .fitted) * qsmk + 
-      .fitted * (1 - qsmk),
+  mutate(
+    w_ate = wt_ate(.fitted, qsmk),
+    w_att = wt_att(.fitted, qsmk),
+    w_atc = wt_atu(.fitted, qsmk),
+    w_atm = wt_atm(.fitted, qsmk),
+    w_ato = wt_ato(.fitted, qsmk),
     qsmk = factor(qsmk)
   )
-
-d <- df |>
-  pivot_wider(names_from = qsmk, values_from = .fitted, names_prefix = "qsmk_p")
 ```
 
 ```{r}
@@ -334,6 +322,17 @@ ggplot(df, aes(.fitted)) +
   xlab("propensity score") +
   scale_y_continuous(labels = abs) +
   theme(legend.position = "bottom")
+```
+
+## Target estimands: ATE {background-color="#23373B"}
+
+Average Treatment Effect (ATE)
+
+$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
+
+```{r}
+#| eval: false
+(Z / p) + ((1 - Z) / (1 - p))
 ```
 
 ## ATE
@@ -488,7 +487,7 @@ df <- propensity_model |>
 ```{r}
 #| echo: false
 #| eval: true
-countdown::countdown(minutes = 10)
+countdown::countdown(minutes = 6)
 ```
 
 ### Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame
