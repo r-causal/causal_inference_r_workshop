@@ -8,10 +8,9 @@
 <link href="03-causal-inference-with-group-by-and-summarise_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="03-causal-inference-with-group-by-and-summarise_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="03-causal-inference-with-group-by-and-summarise_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2022-07-23">
   <title>Causal Inference with group_by and summarise</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -406,7 +406,6 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2022-07-23</p>
 </section>
 <section id="observational-studies" class="slide level2" data-background-color="#23373B">
 <h2>Observational Studies</h2>
@@ -545,7 +544,7 @@ Coefficients:
 <h2><em>Your Turn 1</em> (<code>03-ci-with-group-by-and-summarise-exercises.qmd</code>)</h2>
 <h3 id="group-the-dataset-by-confounder-and-exposure">Group the dataset by <code>confounder</code> and <code>exposure</code></h3>
 <h3 id="calculate-the-mean-of-the-outcome-for-the-groups">Calculate the mean of the <code>outcome</code> for the groups</h3>
-<p></p><div class="countdown" id="timer_b1820b28" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_51df0e8b" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-1" class="slide level2">
 <h2><em>Your Turn 1</em></h2>
@@ -680,7 +679,7 @@ Coefficients:
 1  -0.0731</code></pre>
 </div>
 </div>
-<p></p><div class="countdown" id="timer_752d4425" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_eb14c708" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="simulation-6" class="slide level2">
 <h2>Simulation</h2>
@@ -818,7 +817,7 @@ Coefficients:
 <h3 id="use-ntile-from-dplyr-to-calculate-a-binned-version-of-confounder-called-confounder_q.-well-create-a-variable-with-5-bins.">Use <code>ntile()</code> from dplyr to calculate a binned version of <code>confounder</code> called <code>confounder_q</code>. We’ll create a variable with 5 bins.</h3>
 <h3 id="group-the-dataset-by-the-binned-variable-you-just-created-and-exposure">Group the dataset by the binned variable you just created and exposure</h3>
 <h3 id="calculate-the-mean-of-the-outcome-for-the-groups-2">Calculate the mean of the outcome for the groups</h3>
-<p></p><div class="countdown" id="timer_4d6b50d1" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_b3ac54c5" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="your-turn-3-1" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
@@ -877,7 +876,6 @@ Coefficients:
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1176,10 +1174,9 @@ Coefficients:
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1189,8 +1186,17 @@ Coefficients:
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

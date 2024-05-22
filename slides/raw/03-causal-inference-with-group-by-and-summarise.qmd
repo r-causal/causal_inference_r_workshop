@@ -208,6 +208,8 @@ lm(outcome ~ exposure, data = sim2)
 ### Group the dataset by the confounders and exposure
 ### Calculate the mean of the outcome for the groups
 
+`r countdown::countdown(minutes = 2)`
+
 ## *Your Turn 2*
 
 ```{r}
@@ -224,8 +226,6 @@ sim2 |>
   summarise(estimate = x_1 - x_0, .groups = "drop") |>
   summarise(estimate = mean(estimate)) 
 ```
-
-`r countdown::countdown(minutes = 2)`
 
 ## Simulation
 
@@ -275,9 +275,11 @@ lm(outcome ~ exposure, data = big_sim2)
 big_sim2 |>
   group_by(confounder_1, confounder_2, exposure) |>
   summarise(avg_y = mean(outcome)) |>
-  pivot_wider(names_from = exposure,
-              values_from = avg_y,  
-              names_prefix = "x_") |>
+  pivot_wider(
+    names_from = exposure,
+    values_from = avg_y,  
+    names_prefix = "x_"
+  ) |>
   summarise(estimate = x_1 - x_0, .groups = "drop") |>
   summarise(estimate = mean(estimate))  
 ```
