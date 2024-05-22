@@ -165,6 +165,7 @@ dagify(
 ### Specify a DAG with `dagify()`. Write your assumption that `smoking` causes `cancer` as a formula. 
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
+### Finish early? Try the *stretch goals*
 
 `r countdown::countdown(minutes = 5)`
 
@@ -262,6 +263,7 @@ smk_wt_dag |>
 
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
+### Finish early? Try the *stretch goals*
 
 `r countdown::countdown(minutes = 5)`
 
@@ -466,6 +468,8 @@ adjustmentSets(smk_wt_dag)
 
 ### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 ### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
+
+### Finish early? Try the *stretch goals*
 
 `r countdown::countdown(minutes = 5)`
 
