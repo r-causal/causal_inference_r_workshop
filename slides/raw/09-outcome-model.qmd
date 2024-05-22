@@ -141,7 +141,7 @@ boot_estimate <- int_t(ipw_results, boot_fits) |>
 
 ## *Your Turn*
 
-`r countdown::countdown(minutes = 12)`
+`r countdown::countdown(minutes = 8)`
 
 ### Create a function called `ipw_fit` that fits the propensity score model and the weighted outcome model for the effect between `park_extra_magic_morning` and `wait_minutes_posted_avg`
 

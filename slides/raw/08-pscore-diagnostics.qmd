@@ -116,7 +116,7 @@ ggplot(
 
 ## Your turn 1
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 6)`
 
 ### Create a Love Plot for the propensity score weighting you created in the previous exercise
 
@@ -176,7 +176,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## *Your turn 2*
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 6)`
 
 ### Create an unweighted ECDF examining the `park_temperature_high` confounder by whether or not the day had Extra Magic Hours.
 ### Create a weighted ECDF examining the `park_temperature_high` confounder
