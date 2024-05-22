@@ -32,12 +32,9 @@ seven_dwarfs_prop <- propensity_model |>
 
 ## Your Turn 1 (Matching)
 
-*After updating the code chunks below, change `eval: true` before rendering*
-
 Create at "matched" data set using the same propensity score model as above and a caliper of 0.2.
 
 ```{r}
-#| eval: false
 library(MatchIt)
 matched_dwarfs <- matchit(
   ___,
@@ -51,12 +48,9 @@ matched_df <- ___(matched_dwarfs)
 
 ## Your Turn 2 (Weighting)
 
-*After updating the code chunks below, change `eval: true` before rendering*
-
 Add the ATE weights to the data frame, `seven_dwarfs_prop`
 
 ```{r}
-#| eval: false
 seven_dwarfs_prop <- seven_dwarfs_prop |>
   mutate(w_ate = ___)
 ```
@@ -67,7 +61,6 @@ Stretch Goal 1:
 Add ATM weights to the data frame, `seven_dwarfs_prop`
 
 ```{r}
-#| eval: false
 seven_dwarfs_prop <- seven_dwarfs_prop |>
   mutate(w_atm = ___)
 ```
@@ -78,7 +71,6 @@ Update the code below to examine the distribution of the weighted sample. **HINT
 
 
 ```{r}
-#| eval: false
 #| warning: false
 ggplot(
   seven_dwarfs_prop, 

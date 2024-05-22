@@ -108,12 +108,9 @@ Here's a data dictionary of the variables we need in the `seven_dwarfs` data set
 
 ## Your Turn
 
-*After updating the code chunks below, change `eval: true` before rendering*
-
 Now, fit a propensity score model for `park_extra_magic_morning` using the above proposed confounders.
 
 ```{r}
-#| eval: false
 propensity_model <- ___(
   ___ ~ ___,
   data = seven_dwarfs,
@@ -124,7 +121,6 @@ propensity_model <- ___(
 Add the propensity scores to the `seven_dwarfs` data set, call this new dataset `df`.
 
 ```{r}
-#| eval: false
 df <- propensity_model |>
   ____(type.predict = ____, data = ____)
 ```

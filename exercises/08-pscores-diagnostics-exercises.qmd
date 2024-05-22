@@ -34,12 +34,9 @@ seven_dwarfs_ps <- propensity_model |>
 
 ## Your Turn 1
 
-*After updating the code chunks below, change `eval: true` before rendering*
-
 Calculate the standardized mean differences with and without weights
 
 ```{r}
-#| eval: false
 smds <- seven_dwarfs_ps |>
   mutate(park_close = as.numeric(park_close)) |>
   tidy_smd(
@@ -52,7 +49,6 @@ smds <- seven_dwarfs_ps |>
 Create the Love Plot using ggplot and halfmoon
 
 ```{r}
-#| eval: false
 ggplot(
   data = ____,
   aes(x = abs(____), y = ____, group = ____, color = ____)
@@ -65,7 +61,6 @@ ggplot(
 Create an unweighted ECDF for `park_temperature_high` by whether or not the day had Extra Magic Hours.
 
 ```{r}
-#| eval: false
 ggplot(seven_dwarfs_ps, aes(x = ____, group = ____, color = factor(____))) +
   ____() +
   scale_color_manual(
@@ -80,7 +75,6 @@ ggplot(seven_dwarfs_ps, aes(x = ____, group = ____, color = factor(____))) +
 Create an weighted ECDF for `park_temperature_high` by whether or not the day had Extra Magic Hours.
 
 ```{r}
-#| eval: false
 ggplot(seven_dwarfs_ps, aes(x = ____, color = factor(____))) +
   ____(aes(weights = ____)) + 
   scale_color_manual(
