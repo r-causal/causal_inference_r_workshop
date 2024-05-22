@@ -56,6 +56,8 @@ ggplot(
   geom_love()
 ```
 
+Stretch goal: Create a Love Plot using `make_dummy_vars = TRUE` and sorted by `abs(smd)` for the SMD values for the rows represnting the observed data.
+
 ## Your Turn 2
 
 Create an unweighted ECDF for `park_temperature_high` by whether or not the day had Extra Magic Hours.

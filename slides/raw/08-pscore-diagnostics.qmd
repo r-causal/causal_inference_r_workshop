@@ -35,7 +35,7 @@ Calculate standardized mean differences
 ```{r}
 #| message: false
 #| warning: false
-#| code-line-numbers: "|4|6|7|8"
+#| code-line-numbers: "|4|6|7|8|9"
 library(halfmoon)
 library(tidyverse)
 
@@ -43,7 +43,8 @@ smds <- tidy_smd(
   df,
   .vars = c(confounder_1, confounder_2, ...),
   .group = exposure,
-  .wts = wts # weight is optional
+  .wts = wts # optional,
+  make_dummy_vars = TRUE # optional
 )
 ```
 
@@ -80,6 +81,7 @@ library(halfmoon)
 library(tidyverse)
 library(broom)
 library(causaldata)
+library(propensity)
 
 propensity_model <- glm(
   qsmk ~ sex + 
@@ -93,7 +95,7 @@ propensity_model <- glm(
 
 df <- propensity_model |>
   augment(type.predict = "response", data = nhefs_complete) |>
-  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  mutate(w_ate = wt_ate(.fitted, qmsk))
 
 vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
           "exercise", "active", "wt71")
@@ -102,11 +104,13 @@ plot_df <- tidy_smd(
   df,
   all_of(vars),
   qsmk,
-  w_ate
+  w_ate,
+  make_dummy_vars = TRUE
 )
-
+plot_df |> 
+  arrange(method, abs(smd)) |>
+  mutate(variable = fct_inorder(variable)) |> 
 ggplot(
-  data = plot_df,
   mapping = aes(x = abs(smd), y = variable, group = method, color = method)
 ) +
   geom_line(orientation = "y") +

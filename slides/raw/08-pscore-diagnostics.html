@@ -8,7 +8,7 @@
 <link href="08-pscore-diagnostics_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="08-pscore-diagnostics_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="08-pscore-diagnostics_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <meta name="dcterms.date" content="2021-09-01">
@@ -32,7 +32,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +222,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -424,15 +425,16 @@ Lucy D’Agostino McGowan
 <p><br></p>
 <p>Calculate standardized mean differences</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|4|6|7|8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(halfmoon)</span>
+<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|4|6|7|8|9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(halfmoon)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
 <span id="cb1-4"><a href="#cb1-4"></a>smds <span class="ot">&lt;-</span> <span class="fu">tidy_smd</span>(</span>
 <span id="cb1-5"><a href="#cb1-5"></a>  df,</span>
 <span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">.vars =</span> <span class="fu">c</span>(confounder_1, confounder_2, ...),</span>
 <span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">.group =</span> exposure,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">.wts =</span> wts <span class="co"># weight is optional</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">.wts =</span> wts <span class="co"># optional,</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="at">make_dummy_vars =</span> <span class="cn">TRUE</span> <span class="co"># optional</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="smd-in-r-1" class="slide level2">
@@ -458,7 +460,7 @@ Lucy D’Agostino McGowan
 <img data-src="08-pscore-diagnostics_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="your-turn-1" class="slide level2">
 <h2>Your turn 1</h2>
-<p></p><div class="countdown" id="timer_e02d07b1" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_ec6015a1" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-a-love-plot-for-the-propensity-score-weighting-you-created-in-the-previous-exercise">Create a Love Plot for the propensity score weighting you created in the previous exercise</h3>
 </section>
 <section id="ecdf" class="slide level2">
@@ -524,7 +526,7 @@ Lucy D’Agostino McGowan
 </div>
 </div></section><section id="your-turn-2" class="slide level2">
 <h2><em>Your turn 2</em></h2>
-<p></p><div class="countdown" id="timer_998615b6" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_d28bb99d" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-an-unweighted-ecdf-examining-the-park_temperature_high-confounder-by-whether-or-not-the-day-had-extra-magic-hours.">Create an unweighted ECDF examining the <code>park_temperature_high</code> confounder by whether or not the day had Extra Magic Hours.</h3>
 <h3 id="create-a-weighted-ecdf-examining-the-park_temperature_high-confounder">Create a weighted ECDF examining the <code>park_temperature_high</code> confounder</h3>
 </section>
@@ -557,24 +559,23 @@ Lucy D’Agostino McGowan
 <h2></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
-<div id="rtlvloyuim" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rtlvloyuim table {
+<div id="wecnjhfgrv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wecnjhfgrv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rtlvloyuim thead, #rtlvloyuim tbody, #rtlvloyuim tfoot, #rtlvloyuim tr, #rtlvloyuim td, #rtlvloyuim th {
+#wecnjhfgrv thead, #wecnjhfgrv tbody, #wecnjhfgrv tfoot, #wecnjhfgrv tr, #wecnjhfgrv td, #wecnjhfgrv th {
   border-style: none;
 }
 
-#rtlvloyuim p {
+#wecnjhfgrv p {
   margin: 0;
   padding: 0;
 }
 
-#rtlvloyuim .gt_table {
+#wecnjhfgrv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -600,12 +601,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_caption {
+#wecnjhfgrv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rtlvloyuim .gt_title {
+#wecnjhfgrv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -617,7 +618,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#rtlvloyuim .gt_subtitle {
+#wecnjhfgrv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -629,7 +630,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#rtlvloyuim .gt_heading {
+#wecnjhfgrv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -641,13 +642,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_bottom_border {
+#wecnjhfgrv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_col_headings {
+#wecnjhfgrv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -662,7 +663,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_col_heading {
+#wecnjhfgrv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -682,7 +683,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#rtlvloyuim .gt_column_spanner_outer {
+#wecnjhfgrv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -694,15 +695,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#rtlvloyuim .gt_column_spanner_outer:first-child {
+#wecnjhfgrv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rtlvloyuim .gt_column_spanner_outer:last-child {
+#wecnjhfgrv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rtlvloyuim .gt_column_spanner {
+#wecnjhfgrv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -714,11 +715,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#rtlvloyuim .gt_spanner_row {
+#wecnjhfgrv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rtlvloyuim .gt_group_heading {
+#wecnjhfgrv .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -744,7 +745,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#rtlvloyuim .gt_empty_group_heading {
+#wecnjhfgrv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -759,15 +760,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#rtlvloyuim .gt_from_md > :first-child {
+#wecnjhfgrv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rtlvloyuim .gt_from_md > :last-child {
+#wecnjhfgrv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rtlvloyuim .gt_row {
+#wecnjhfgrv .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -786,7 +787,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#rtlvloyuim .gt_stub {
+#wecnjhfgrv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -799,7 +800,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#rtlvloyuim .gt_stub_row_group {
+#wecnjhfgrv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -813,15 +814,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#rtlvloyuim .gt_row_group_first td {
+#wecnjhfgrv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rtlvloyuim .gt_row_group_first th {
+#wecnjhfgrv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rtlvloyuim .gt_summary_row {
+#wecnjhfgrv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -831,16 +832,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#rtlvloyuim .gt_first_summary_row {
+#wecnjhfgrv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_first_summary_row.thick {
+#wecnjhfgrv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rtlvloyuim .gt_last_summary_row {
+#wecnjhfgrv .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -850,7 +851,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_grand_summary_row {
+#wecnjhfgrv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -860,7 +861,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#rtlvloyuim .gt_first_grand_summary_row {
+#wecnjhfgrv .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -870,7 +871,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_last_grand_summary_row_top {
+#wecnjhfgrv .gt_last_grand_summary_row_top {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -880,11 +881,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_striped {
+#wecnjhfgrv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rtlvloyuim .gt_table_body {
+#wecnjhfgrv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -893,7 +894,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_footnotes {
+#wecnjhfgrv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -907,7 +908,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_footnote {
+#wecnjhfgrv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 1px;
@@ -916,7 +917,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#rtlvloyuim .gt_sourcenotes {
+#wecnjhfgrv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -930,7 +931,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#rtlvloyuim .gt_sourcenote {
+#wecnjhfgrv .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -938,160 +939,220 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#rtlvloyuim .gt_left {
+#wecnjhfgrv .gt_left {
   text-align: left;
 }
 
-#rtlvloyuim .gt_center {
+#wecnjhfgrv .gt_center {
   text-align: center;
 }
 
-#rtlvloyuim .gt_right {
+#wecnjhfgrv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rtlvloyuim .gt_font_normal {
+#wecnjhfgrv .gt_font_normal {
   font-weight: normal;
 }
 
-#rtlvloyuim .gt_font_bold {
+#wecnjhfgrv .gt_font_bold {
   font-weight: bold;
 }
 
-#rtlvloyuim .gt_font_italic {
+#wecnjhfgrv .gt_font_italic {
   font-style: italic;
 }
 
-#rtlvloyuim .gt_super {
+#wecnjhfgrv .gt_super {
   font-size: 65%;
 }
 
-#rtlvloyuim .gt_footnote_marks {
+#wecnjhfgrv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rtlvloyuim .gt_asterisk {
+#wecnjhfgrv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rtlvloyuim .gt_indent_1 {
+#wecnjhfgrv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rtlvloyuim .gt_indent_2 {
+#wecnjhfgrv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rtlvloyuim .gt_indent_3 {
+#wecnjhfgrv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rtlvloyuim .gt_indent_4 {
+#wecnjhfgrv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rtlvloyuim .gt_indent_5 {
+#wecnjhfgrv .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>0</strong>, N = 1,565<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>0</strong>, N = 1,565<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>1</strong>, N = 1,561<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>1</strong>, N = 1,561<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Difference</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>2</sup></span>"><strong>Difference</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>2</sup></span></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">WEIGHT IN KILOGRAMS  IN 1971</td>
-<td headers="stat_1" class="gt_row gt_center">69 (60, 80)</td>
-<td headers="stat_2" class="gt_row gt_center">69 (59, 79)</td>
-<td headers="estimate" class="gt_row gt_center">0.01</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">0: WHITE 1: BLACK OR OTHER IN 1971</td>
-<td headers="stat_1" class="gt_row gt_center"></td>
-<td headers="stat_2" class="gt_row gt_center"></td>
-<td headers="estimate" class="gt_row gt_center">0.01</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
-<td headers="stat_1" class="gt_row gt_center">1,359 (87%)</td>
-<td headers="stat_2" class="gt_row gt_center">1,352 (87%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td headers="stat_1" class="gt_row gt_center">206 (13%)</td>
-<td headers="stat_2" class="gt_row gt_center">209 (13%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">AGE IN 1971</td>
-<td headers="stat_1" class="gt_row gt_center">43 (33, 52)</td>
-<td headers="stat_2" class="gt_row gt_center">43 (33, 53)</td>
-<td headers="estimate" class="gt_row gt_center">-0.01</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">0: MALE 1: FEMALE</td>
-<td headers="stat_1" class="gt_row gt_center"></td>
-<td headers="stat_2" class="gt_row gt_center"></td>
-<td headers="estimate" class="gt_row gt_center">0.00</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
-<td headers="stat_1" class="gt_row gt_center">764 (49%)</td>
-<td headers="stat_2" class="gt_row gt_center">764 (49%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td headers="stat_1" class="gt_row gt_center">802 (51%)</td>
-<td headers="stat_2" class="gt_row gt_center">797 (51%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">NUMBER OF CIGARETTES SMOKED PER DAY IN 1971</td>
-<td headers="stat_1" class="gt_row gt_center">20 (10, 25)</td>
-<td headers="stat_2" class="gt_row gt_center">20 (10, 30)</td>
-<td headers="estimate" class="gt_row gt_center">0.02</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">YEARS OF SMOKING</td>
-<td headers="stat_1" class="gt_row gt_center">24 (15, 33)</td>
-<td headers="stat_2" class="gt_row gt_center">24 (14, 33)</td>
-<td headers="estimate" class="gt_row gt_center">0.00</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">IN RECREATION, HOW MUCH EXERCISE? IN 1971, 0:much exercise,1:moderate exercise,2:little or no exercise</td>
-<td headers="stat_1" class="gt_row gt_center"></td>
-<td headers="stat_2" class="gt_row gt_center"></td>
-<td headers="estimate" class="gt_row gt_center">0.04</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
-<td headers="stat_1" class="gt_row gt_center">302 (19%)</td>
-<td headers="stat_2" class="gt_row gt_center">294 (19%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td headers="stat_1" class="gt_row gt_center">665 (42%)</td>
-<td headers="stat_2" class="gt_row gt_center">691 (44%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
-<td headers="stat_1" class="gt_row gt_center">599 (38%)</td>
-<td headers="stat_2" class="gt_row gt_center">576 (37%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">IN YOUR USUAL DAY, HOW ACTIVE ARE YOU? IN 1971, 0:very active, 1:moderately active, 2:inactive</td>
-<td headers="stat_1" class="gt_row gt_center"></td>
-<td headers="stat_2" class="gt_row gt_center"></td>
-<td headers="estimate" class="gt_row gt_center">0.03</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
-<td headers="stat_1" class="gt_row gt_center">700 (45%)</td>
-<td headers="stat_2" class="gt_row gt_center">684 (44%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td headers="stat_1" class="gt_row gt_center">718 (46%)</td>
-<td headers="stat_2" class="gt_row gt_center">738 (47%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
-<td headers="stat_1" class="gt_row gt_center">147 (9.4%)</td>
-<td headers="stat_2" class="gt_row gt_center">138 (8.9%)</td>
-<td headers="estimate" class="gt_row gt_center"></td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Median (IQR); n (%)</td>
-    </tr>
-    <tr>
-      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>2</sup></span> Standardized Mean Difference</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>0</strong>, N = 1,565<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>0</strong>, N = 1,565<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>1</strong>, N = 1,561<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>1</strong>, N = 1,561<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>Difference</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Difference</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>2</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">WEIGHT IN KILOGRAMS IN 1971</td>
+<td class="gt_row gt_center" headers="stat_1">69 (60, 80)</td>
+<td class="gt_row gt_center" headers="stat_2">69 (59, 79)</td>
+<td class="gt_row gt_center" headers="estimate">0.01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">0: WHITE 1: BLACK OR OTHER IN 1971</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
+<td class="gt_row gt_center" headers="stat_1">1,359 (87%)</td>
+<td class="gt_row gt_center" headers="stat_2">1,352 (87%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td class="gt_row gt_center" headers="stat_1">206 (13%)</td>
+<td class="gt_row gt_center" headers="stat_2">209 (13%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">AGE IN 1971</td>
+<td class="gt_row gt_center" headers="stat_1">43 (33, 52)</td>
+<td class="gt_row gt_center" headers="stat_2">43 (33, 53)</td>
+<td class="gt_row gt_center" headers="estimate">-0.01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">0: MALE 1: FEMALE</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
+<td class="gt_row gt_center" headers="stat_1">764 (49%)</td>
+<td class="gt_row gt_center" headers="stat_2">764 (49%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td class="gt_row gt_center" headers="stat_1">802 (51%)</td>
+<td class="gt_row gt_center" headers="stat_2">797 (51%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">NUMBER OF CIGARETTES SMOKED PER DAY IN 1971</td>
+<td class="gt_row gt_center" headers="stat_1">20 (10, 25)</td>
+<td class="gt_row gt_center" headers="stat_2">20 (10, 30)</td>
+<td class="gt_row gt_center" headers="estimate">0.02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">YEARS OF SMOKING</td>
+<td class="gt_row gt_center" headers="stat_1">24 (15, 33)</td>
+<td class="gt_row gt_center" headers="stat_2">24 (14, 33)</td>
+<td class="gt_row gt_center" headers="estimate">0.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">IN RECREATION, HOW MUCH EXERCISE? IN 1971, 0:much exercise,1:moderate exercise,2:little or no exercise</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
+<td class="gt_row gt_center" headers="stat_1">302 (19%)</td>
+<td class="gt_row gt_center" headers="stat_2">294 (19%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td class="gt_row gt_center" headers="stat_1">665 (42%)</td>
+<td class="gt_row gt_center" headers="stat_2">691 (44%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td class="gt_row gt_center" headers="stat_1">599 (38%)</td>
+<td class="gt_row gt_center" headers="stat_2">576 (37%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">IN YOUR USUAL DAY, HOW ACTIVE ARE YOU? IN 1971, 0:very active, 1:moderately active, 2:inactive</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
+<td class="gt_row gt_center" headers="stat_1">700 (45%)</td>
+<td class="gt_row gt_center" headers="stat_2">684 (44%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td class="gt_row gt_center" headers="stat_1">718 (46%)</td>
+<td class="gt_row gt_center" headers="stat_2">738 (47%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td class="gt_row gt_center" headers="stat_1">147 (9.4%)</td>
+<td class="gt_row gt_center" headers="stat_2">138 (8.9%)</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Median (IQR); n (%)</td>
+</tr>
+<tr class="even">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>2</sup></span> Standardized Mean Difference</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -1125,7 +1186,6 @@ Lucy D’Agostino McGowan
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1424,10 +1484,9 @@ Lucy D’Agostino McGowan
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1437,8 +1496,17 @@ Lucy D’Agostino McGowan
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
