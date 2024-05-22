@@ -5,7 +5,9 @@ institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
+
 ## {background-color="#23373B"}
+
 
 ```{r}
 #| label: setup
@@ -26,6 +28,7 @@ library(halfmoon)
 set.seed(1234)
 ```
 
+
 1. Specify causal question (e.g. target trial)
 2. Draw assumptions (causal diagram)
 3. Model assumptions (e.g., propensity)
@@ -44,6 +47,7 @@ set.seed(1234)
 
 ---
 
+
 ```{r}
 library(causaldata)
 nhefs_complete_uc <- nhefs_complete |>
@@ -51,7 +55,9 @@ nhefs_complete_uc <- nhefs_complete |>
 nhefs_complete_uc
 ```
 
+
 ## Did those who quit smoking gain weight?
+
 
 ```{r}
 #| echo: false
@@ -68,9 +74,11 @@ nhefs_complete_uc |>
   )
 ```
 
+
 ---
 
 ## Did those who quit smoking gain weight?
+
 
 ```{r}
 #| highlight.output: !expr '4:5'
@@ -84,11 +92,13 @@ nhefs_complete_uc |>
   )
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### **draw your assumptions**
 
 ---
+
 
 ```{r}
 #| echo: false
@@ -139,7 +149,9 @@ smk_wt_dag |>
   theme_dag()
 ```
 
+
 ---
+
 
 ```{r}
 #| echo: false
@@ -151,11 +163,13 @@ smk_wt_dag |>
   theme_dag()
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### What do I need to control for?
 
 ---
+
 
 ```{r}
 #| echo: false
@@ -229,7 +243,9 @@ smk_wt_dag |>
 ```
 
 
+
 ---
+
 
 ```{r}
 #| echo: false
@@ -243,7 +259,9 @@ smk_wt_dag |>
   )
 ```
 
+
 ## Multivariable regression: what's the association?
+
 
 ```{r}
 #| code-line-numbers: "|1-8"
@@ -260,6 +278,7 @@ lm(
   filter(term == "qsmk")
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### **model your assumptions**
@@ -270,6 +289,7 @@ lm(
 ### counterfactual: what if <u>everyone</u> quit smoking vs. what if <u>no one</u> quit smoking
 
 ## Fit propensity score model
+
 
 ```{r}
 #| code-line-numbers: "|1-2"
@@ -284,7 +304,9 @@ propensity_model <- glm(
 )
 ```
 
+
 ## Calculate inverse probability weights
+
 
 ```{r}
 #| code-line-numbers: "|4,6"
@@ -296,11 +318,13 @@ nhefs_complete_uc <- propensity_model |>
   mutate(wts = wt_ate(.fitted, qsmk)) 
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### **diagnose your model assumptions**
 
 ## What's the distribution of weights?
+
 
 ```{r}
 #| echo: false
@@ -312,7 +336,9 @@ ggplot(nhefs_complete_uc, aes(wts)) +
   xlab("Weights")
 ```
 
+
 ## What are the weights doing to the sample?
+
 
 ```{r}
 #| echo: false
@@ -328,7 +354,9 @@ nhefs_complete_uc |>
   theme_minimal(base_size = 20)
 ```
 
+
 ## What are the weights doing to the sample?
+
 
 ```{r}
 #| echo: false
@@ -349,7 +377,9 @@ nhefs_complete_uc |>
   theme_minimal(base_size = 20)
 ```
 
+
 ---
+
 
 ```{r}
 #| echo: false
@@ -360,7 +390,6 @@ vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs",
 plot_df <- nhefs_complete_uc |> 
   tidy_smd(all_of(vars), .group = qsmk, .wts = wts)
 ```
-
 
 ```{r}
 #| echo: false
@@ -377,7 +406,9 @@ ggplot(
   xlim(0, .3)
 ```
 
+
 ---
+
 
 ```{r}
 #| echo: false
@@ -396,11 +427,13 @@ ggplot(
   xlim(0, .3)
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### **estimate the causal effects**
 
 ## Estimate causal effect with IPW
+
 
 ```{r}
 #| code-line-numbers: "|1-2,4"
@@ -415,15 +448,19 @@ ipw_estimate <- ipw_model |>
   filter(term == "qsmk")
 ```
 
+
 ## Estimate causal effect with IPW
+
 
 ```{r}
 ipw_estimate
 ```
 
+
 ## Let's fix our confidence intervals with robust SEs!
 
 . . .
+
 
 ```{r}
 #| code-line-numbers: "|3-4,6"
@@ -440,19 +477,23 @@ ipw_estimate_robust <- ipw_model_robust |>
   filter(term == "qsmk")
 ```
 
+
 ---
 
 ## Let's fix our confidence intervals with robust SEs!
 
+
 ```{r}
 as_tibble(ipw_estimate_robust)
 ```
+
 
 ---
 
 ## Let's fix our confidence intervals with the bootstrap!
 
 . . .
+
 
 ```{r}
 # fit ipw model for a single bootstrap sample
@@ -466,7 +507,9 @@ fit_ipw_not_quite_rightly <- function(split, ...) {
 }
 ```
 
+
 ## {.small}
+
 
 ```{r}
 fit_ipw <- function(split, ...) {
@@ -494,9 +537,11 @@ fit_ipw <- function(split, ...) {
 }
 ```
 
+
 ## Using {rsample} to bootstrap our causal effect
 
 . . .
+
 
 ```{r}
 #| label: boot_cache
@@ -506,7 +551,9 @@ ipw_results <- bootstraps(nhefs_complete_uc, 1000, apparent = TRUE) |>
   mutate(results = map(splits, fit_ipw)) 
 ```
 
+
 ## Using {rsample} to bootstrap our causal effect
+
 
 ```{r}
 #| code-line-numbers: "|2"
@@ -518,7 +565,9 @@ boot_estimate <- int_t(ipw_results, results) |>
 boot_estimate
 ```
 
+
 ## {.center}
+
 
 ```{r}
 #| echo: false
@@ -545,6 +594,7 @@ bind_rows(
     theme(axis.title.y = element_blank())
 ```
 
+
 ## {background-color="#23373B" .center}
 
 ### *Our causal effect estimate: **3.5 kg (95% CI 2.4 kg, 4.4 kg)***
@@ -557,3 +607,4 @@ bind_rows(
 ### [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
 ### [Bootstrap confidence intervals with {rsample}](https://rsample.tidymodels.org/articles/Applications/Intervals.html)
 ### [R-causal](https://github.com/r-causal): Our GitHub org with R packages and examples
+
