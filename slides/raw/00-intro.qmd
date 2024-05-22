@@ -4,7 +4,7 @@ date: "2020-07-29 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 ---
 
-## `> who_are_we(c("lucy", "malcolm"))`
+## `> who_are_we(c("lucy", "malcolm", "travis"))`
 
 ```{r}
 #| label: setup
@@ -26,22 +26,44 @@ img {
 
 :::: {.columns}
 
-::: {.column width="50%"}
+::: {.column width="33.3%"}
 <br />
 <br />
 
 <img src="img/ldm.jpg" class="rounded-circle" />
 
+::: {.small}
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `r fontawesome::fa("globe")` [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)
+:::
 :::
 
-::: {.column width="50%"}
+::: {.column width="33.3%"}
 <br />
 <br />
+
+::: {.small}
 <img src="img/mb.jpg" class="rounded-circle" />
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `r fontawesome::fa("globe")` [https://www.malco.io/](https://www.malco.io/)
+&nbsp;&nbsp;&nbsp; [https://www.malco.io/](https://www.malco.io/)
+:::
+:::
+
+
+::: {.column width="33.3%"}
+<br />
+<br />
+<img src="img/tg.jpg" class="rounded-circle" />
+
+
+
+::: {.small}
+<br />
+<br />
+<br />
+[https://travisgerke.com/](https://travisgerke.com/)
+:::
 :::
 
 ::::
