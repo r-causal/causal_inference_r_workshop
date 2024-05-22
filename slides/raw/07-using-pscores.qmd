@@ -14,7 +14,7 @@ options(
 )
 ```
 
-## Propensity scores {background-color="#23373B" .large}
+## Propensity scores {.large background-color="#23373B"}
 
 Matching
 
@@ -26,17 +26,18 @@ Direct Adjustment
 
 ...
 
-## Estimands 
+##
 
-::: {.tiny}
-Greifer, N., & Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577. See also [Choosing Estimands](https://www.r-causal.org/chapters/chapter-10#choosing-estimands) in our book.
+```{r}
+#| echo: false
+knitr::include_graphics("img/estimands-cake.png")
+```
+
+:::{.tiny}
+Image source: Simon Grund
 :::
 
-::: {.center}
-![](img/estimand.png){width="70%"}
-:::
-
-## Propensity scores {background-color="#23373B" .large}
+## Propensity scores {.large background-color="#23373B"}
 
 **Matching**
 
@@ -69,6 +70,7 @@ propensity_model <- glm(
 ### Average Treatment Effect (ATE)
 
 $$\tau = E[Y(1) - Y(0)]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 2.0
@@ -88,11 +90,22 @@ ggplot(p, aes(x = x, y = y, color = col)) +
   labs(x = "", y = "")
 ```
 
+## Target Estimands
+
++----------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| Estimand | Target population | Example Research Question                                                                                                            |
++==========+===================+======================================================================================================================================+
+| ATE      | Full population   | Should we decide whether to have extra magic hours *all* mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
+|          |                   |                                                                                                                                      |
+|          |                   | Should a specific policy be applied to all eligible observations?                                                                    |
++----------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+
 ## Target estimands
 
 ### Average Treatment Effect among the Treated (ATT)
 
 $$\tau = E[Y(1) - Y(0) | Z = 1]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 3.0
@@ -108,6 +121,18 @@ ggplot(aes(x = x, y = y, color = color)) +
   labs(x = "", y = "") + 
   geom_vline(xintercept = c(0, 0.8))
 ```
+
+## Target Estimands
+
++------------+--------------------------------+-----------------------------------------------------------------------------------------------------+
+| Estimand   | Target population              | Example Research Question                                                                           |
++============+================================+=====================================================================================================+
+| ATT        | Exposed (treated) observations | Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
+|            |                                |                                                                                                     |
+|            |                                | Should we stop our marketing campaign to those currently receiving it?                              |
+|            |                                |                                                                                                     |
+|            |                                | Should medical providers stop recommending treatment for those currently receiving it?              |
++------------+--------------------------------+-----------------------------------------------------------------------------------------------------+
 
 ## Matching in R (ATT)
 
@@ -136,6 +161,7 @@ glimpse(matched_data)
 ### Average Treatment Effect among the Controls (ATC)
 
 $$\tau = E[Y(1) - Y(0) | Z = 0]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 3.0
@@ -167,6 +193,18 @@ m <- matchit(qsmk ~ sex +
 m
 ```
 
+## Target Estimands
+
++-----------+----------------------------------+-----------------------------------------------------------------------------------------------------------------+
+| Estimand  | Target population                | Example Research Question                                                                                       |
++===========+==================================+=================================================================================================================+
+| ATU       | Unexposed (control) observations | Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
+|           |                                  |                                                                                                                 |
+|           |                                  | Should we extend our marketing campaign to those not receiving it?                                              |
+|           |                                  |                                                                                                                 |
+|           |                                  | Should medical providers extend treatment to those not currently receiving it?                                  |
++-----------+----------------------------------+-----------------------------------------------------------------------------------------------------------------+
+
 ## Target estimands
 
 ### Average Treatment Effect among the Matched (ATM)
@@ -186,6 +224,18 @@ ggplot(aes(x = x, y = y, color = color)) +
   labs(x = "", y = "") + 
   geom_vline(xintercept = c(0.115, 0.8))
 ```
+
+## Target Estimands
+
++----------+-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Estimand | Target population | Example Research Question                                                                                                                                  |
++==========+===================+============================================================================================================================================================+
+| ATM      | Evenly matchable  | Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
+|          |                   |                                                                                                                                                            |
+|          |                   | Is there an effect of the exposure for some observations?                                                                                                  |
+|          |                   |                                                                                                                                                            |
+|          |                   | Should those at clinical equipoise receive treatment?                                                                                                      |
++----------+-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 ## Matching in R (ATM)
 
@@ -225,7 +275,7 @@ countdown::countdown(minutes = 10)
 
 ### Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
 
-## Propensity scores {background-color="#23373B".large}
+## Propensity scores {.large background-color="#23373B"}
 
 Matching
 
@@ -242,6 +292,7 @@ Direct Adjustment
 Average Treatment Effect (ATE)
 
 $$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
+
 ```{r}
 #| eval: false
 (Z / p) + ((1 - Z) / (1 - p))
@@ -306,8 +357,7 @@ ggplot(df, aes(.fitted)) +
 
 . . .
 
-Average Treatment Effect Among the Treated (ATT)
-$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
+Average Treatment Effect Among the Treated (ATT) $$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
 
 ```{r}
 #| eval: false
@@ -316,8 +366,7 @@ $$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
 
 ## Target estimands: ATT & ATC {background-color="#23373B"}
 
-Average Treatment Effect Among the Controls (ATC)
-$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
+Average Treatment Effect Among the Controls (ATC) $$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
 
 ```{r}
 #| eval: false
@@ -358,14 +407,11 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
-
 ## Target estimands: ATM & ATO {background-color="#23373B"}
 
 . . .
 
-Average Treatment Effect Among the Evenly Matchable (ATM)
-$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
-
+Average Treatment Effect Among the Evenly Matchable (ATM) $$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
 
 ```{r}
 #| eval: false
@@ -374,14 +420,20 @@ pmin(p, 1 - p) / (Z * p + (1 - Z) * (1 - p))
 
 ## Target estimands: ATM & ATO {background-color="#23373B"}
 
-Average Treatment Effect Among the Overlap Population
-$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
-
+Average Treatment Effect Among the Overlap Population $$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
 
 ```{r}
 #| eval: false
 (1 - p) * Z + p * (1 - Z)
 ```
+
+## Target Estimands
+
++----------+--------------------+-----------------------------------------------+
+| Estimand | Target population  | Example Research Question                     |
++==========+====================+===============================================+
+| ATO      | Overlap population | Same as ATM                                   |
++----------+--------------------+-----------------------------------------------+
 
 ## ATM
 
@@ -417,13 +469,12 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
-## ATE in R ![](img/hex/propensity.png){.absolute top=0 right=0 width=140}
+## ATE in R ![](img/hex/propensity.png){.absolute top="0" right="0" width="140"}
 
 <br />
 
-Average Treatment Effect (ATE)
-$w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
-  
+Average Treatment Effect (ATE) $w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
+
 ```{r}
 #| code-line-numbers: "|4"
 library(propensity)
@@ -432,7 +483,7 @@ df <- propensity_model |>
   mutate(w_ate = wt_ate(.fitted, qsmk)) 
 ```
 
-## *Your Turn* 
+## *Your Turn*
 
 ```{r}
 #| echo: false

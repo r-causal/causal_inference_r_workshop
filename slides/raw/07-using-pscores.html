@@ -8,7 +8,7 @@
 <link href="07-using-pscores_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="07-using-pscores_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="07-using-pscores_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <meta name="dcterms.date" content="2021-09-01">
@@ -32,7 +32,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +222,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -416,13 +417,11 @@ Lucy D’Agostino McGowan
 <p>Direct Adjustment</p>
 <p>…</p>
 </section>
-<section id="estimands" class="slide level2">
-<h2>Estimands</h2>
-<div class="tiny">
-<p>Greifer, N., &amp; Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577. See also <a href="https://www.r-causal.org/chapters/chapter-10#choosing-estimands">Choosing Estimands</a> in our book.</p>
-</div>
-<div class="center">
-<p><img data-src="img/estimand.png" style="width:70.0%"></p>
+<section id="section" class="slide level2">
+<h2></h2>
+
+<img data-src="img/estimands-cake.png" style="width:80.0%" class="r-stretch quarto-figure-center"><div class="tiny">
+<p>Image source: Simon Grund</p>
 </div>
 </section>
 <section id="propensity-scores-1" class="slide level2 large" data-background-color="#23373B">
@@ -438,13 +437,64 @@ Lucy D’Agostino McGowan
 <h3 id="average-treatment-effect-ate">Average Treatment Effect (ATE)</h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0)]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-3-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-1" class="slide level2">
+<h2>Target Estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATE</td>
+<td>Full population</td>
+<td><p>Should we decide whether to have extra magic hours <em>all</em> mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
+<p>Should a specific policy be applied to all eligible observations?</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="target-estimands-2" class="slide level2">
 <h2>Target estimands</h2>
 <h3 id="average-treatment-effect-among-the-treated-att">Average Treatment Effect among the Treated (ATT)</h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0) | Z = 1]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-3" class="slide level2">
+<h2>Target Estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 22%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATT</td>
+<td>Exposed (treated) observations</td>
+<td><p>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
+<p>Should we stop our marketing campaign to those currently receiving it?</p>
+<p>Should medical providers stop recommending treatment for those currently receiving it?</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-att" class="slide level2">
 <h2>Matching in R (ATT)</h2>
 <div class="cell" data-layout-align="center">
@@ -553,12 +603,12 @@ $ distance          &lt;dbl&gt; 0.2384597, 0.2381918, 0.2090935,…</code></pre>
 </div>
 </div>
 </section>
-<section id="target-estimands-2" class="slide level2">
+<section id="target-estimands-4" class="slide level2">
 <h2>Target estimands</h2>
 <h3 id="average-treatment-effect-among-the-controls-atc">Average Treatment Effect among the Controls (ATC)</h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0) | Z = 0]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-7-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="matching-in-r-atc" class="slide level2">
 <h2>Matching in R (ATC)</h2>
 <div class="cell" data-layout-align="center">
@@ -584,11 +634,63 @@ $ distance          &lt;dbl&gt; 0.2384597, 0.2381918, 0.2090935,…</code></pre>
 </div>
 </div>
 </section>
-<section id="target-estimands-3" class="slide level2">
+<section id="target-estimands-5" class="slide level2">
+<h2>Target Estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 21%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATU</td>
+<td>Unexposed (control) observations</td>
+<td><p>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
+<p>Should we extend our marketing campaign to those not receiving it?</p>
+<p>Should medical providers extend treatment to those not currently receiving it?</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="target-estimands-6" class="slide level2">
 <h2>Target estimands</h2>
 <h3 id="average-treatment-effect-among-the-matched-atm">Average Treatment Effect among the Matched (ATM)</h3>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-9-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-10-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-7" class="slide level2">
+<h2>Target Estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 10%">
+<col style="width: 83%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATM</td>
+<td>Evenly matchable</td>
+<td><p>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
+<p>Is there an effect of the exposure for some observations?</p>
+<p>Should those at clinical equipoise receive treatment?</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-atm" class="slide level2">
 <h2>Matching in R (ATM)</h2>
 <div class="cell" data-layout-align="center">
@@ -705,7 +807,7 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_b412d8fd" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_e0f6483e" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -729,6 +831,14 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>(Z <span class="sc">/</span> p) <span class="sc">+</span> ((<span class="dv">1</span> <span class="sc">-</span> Z) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="histogram-of-propensity-scores" class="slide level2">
+<h2>Histogram of propensity scores</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="ate" class="slide level2">
+<h2>ATE</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-att-atc" class="slide level2" data-background-color="#23373B">
 <h2>Target estimands: ATT &amp; ATC</h2>
 <div class="fragment">
@@ -745,6 +855,14 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>(((<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> Z) <span class="sc">/</span> p) <span class="sc">+</span> (((<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> Z)) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="att" class="slide level2">
+<h2>ATT</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="atc" class="slide level2">
+<h2>ATC</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-atm-ato" class="slide level2" data-background-color="#23373B">
 <h2>Target estimands: ATM &amp; ATO</h2>
 <div class="fragment">
@@ -761,30 +879,38 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>(<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> Z <span class="sc">+</span> p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> Z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="histogram-of-propensity-scores" class="slide level2">
-<h2>Histogram of propensity scores</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-19-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="ate" class="slide level2">
-<h2>ATE</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="att" class="slide level2">
-<h2>ATT</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="atc" class="slide level2">
-<h2>ATC</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-22-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-8" class="slide level2">
+<h2>Target Estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 25%">
+<col style="width: 59%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATO</td>
+<td>Overlap population</td>
+<td>Same as ATM</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="atm" class="slide level2">
 <h2>ATM</h2>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-23-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-24-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="ato" class="slide level2">
 <h2>ATO</h2>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-24-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-25-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="ate-in-r" class="slide level2">
 <h2>ATE in R <img data-src="img/hex/propensity.png" class="absolute" style="top: 0px; right: 0px; width: 140px; "></h2>
 <p><br></p>
@@ -800,7 +926,7 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <h2><em>Your Turn</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_3be75737" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_1f7167ab" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -838,7 +964,6 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1137,10 +1262,9 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1150,8 +1274,17 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
