@@ -84,7 +84,7 @@ ggplot(seven_dwarfs_ps, aes(x = ____, color = factor(____))) +
     values = c("#5154B8", "#5DB854"),
     labels = c("Yes", "No")
   ) +
-  xlab(____) +
+  xlab("Historic Temperature") +
   ylab("Proportion <= x (Weighted)")
 ```
 
