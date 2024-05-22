@@ -1,7 +1,7 @@
 ---
 title: "Causal Modeling in R: Whole Game"
 author: "Malcolm Barrett"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
+institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 

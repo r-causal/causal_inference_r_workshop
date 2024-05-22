@@ -1,8 +1,8 @@
 ---
 title: "Whole Game 2: Malaria and Mosquito Nets"
 author: "Malcolm Barrett"
+institute: "Stanford University"
 format: "kakashi-revealjs"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
 ---
 
 ```{r}

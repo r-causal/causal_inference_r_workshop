@@ -1,6 +1,5 @@
 ---
 title: "Causal Inference in R: Introduction"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 ---
 

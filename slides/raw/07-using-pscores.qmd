@@ -2,7 +2,6 @@
 title: "Using Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: kakashi-revealjs
 ---
 
