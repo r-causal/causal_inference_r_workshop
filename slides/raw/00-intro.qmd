@@ -79,11 +79,6 @@ img {
 1. G-methods & friends
 1. Instrumental variables & friends
 
-
-## {background-color="#23373B" .center}
-
-### **RStudio Cloud**: <https://bit.ly/causal-r-cloud> {.d-flex .justify-content-center .align-items-center .vh-100}
-
 ## Resources {background-color="#23373B"}
 ### [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
 ### [The Book of Why](http://bayes.cs.ucla.edu/WHY/): Detailed, friendly intro to DAGs and causal inference. Free online.
