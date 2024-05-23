@@ -25,14 +25,14 @@ Direct Adjustment
 
 ...
 
-##
+## 
 
 ```{r}
 #| echo: false
 knitr::include_graphics("img/estimands-cake.png")
 ```
 
-:::{.tiny}
+::: tiny
 Image source: Simon Grund
 :::
 
@@ -66,7 +66,7 @@ propensity_model <- glm(
 )
 ```
 
-### Average Treatment Effect (ATE)
+### *Average Treatment Effect (ATE)*
 
 $$\tau = E[Y(1) - Y(0)]$$
 
@@ -89,15 +89,30 @@ ggplot(p, aes(x = x, y = y, color = col)) +
   labs(x = "", y = "")
 ```
 
-## Target Estimands
+## Target estimands
 
-+----------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------+
-| Estimand | Target population | Example Research Question                                                                                                            |
-+==========+===================+======================================================================================================================================+
-| ATE      | Full population   | Should we decide whether to have extra magic hours *all* mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
-|          |                   |                                                                                                                                      |
-|          |                   | Should a specific policy be applied to all eligible observations?                                                                    |
-+----------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATE</p></td>
+<td><p>Full population</p></td>
+<td><p><em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should a specific policy be applied to all eligible observations?</em></p></td>
+</tr>
+</tbody>
+</table>
 
 ## Target estimands
 
@@ -121,17 +136,31 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0, 0.8))
 ```
 
-## Target Estimands
+## Target estimands
 
-+------------+--------------------------------+-----------------------------------------------------------------------------------------------------+
-| Estimand   | Target population              | Example Research Question                                                                           |
-+============+================================+=====================================================================================================+
-| ATT        | Exposed (treated) observations | Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
-|            |                                |                                                                                                     |
-|            |                                | Should we stop our marketing campaign to those currently receiving it?                              |
-|            |                                |                                                                                                     |
-|            |                                | Should medical providers stop recommending treatment for those currently receiving it?              |
-+------------+--------------------------------+-----------------------------------------------------------------------------------------------------+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATT</p></td>
+<td><p>Exposed (treated) observations</p></td>
+<td><p><em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should we stop our marketing campaign to those currently receiving it?</em></p>
+<p><em>Should medical providers stop recommending treatment for those currently receiving it?</em></p></td>
+</tr>
+</tbody>
+</table>
 
 ## Matching in R (ATT)
 
@@ -160,7 +189,7 @@ as_tibble(matched_data)
 
 ## Target estimands
 
-### Average Treatment Effect among the Controls (ATC)
+### *Average Treatment Effect among the Controls (ATC)*
 
 $$\tau = E[Y(1) - Y(0) | Z = 0]$$
 
@@ -180,6 +209,32 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0.115, 1))
 ```
 
+## Target estimands
+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATU</p></td>
+<td><p>Unexposed (control) observations</p></td>
+<td><p><em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should we extend our marketing campaign to those not receiving it?</em></p>
+<p><em>Should medical providers extend treatment to those not currently receiving it?</em></p></td>
+</tr>
+</tbody>
+</table>
+
 ## Matching in R (ATC)
 
 ```{r}
@@ -197,21 +252,9 @@ m <- matchit(
 m
 ```
 
-## Target Estimands
-
-+-----------+----------------------------------+-----------------------------------------------------------------------------------------------------------------+
-| Estimand  | Target population                | Example Research Question                                                                                       |
-+===========+==================================+=================================================================================================================+
-| ATU       | Unexposed (control) observations | Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
-|           |                                  |                                                                                                                 |
-|           |                                  | Should we extend our marketing campaign to those not receiving it?                                              |
-|           |                                  |                                                                                                                 |
-|           |                                  | Should medical providers extend treatment to those not currently receiving it?                                  |
-+-----------+----------------------------------+-----------------------------------------------------------------------------------------------------------------+
-
 ## Target estimands
 
-### Average Treatment Effect among the Matched (ATM)
+### *Average Treatment Effect among the Matched (ATM)*
 
 ```{r}
 #| echo: false
@@ -229,17 +272,31 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0.115, 0.8))
 ```
 
-## Target Estimands
+## Target estimands
 
-+----------+-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Estimand | Target population | Example Research Question                                                                                                                                  |
-+==========+===================+============================================================================================================================================================+
-| ATM      | Evenly matchable  | Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm? |
-|          |                   |                                                                                                                                                            |
-|          |                   | Is there an effect of the exposure for some observations?                                                                                                  |
-|          |                   |                                                                                                                                                            |
-|          |                   | Should those at clinical equipoise receive treatment?                                                                                                      |
-+----------+-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATM</p></td>
+<td><p>Evenly matchable</p></td>
+<td><p><em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Is there an effect of the exposure for some observations?</em></p>
+<p><em>Should those at clinical equipoise receive treatment?</em></p></td>
+</tr>
+</tbody>
+</table>
 
 ## Matching in R (ATM)
 
@@ -425,13 +482,11 @@ Average Treatment Effect Among the Overlap Population $$\Large w_{ATO} = (1-p_i)
 (1 - p) * Z + p * (1 - Z)
 ```
 
-## Target Estimands
+## Target estimands
 
-+----------+--------------------+-----------------------------------------------+
-| Estimand | Target population  | Example Research Question                     |
-+==========+====================+===============================================+
-| ATO      | Overlap population | Same as ATM                                   |
-+----------+--------------------+-----------------------------------------------+
+| Estimand | Target population  | Example Research Question |
+|----------|--------------------|---------------------------|
+| dATO     | Overlap population | *Same as ATM*             |
 
 ## ATM
 
@@ -481,7 +536,7 @@ df <- propensity_model |>
   mutate(w_ate = wt_ate(.fitted, qsmk)) 
 ```
 
-## *Your Turn*
+## *Your Turn 2*
 
 ```{r}
 #| echo: false

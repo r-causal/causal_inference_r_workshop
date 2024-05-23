@@ -11,7 +11,6 @@
   <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Using Propensity Scores</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -407,7 +406,6 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2021-09-01</p>
 </section>
 <section id="propensity-scores" class="slide level2 large" data-background-color="#23373B">
 <h2>Propensity scores</h2>
@@ -434,31 +432,57 @@ Lucy D’Agostino McGowan
 </section>
 <section id="target-estimands" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-ate">Average Treatment Effect (ATE)</h3>
+<h3 id="average-treatment-effect-ate"><em>Average Treatment Effect (ATE)</em></h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0)]\]</span></p>
 
 <img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-1" class="slide level2">
-<h2>Target Estimands</h2>
+<h2>Target estimands</h2>
 <table style="width:99%;">
 <colgroup>
-<col style="width: 6%">
-<col style="width: 11%">
-<col style="width: 80%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Estimand</th>
-<th>Target population</th>
-<th>Example Research Question</th>
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ATE</td>
-<td>Full population</td>
-<td><p>Should we decide whether to have extra magic hours <em>all</em> mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
-<p>Should a specific policy be applied to all eligible observations?</p></td>
+<td>
+<p>
+ATE
+</p>
+</td>
+<td>
+<p>
+Full population
+</p>
+</td>
+<td>
+<p>
+<em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should a specific policy be applied to all eligible observations?</em>
+</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -470,27 +494,55 @@ Lucy D’Agostino McGowan
 
 <img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-3" class="slide level2">
-<h2>Target Estimands</h2>
+<h2>Target estimands</h2>
 <table style="width:99%;">
 <colgroup>
-<col style="width: 8%">
-<col style="width: 22%">
-<col style="width: 68%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 62%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Estimand</th>
-<th>Target population</th>
-<th>Example Research Question</th>
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ATT</td>
-<td>Exposed (treated) observations</td>
-<td><p>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
-<p>Should we stop our marketing campaign to those currently receiving it?</p>
-<p>Should medical providers stop recommending treatment for those currently receiving it?</p></td>
+<td>
+<p>
+ATT
+</p>
+</td>
+<td>
+<p>
+Exposed (treated) observations
+</p>
+</td>
+<td>
+<p>
+<em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should we stop our marketing campaign to those currently receiving it?</em>
+</p>
+<p>
+<em>Should medical providers stop recommending treatment for those currently receiving it?</em>
+</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -550,10 +602,64 @@ Lucy D’Agostino McGowan
 </section>
 <section id="target-estimands-4" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-among-the-controls-atc">Average Treatment Effect among the Controls (ATC)</h3>
+<h3 id="average-treatment-effect-among-the-controls-atc"><em>Average Treatment Effect among the Controls (ATC)</em></h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0) | Z = 0]\]</span></p>
 
 <img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-5" class="slide level2">
+<h2>Target estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+ATU
+</p>
+</td>
+<td>
+<p>
+Unexposed (control) observations
+</p>
+</td>
+<td>
+<p>
+<em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should we extend our marketing campaign to those not receiving it?</em>
+</p>
+<p>
+<em>Should medical providers extend treatment to those not currently receiving it?</em>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-atc" class="slide level2">
 <h2>Matching in R (ATC)</h2>
 <div class="cell" data-layout-align="center">
@@ -580,59 +686,61 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 </section>
-<section id="target-estimands-5" class="slide level2">
-<h2>Target Estimands</h2>
-<table style="width:99%;">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 21%">
-<col style="width: 70%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Estimand</th>
-<th>Target population</th>
-<th>Example Research Question</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>ATU</td>
-<td>Unexposed (control) observations</td>
-<td><p>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
-<p>Should we extend our marketing campaign to those not receiving it?</p>
-<p>Should medical providers extend treatment to those not currently receiving it?</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="target-estimands-6" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-among-the-matched-atm">Average Treatment Effect among the Matched (ATM)</h3>
+<h3 id="average-treatment-effect-among-the-matched-atm"><em>Average Treatment Effect among the Matched (ATM)</em></h3>
 
 <img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-10-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-7" class="slide level2">
-<h2>Target Estimands</h2>
+<h2>Target estimands</h2>
 <table style="width:99%;">
 <colgroup>
-<col style="width: 5%">
-<col style="width: 10%">
-<col style="width: 83%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 71%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Estimand</th>
-<th>Target population</th>
-<th>Example Research Question</th>
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ATM</td>
-<td>Evenly matchable</td>
-<td><p>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</p>
-<p>Is there an effect of the exposure for some observations?</p>
-<p>Should those at clinical equipoise receive treatment?</p></td>
+<td>
+<p>
+ATM
+</p>
+</td>
+<td>
+<p>
+Evenly matchable
+</p>
+</td>
+<td>
+<p>
+<em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Is there an effect of the exposure for some observations?</em>
+</p>
+<p>
+<em>Should those at clinical equipoise receive treatment?</em>
+</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -697,7 +805,7 @@ Lucy D’Agostino McGowan
 <h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_da8e7baa" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_b47733f5" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -770,13 +878,8 @@ Lucy D’Agostino McGowan
 </div>
 </section>
 <section id="target-estimands-8" class="slide level2">
-<h2>Target Estimands</h2>
-<table style="width:99%;">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 25%">
-<col style="width: 59%">
-</colgroup>
+<h2>Target estimands</h2>
+<table>
 <thead>
 <tr class="header">
 <th>Estimand</th>
@@ -786,9 +889,9 @@ Lucy D’Agostino McGowan
 </thead>
 <tbody>
 <tr class="odd">
-<td>ATO</td>
+<td>dATO</td>
 <td>Overlap population</td>
-<td>Same as ATM</td>
+<td><em>Same as ATM</em></td>
 </tr>
 </tbody>
 </table>
@@ -812,11 +915,11 @@ Lucy D’Agostino McGowan
 <span id="cb16-4"><a href="#cb16-4"></a>  <span class="fu">mutate</span>(<span class="at">w_ate =</span> <span class="fu">wt_ate</span>(.fitted, qsmk)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="your-turn" class="slide level2">
-<h2><em>Your Turn</em></h2>
+<section id="your-turn-2" class="slide level2">
+<h2><em>Your Turn 2</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_71a269d8" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_a6d56ce0" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>

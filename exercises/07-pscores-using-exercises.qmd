@@ -33,7 +33,11 @@ seven_dwarfs_prop <- propensity_model |>
 
 ## Your Turn 1 (Matching)
 
-Create at "matched" data set using the same propensity score model as above and a caliper of 0.2.
+Create at "matched" data set using the same propensity score model as above and a caliper of 0.2. 
+
+1. Provide `matchit()` the formula for the propensity score.
+2. Using the `link` and `caliper` arguments, create a caliper of 0.2 SDs on the linear logit scale.
+3. Extract the matched datasets into a new data frame called `matched_df`.
 
 ```{r}
 library(MatchIt)
