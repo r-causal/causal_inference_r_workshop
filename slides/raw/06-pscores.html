@@ -8,10 +8,9 @@
 <link href="06-pscores_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="06-pscores_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="06-pscores_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Propensity Scores</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -406,7 +406,6 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2021-09-01</p>
 </section>
 <section id="observational-studies" class="slide level2" data-background-color="#23373B">
 <h2>Observational Studies</h2>
@@ -458,26 +457,30 @@ Lucy D’Agostino McGowan
 <section id="propensity-scores-3" class="slide level2">
 <h2>Propensity scores</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">glm</span>(exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
-<span id="cb2-2"><a href="#cb2-2"></a>    <span class="at">data =</span> df,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    <span class="at">family =</span> <span class="fu">binomial</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">glm</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">data =</span> df,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb2-5"><a href="#cb2-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-scores-4" class="slide level2">
 <h2>Propensity scores</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">glm</span>(exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
-<span id="cb3-2"><a href="#cb3-2"></a>    <span class="at">data =</span> df,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>    <span class="at">family =</span> <span class="fu">binomial</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> df) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">glm</span>(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">data =</span> df,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb3-5"><a href="#cb3-5"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> df) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-scores-5" class="slide level2" data-background-color="#23373B">
 <h2>Propensity scores</h2>
 
 <img data-src="img/pscores.png" class="r-stretch"></section>
-<section id="example" class="slide level2 small">
-<h2>Example</h2>
+<section id="example-the-seven-dwarfs-mine-train" class="slide level2 small">
+<h2>Example: The Seven Dwarfs Mine Train</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><img src="img/Mickey_and_Walt_Disney.jpg" height="300"></p>
@@ -491,16 +494,16 @@ Lucy D’Agostino McGowan
 </section>
 <section id="section-2" class="slide level2 large center" data-background-color="#23373B">
 <h2></h2>
-<p><strong>We are interested in examining the relationship between whether there were “Extra Magic Hours” in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am.</strong></p>
+<p><em>We are interested in examining the relationship between whether there were</em> <strong>“Extra Magic Hours”</strong> <em>in the morning and</em> <strong>the average wait time</strong> <em>for the Seven Dwarfs Mine Train the same day between 9am and 10am.</em></p>
 </section>
 <section class="slide level2">
 
 
 <img data-src="06-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="your-turn" class="slide level2">
-<h2><strong>Your turn</strong></h2>
-<p></p><div class="countdown" id="timer_e5f68cf2" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
-<h3 id="using-the-confounders-identified-in-the-previous-dag-fit-a-propensity-score-model-for-park_extra_magic_morning">Using the <strong>confounders</strong> identified in the previous DAG, fit a propensity score model for <code>park_extra_magic_morning</code></h3>
+<h2><em>Your turn</em></h2>
+<p></p><div class="countdown" id="timer_9a305451" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<h3 id="using-the-confounders-identified-in-the-previous-dag-fit-a-propensity-score-model-for-park_extra_magic_morning">Using the confounders identified in the previous DAG, fit a propensity score model for <code>park_extra_magic_morning</code></h3>
 <h3 id="stretch-create-two-histograms-one-of-the-propensity-scores-for-days-with-extra-morning-magic-hours-and-one-for-those-without"><em>Stretch</em>: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without</h3>
 <div class="footer footer-default">
 
@@ -532,7 +535,6 @@ Lucy D’Agostino McGowan
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -831,10 +833,9 @@ Lucy D’Agostino McGowan
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -844,8 +845,17 @@ Lucy D’Agostino McGowan
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
