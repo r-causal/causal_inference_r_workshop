@@ -17,7 +17,7 @@ library(tidyverse)
 library(broom)
 library(causaldata)
 
-set.seed(1000)
+set.seed(100111)
 ```
 
 ## Confounders and chains
@@ -50,7 +50,8 @@ ggdag_adjust(
 ) + 
   theme_dag() +
   theme(legend.position = "none") +
-  expand_plot(expansion(.2), expansion(.2))
+  expand_plot(expansion(.2), expansion(.2)) +
+  ggokabeito::scale_color_okabe_ito()
 ```
 
 ## Let's prove it!
@@ -109,10 +110,11 @@ l2fu <- dagify(follow_up ~ symptoms,
        ), exposure = "new_rx", outcome = "cd4")
 
 l2fu |>
-  ggdag_adjust("follow_up", layout = "mds", text = FALSE, collider_lines = FALSE) + geom_dag_text_repel(aes(label = label), color = "black", point.padding = 100) + 
+  ggdag_adjust("follow_up", layout = "mds", text = FALSE, collider_lines = FALSE) + geom_dag_text_repel(aes(label = label), color = "black", point.padding = 100, seed = 1) + 
   theme_dag() +
   theme(legend.position = "none") +
-  expand_plot()
+  expand_plot() +
+  ggokabeito::scale_color_okabe_ito()
 ```
 
 ## Adjusting for selection bias {background-color="#23373B"}
