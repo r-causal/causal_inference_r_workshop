@@ -34,7 +34,7 @@ We have measured variables, what should we adjust for?
 
 . . .
 
- **exposure** | **outcome** | **covariate**
+**exposure** | **outcome** | **covariate**
 ---|---|---
 0.49 | 1.71 | 2.24
 0.07 | 0.68 | 0.92
@@ -44,7 +44,7 @@ We have measured variables, what should we adjust for?
 . | . | .
 0.55 | -1.73 | -2.34
 
-## *A bit more info*
+## *What does the data say?*
 
 :::: columns
 
@@ -54,7 +54,7 @@ We have measured variables, what should we adjust for?
 #| eval: true
 #| message: false
 #| warning: false
-ggplot(causal_confounding, aes(x = exposure, y = outcome))+ 
+ggplot(causal_confounding, aes(x = exposure, y = outcome)) + 
   geom_point() + 
   geom_smooth(method = "lm", formula = "y ~ x")
 ```
@@ -203,16 +203,11 @@ dags
 ## *Your turn 1* {.small}
 
 ### Load the `quartets` package
-### For each of the following 4 datasets, look at the correlation between `exposure` and `covariate`: `causal_collider`, `causal_confounding`, `causal_mediator`, `causal_m_bias`
-###  For each of the above 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`
-### For each of the above 4 datasets, fit a linear model to examine the relationship between the `exposure` and the `outcome`
+###  For each of the following 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`: `causal_collider`, `causal_confounding`, `causal_mediator`, `causal_m_bias`
+### For each of the above 4 datasets, look at the correlation between `exposure` and `covariate`
+### *Stretch goal*: For each of the above 4 datasets, fit a linear model to examine the relationship between the `exposure` and the `outcome`
 
-```{r}
-#| echo: false
-#| eval: true
-
-countdown::countdown(10)
-```
+`r countdown::countdown(6)`
 
 ## *Relationship between exposure and outcome*
 
@@ -232,11 +227,49 @@ ggplot(causal_quartet, aes(x = exposure, y = outcome)) +
 #| eval: true
 causal_quartet |>
   group_by(dataset) |>
-  summarise(cor(exposure, covariate))
+  summarise(corr = cor(exposure, covariate))
+```
+
+## *Observed effects* {.large}
+
+```{r}
+#| echo: false
+#| eval: true
+causal_quartet |>
+  nest_by(dataset) |>
+  mutate(
+    ate_x = coef(lm(outcome ~ exposure, data = data))[2],
+    ate_xz = coef(lm(outcome ~ exposure + covariate, data = data))[2],
+    cor = cor(data$exposure, data$covariate)
+  ) |>
+  select(-data, dataset) |> 
+  ungroup() |> 
+  gt() |> 
+  gt::cols_label(
+    dataset = "Data generating mechanism",   
+    ate_x = "ATE not adjusting for Z",       
+    ate_xz = "ATE adjusting for Z", 
+    cor = "Correlation of X and Z"
+  ) |>
+  fmt_number() |> 
+  tab_options(table.font.size = "80%")
+```
+
+::: tiny
+D'Agostino McGowan L, Gerke T, Barrett M (2023). 
+Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
+:::
+
+## The solution
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 8.5
+dags
 ```
 
 ## *Correct effects*
-
 
 ```{r}
 #| echo: false
@@ -261,45 +294,6 @@ D'Agostino McGowan L, Gerke T, Barrett M (2023).
 Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
 :::
 
-## *Observed effects* {.large}
-
-```{r}
-#| echo: false
-#| eval: true
-causal_quartet |>
-  nest_by(dataset) |>
-  mutate(ate_x = coef(lm(outcome ~ exposure, data = data))[2],
-         ate_xz = coef(lm(outcome ~ exposure + covariate, data = data))[2],
-         cor = cor(data$exposure, data$covariate)) |>
-  select(-data, dataset) |> 
-  ungroup() |> 
-  gt() |> 
-  gt::cols_label(
-    dataset = "Data generating mechanism",   
-    ate_x = "ATE not adjusting for Z",       
-    ate_xz = "ATE adjusting for Z", 
-    cor = "Correlation of X and Z"
-  ) |>
-  fmt_number() |> 
-  tab_options(table.font.size = "80%")
-```
-
-
-::: tiny
-D'Agostino McGowan L, Gerke T, Barrett M (2023). 
-Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
-:::
-
-## The solution
-
-```{r}
-#| echo: false
-#| eval: true
-#| fig-width: 8.5
-dags
-```
-
-
 ## The *partial* solution
 
 ::: small
@@ -321,13 +315,19 @@ causal_collider_time
 #| echo: false
 #| eval: true
 coords <- list(
-  x = c(X_0 = 1, X_1 = 2, Z_1 = 2, Y_1 = 1.9, X_2 = 3, Y_2 = 2.9, Z_2 = 3,
-        X_3 = 4, Y_3 = 3.9, Z_3 = 4),
-  y = c(X_0 = 1, Y_0 = 1.05,
-        X_1 = 1, Z_1 = 1.1, Y_1 = 1.05,
-        X_2 = 1, Z_2 = 1.1, Y_2 = 1.05,
-        X_3 = 1, Z_3 = 1.1, Y_3 = 1.05)
+  x = c(
+    X_0 = 1, X_1 = 2, Z_1 = 2, Y_1 = 1.9, 
+    X_2 = 3, Y_2 = 2.9, Z_2 = 3,
+    X_3 = 4, Y_3 = 3.9, Z_3 = 4
+  ),
+  y = c(
+    X_0 = 1, Y_0 = 1.05,
+    X_1 = 1, Z_1 = 1.1, Y_1 = 1.05,
+    X_2 = 1, Z_2 = 1.1, Y_2 = 1.05,
+    X_3 = 1, Z_3 = 1.1, Y_3 = 1.05
+  )
 )
+
 d_coll <- dagify(
   Y_2 ~ X_1,
   Y_3 ~ X_2,
@@ -336,17 +336,19 @@ d_coll <- dagify(
   Z_3 ~ X_2 + Y_3 + Z_2,
   exposure = "X_2",
   outcome = "Y_3",
-  labels = c(X_0 = "X",
-             X_1 = "X",
-             X_2 = "X",
-             X_3 = "X",
-             Y_0 = "Y",
-             Y_1 = "Y",
-             Y_2 = "Y",
-             Y_3 = "Y",
-             Z_1 = "Z",
-             Z_2 = "Z",
-             Z_3 = "Z"),
+  labels = c(
+    X_0 = "X",
+    X_1 = "X",
+    X_2 = "X",
+    X_3 = "X",
+    Y_0 = "Y",
+    Y_1 = "Y",
+    Y_2 = "Y",
+    Y_3 = "Y",
+    Z_1 = "Z",
+    Z_2 = "Z",
+    Z_3 = "Z"
+  ),
   coords = coords
 )
 
@@ -415,6 +417,12 @@ no_col_bias
 
 # `outcome_followup ~ exposure_baseline + covariate_baseline` {.tiny background-color="#23373B"}
 
+## *Your turn 2*
+
+### For each of the following 4 datasets, fit a linear linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: `causal_collider_time`, `causal_confounding_time`, `causal_mediator_time`, `causal_m_bias_time`
+
+`r countdown::countdown(6)`
+
 ## The *partial* solution
 
 ```{r}
@@ -422,22 +430,18 @@ no_col_bias
 #| eval: true
 causal_quartet_time |>
   nest_by(dataset) |>
-  mutate(ate_x = 
-           coef(
-             lm(outcome_followup ~ exposure_baseline, data = data)
-           )[2],
-         ate_xz = 
-           coef(
-             lm(outcome_followup ~ exposure_baseline + covariate_baseline, 
-                data = data)
-           )[2]) |>
+  mutate(
+    ate_x = coef(lm(outcome_followup ~ exposure_baseline, data = data))[2],
+    ate_xz = coef(lm(outcome_followup ~ exposure_baseline + covariate_baseline, 
+                     data = data))[2]
+  ) |>
   bind_cols(tibble(truth = c(1, 0.5, 1, 1))) |>
   select(-data, dataset) |> 
   ungroup() |> 
   gt() |> 
   gt::cols_label(
     dataset = "Data generating mechanism",   
-    ate_x = "ATE not adjusting for pre-exposure Z",       
+    ate_x = "ATE not adjusting for pre-exposure Z",
     ate_xz = "ATE adjusting for pre-exposure Z", 
     truth = "Correct causal effect"
   ) |>
@@ -455,14 +459,9 @@ Causal inference is not a statistical problem. Preprint arXiv:2304.02683v1.
 
 ::: small
 * The relationship between Z and the unmeasured confounders needs to be really large (Liu et al 2012)
-* “To obsess about the possibility of [M-bias] generates bad practical advice in all but the most unusual circumstances” (Rubin 2009)
+* "To obsess about the possibility of [M-bias] generates bad practical advice in all but the most unusual circumstances" (Rubin 2009)
 * There are (almost) no true zeros (Gelman 2011)
 * Asymptotic theory shows that induction of M-bias is quite sensitive to various deviations from the exact M-Structure (Ding and Miratrix 2014)
 :::
 
-## *Your turn 2*
-
-### For each of the following 4 datasets, fit a linear linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: `causal_collider_time`, `causal_confounding_time`, `causal_mediator_time`, `causal_m_bias_time`
-
-`r countdown::countdown(10)`
 
