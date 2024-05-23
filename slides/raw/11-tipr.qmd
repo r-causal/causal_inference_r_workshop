@@ -252,18 +252,16 @@ tip_hr_with_binary(
 :::
 ::::
 
-## Disney Data
+## Disney Data: Extra magic morning & wait times
 
 ### `tip_coef()`
 
-* `effect_observed`: observed exposure - outcome effect **4.32 minutes (95% CI: 0.0009, 8.36)**
+* `effect_observed`: observed exposure - outcome effect **6.17 minutes (95% CI: 2.02, 10.40)**
 
 ## Disney Data
 
 ### `tip_coef()`
 * `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
-
-
 
 ## Disney Data
 

@@ -40,7 +40,7 @@ lm(outcome ~ exposure, data = df, weights = wts) |>
 
 . . .
 
-`r emo::ji("package")` {rsample}
+`r emo::ji("package")` Let's bootstrap them with rsample
 
 ## 1. Create a function to run your analysis once on a sample of your data
 
@@ -133,10 +133,12 @@ ipw_results |>
 
 ```{r}
 #| code-line-numbers: "|2"
-#| eval: false
+#| output-location: fragment
 # get t-statistic-based CIs
 boot_estimate <- int_t(ipw_results, boot_fits) |> 
-  filter(term == "exposure")
+  filter(term == "qsmk")
+
+boot_estimate
 ```
 
 ## *Your Turn*
