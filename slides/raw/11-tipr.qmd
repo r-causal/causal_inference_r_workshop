@@ -182,7 +182,7 @@ adjust_hr_with_binary(
 ## `tipr` Example
 
 ```{r}
-#| code-line-numbers: "|6"
+#| code-line-numbers: "|5"
 #| eval: true
 sens <- adjust_hr_with_binary(
   effect_observed = 0.96,
