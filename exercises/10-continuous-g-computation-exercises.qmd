@@ -9,9 +9,6 @@ library(tidyverse)
 library(broom)
 library(touringplans)
 library(splines)
-
-seven_dwarfs <- seven_dwarfs_train_2018 |>
-  filter(wait_hour == 9)
 ```
 
 For this set of exercises, we'll use g-computation to calculate a causal effect for continuous exposures.
@@ -117,8 +114,8 @@ First, let's fit the model.
 
 ```{r}
 _______ ___ _______(
-  wait_minutes_actual_avg ~ ns(_______, df = 5)*park_extra_magic_morning + _______ + _______ + _______, 
-  data = seven_dwarfs
+  wait_minutes_actual_avg ~ ns(_______, df = 2)*park_extra_magic_morning + _______ + _______ + _______, 
+  data = wait_times
 )
 ```
 
@@ -131,10 +128,10 @@ Now that we've fit a model, we need to clone our data set. To do this, we'll sim
 3. Save the predicted data sets as`predicted_thirty` and `predicted_sixty`.
 
 ```{r}
-_______ <- seven_dwarfs |>
+_______ <- wait_times |>
   _______
 
-_______ <- seven_dwarfs |>
+_______ <- wait_times |>
   _______
 
 predicted_thirty <- standardized_model |>
@@ -177,10 +174,10 @@ library(rsample)
 fit_gcomp <- function(split, ...) { 
   .df <- analysis(split) 
   
-  # fit outcome model. remember to model using `.df` instead of `seven_dwarfs`
+  # fit outcome model. remember to model using `.df` instead of `wait_times`
   
   
-  # clone datasets. remember to clone `.df` instead of `seven_dwarfs`
+  # clone datasets. remember to clone `.df` instead of `wait_times`
   
   
   # predict actual wait time for each cloned dataset
@@ -197,7 +194,7 @@ fit_gcomp <- function(split, ...) {
     pivot_longer(everything(), names_to = "term", values_to = "estimate")
 }
 
-gcomp_results <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
+gcomp_results <- bootstraps(wait_times, 1000, apparent = TRUE) |>
   mutate(results = map(splits, ______))
 
 # using bias-corrected confidence intervals

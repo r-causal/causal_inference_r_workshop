@@ -30,7 +30,7 @@ Normal regression estimates associations. But we want *causal* estimates: what w
 2. Create a duplicate of your data set for each level of `x` 
 3. Set the value of x to a single value for each cloned data set (e.g `x = 1` for one, `x = 0` for the other)
 
-## G-Computation/G-Formula {background-color="#23373B" .large}
+## G-Computation/G-Formula {background-color="#23373B"}
 
 4. Make predictions using the model on the cloned data sets
 5. Calculate the estimate you want, e.g. `mean(x_1) - mean(x_0)`
