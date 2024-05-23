@@ -11,7 +11,6 @@
   <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Propensity Score Diagnostics</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -407,7 +406,6 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2021-09-01</p>
 </section>
 <section id="checking-balance" class="slide level2" data-background-color="#23373B">
 <h2>Checking balance</h2>
@@ -447,8 +445,8 @@ Lucy D’Agostino McGowan
 <span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">aes</span>(</span>
 <span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">x =</span> <span class="fu">abs</span>(smd), </span>
 <span id="cb2-5"><a href="#cb2-5"></a>    <span class="at">y =</span> variable, </span>
-<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">group =</span> weights, </span>
-<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">color =</span> weights</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">group =</span> method, </span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">color =</span> method</span>
 <span id="cb2-8"><a href="#cb2-8"></a>  )</span>
 <span id="cb2-9"><a href="#cb2-9"></a>) <span class="sc">+</span>  </span>
 <span id="cb2-10"><a href="#cb2-10"></a>  <span class="fu">geom_love</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -460,7 +458,7 @@ Lucy D’Agostino McGowan
 <img data-src="08-pscore-diagnostics_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="your-turn-1" class="slide level2">
 <h2>Your turn 1</h2>
-<p></p><div class="countdown" id="timer_3f4c0d9e" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_2c6636a9" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-a-love-plot-for-the-propensity-score-weighting-you-created-in-the-previous-exercise">Create a Love Plot for the propensity score weighting you created in the previous exercise</h3>
 </section>
 <section id="ecdf" class="slide level2">
@@ -519,7 +517,7 @@ Lucy D’Agostino McGowan
 </div>
 </div></section><section id="your-turn-2" class="slide level2">
 <h2><em>Your turn 2</em></h2>
-<p></p><div class="countdown" id="timer_eddf2bca" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_4dc20b40" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="create-an-unweighted-ecdf-examining-the-park_temperature_high-confounder-by-whether-or-not-the-day-had-extra-magic-hours.">Create an unweighted ECDF examining the <code>park_temperature_high</code> confounder by whether or not the day had Extra Magic Hours.</h3>
 <h3 id="create-a-weighted-ecdf-examining-the-park_temperature_high-confounder">Create a weighted ECDF examining the <code>park_temperature_high</code> confounder</h3>
 </section>
@@ -552,23 +550,23 @@ Lucy D’Agostino McGowan
 <h2></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="nfzneendot" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nfzneendot table {
+<div id="vzoglincml" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vzoglincml table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nfzneendot thead, #nfzneendot tbody, #nfzneendot tfoot, #nfzneendot tr, #nfzneendot td, #nfzneendot th {
+#vzoglincml thead, #vzoglincml tbody, #vzoglincml tfoot, #vzoglincml tr, #vzoglincml td, #vzoglincml th {
   border-style: none;
 }
 
-#nfzneendot p {
+#vzoglincml p {
   margin: 0;
   padding: 0;
 }
 
-#nfzneendot .gt_table {
+#vzoglincml .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -594,12 +592,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#nfzneendot .gt_caption {
+#vzoglincml .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nfzneendot .gt_title {
+#vzoglincml .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -611,7 +609,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#nfzneendot .gt_subtitle {
+#vzoglincml .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -623,7 +621,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#nfzneendot .gt_heading {
+#vzoglincml .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -635,13 +633,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#nfzneendot .gt_bottom_border {
+#vzoglincml .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nfzneendot .gt_col_headings {
+#vzoglincml .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -656,7 +654,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#nfzneendot .gt_col_heading {
+#vzoglincml .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -676,7 +674,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#nfzneendot .gt_column_spanner_outer {
+#vzoglincml .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,15 +686,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#nfzneendot .gt_column_spanner_outer:first-child {
+#vzoglincml .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nfzneendot .gt_column_spanner_outer:last-child {
+#vzoglincml .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nfzneendot .gt_column_spanner {
+#vzoglincml .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -708,11 +706,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#nfzneendot .gt_spanner_row {
+#vzoglincml .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nfzneendot .gt_group_heading {
+#vzoglincml .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -738,7 +736,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#nfzneendot .gt_empty_group_heading {
+#vzoglincml .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -753,15 +751,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#nfzneendot .gt_from_md > :first-child {
+#vzoglincml .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nfzneendot .gt_from_md > :last-child {
+#vzoglincml .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nfzneendot .gt_row {
+#vzoglincml .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -780,7 +778,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#nfzneendot .gt_stub {
+#vzoglincml .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -793,7 +791,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#nfzneendot .gt_stub_row_group {
+#vzoglincml .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -807,15 +805,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#nfzneendot .gt_row_group_first td {
+#vzoglincml .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nfzneendot .gt_row_group_first th {
+#vzoglincml .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nfzneendot .gt_summary_row {
+#vzoglincml .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -825,16 +823,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#nfzneendot .gt_first_summary_row {
+#vzoglincml .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nfzneendot .gt_first_summary_row.thick {
+#vzoglincml .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nfzneendot .gt_last_summary_row {
+#vzoglincml .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -844,7 +842,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#nfzneendot .gt_grand_summary_row {
+#vzoglincml .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -854,7 +852,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#nfzneendot .gt_first_grand_summary_row {
+#vzoglincml .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -864,7 +862,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#nfzneendot .gt_last_grand_summary_row_top {
+#vzoglincml .gt_last_grand_summary_row_top {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -874,11 +872,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#nfzneendot .gt_striped {
+#vzoglincml .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nfzneendot .gt_table_body {
+#vzoglincml .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -887,7 +885,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#nfzneendot .gt_footnotes {
+#vzoglincml .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -901,7 +899,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#nfzneendot .gt_footnote {
+#vzoglincml .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 1px;
@@ -910,7 +908,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#nfzneendot .gt_sourcenotes {
+#vzoglincml .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -924,7 +922,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#nfzneendot .gt_sourcenote {
+#vzoglincml .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -932,63 +930,63 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#nfzneendot .gt_left {
+#vzoglincml .gt_left {
   text-align: left;
 }
 
-#nfzneendot .gt_center {
+#vzoglincml .gt_center {
   text-align: center;
 }
 
-#nfzneendot .gt_right {
+#vzoglincml .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nfzneendot .gt_font_normal {
+#vzoglincml .gt_font_normal {
   font-weight: normal;
 }
 
-#nfzneendot .gt_font_bold {
+#vzoglincml .gt_font_bold {
   font-weight: bold;
 }
 
-#nfzneendot .gt_font_italic {
+#vzoglincml .gt_font_italic {
   font-style: italic;
 }
 
-#nfzneendot .gt_super {
+#vzoglincml .gt_super {
   font-size: 65%;
 }
 
-#nfzneendot .gt_footnote_marks {
+#vzoglincml .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nfzneendot .gt_asterisk {
+#vzoglincml .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nfzneendot .gt_indent_1 {
+#vzoglincml .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nfzneendot .gt_indent_2 {
+#vzoglincml .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nfzneendot .gt_indent_3 {
+#vzoglincml .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nfzneendot .gt_indent_4 {
+#vzoglincml .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nfzneendot .gt_indent_5 {
+#vzoglincml .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1149,6 +1147,10 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 </div>
+</section>
+<section id="section-2" class="slide level2 center huge" data-background-color="#23373B">
+<h2></h2>
+<h3 id="bonus-your-turn-weighted-tables"><em>Bonus Your Turn</em>: Weighted Tables</h3>
 <div class="footer footer-default">
 
 </div>

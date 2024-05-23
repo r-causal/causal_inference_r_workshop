@@ -88,3 +88,30 @@ ggplot(seven_dwarfs_ps, aes(x = ____, color = factor(____))) +
   ylab("Proportion <= x (Weighted)")
 ```
 
+## Bonus Your Turn: Weighted Tables
+
+Create a weighted table for the seven dwarfs dataset given your weights
+
+1. Create a survey design object using `svydesign()` that specifies the weights as `w_ate`
+2. Use `tbl_svysummary()` by `park_extra_magic_morning` to specify a weighted table
+3. Use `add_difference()` to add `"smd"` differences for every variable
+
+
+```{r}
+library(survey)
+library(gtsummary)
+seven_dwarfs_ps |> 
+  select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high, w_ate) |> 
+______(
+  ids = ~ 1,
+  data = _,
+  weights = ~ ____
+) |> 
+  ______(
+    by = ____,
+    include = -w_ate
+  ) |>
+  add_difference(everything() ~ "____") 
+```
+
+
