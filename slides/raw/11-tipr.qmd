@@ -2,7 +2,6 @@
 title: "Tipping Point Sensitivity Analyses"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-subtitle: "2021-09-01 (updated: `r Sys.Date()`)"
 format: kakashi-revealjs
 knitr:
   opts_chunk: 
@@ -53,7 +52,7 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 
 ## *Quantifying Unmeasured Confounding*
 
-![](img/tipr-table.png)
+![](img/tipr-table.png){width=65%}
 [D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)](https://doi.org/10.1007/s40471-022-00308-6)
 
 ## 
@@ -121,28 +120,14 @@ Substance use among US active-duty service members. RAND; 2018.
 **What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
 
 ```{r}
-#| eval: false
+#| code-line-numbers: "|3"
 library(tipr)
 adjust_hr_with_binary(
   effect_observed = c(0.79, 0.87, 0.96),
   exposed_confounder_prev = .04,
   unexposed_confounder_prev = .06,
-  confounder_outcome_effect = 2)
-```
-
-## `tipr` Example
-
-**What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
-
-```{r}
-#| eval: false
-#| code-line-numbers: '3'
-library(tipr)
-adjust_hr_with_binary(
-  effect_observed = c(0.79, 0.87, 0.96),
-  exposed_confounder_prev = .04,
-  unexposed_confounder_prev = .06,
-  confounder_outcome_effect = 2)
+  confounder_outcome_effect = 2
+)
 ```
 
 ## Results
@@ -157,14 +142,14 @@ adjust_hr_with_binary(
 **What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?**
 
 ```{r}
-#| eval: false
 #| code-line-numbers: '4,5'
 library(tipr)
 adjust_hr_with_binary(
   effect_observed = c(0.79, 0.87, 0.96),
   exposed_confounder_prev = .04,
   unexposed_confounder_prev = .06,
-  confounder_outcome_effect = 2)
+  confounder_outcome_effect = 2
+)
 ```
 
 # What if heavy alcohol consumption is prevalent among *4%* of Metformin users and *6%* of Sulfonylurea users?
@@ -180,28 +165,16 @@ Substance use among US active-duty service members. RAND; 2018.
 *What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?*
 
 ```{r}
-#| eval: false
-#| code-line-numbers: '6'
-library(tipr)
-adjust_hr_with_binary(
-  effect_observed = c(0.79, 0.87, 0.96),
-  exposed_confounder_prev = .04,
-  unexposed_confounder_prev = .06,
-  confounder_outcome_effect = 2)
-```
-
-## `tipr` Example
-
-```{r}
-#| echo: false
 #| eval: true
+#| code-line-numbers: '6'
+#| output-location: slide
 library(tipr)
 adjust_hr_with_binary(
   effect_observed = c(0.79, 0.87, 0.96),
   exposed_confounder_prev = .04,
   unexposed_confounder_prev = .06,
-  confounder_outcome_effect = 2,
-  verbose = FALSE)
+  confounder_outcome_effect = 2
+)
 ```
 
 # “If heavy alcohol consumption differed between groups, with *4%* prevalence among metformin users and *6%* among sulfonylureas users, and had an HR of *2* with lung cancer incidence the updated adjusted effect of metformin on lung cancer incidence would be an HR of *0.89 (95% CI: 0.81–0.98)*. Should an unmeasured confounder like this exist, our effect of metformin on lung cancer incidence would be attenuated and fall much closer to the null. {.tiny}
@@ -209,14 +182,14 @@ adjust_hr_with_binary(
 ## `tipr` Example
 
 ```{r}
-#| code-line-numbers: "|6"
+#| code-line-numbers: "|5"
 #| eval: true
-library(tipr)
 sens <- adjust_hr_with_binary(
   effect_observed = 0.96,
   exposed_confounder_prev = .04,
   unexposed_confounder_prev = .06,
-  confounder_outcome_effect = seq(1.1, 3.5, by = 0.1))
+  confounder_outcome_effect = seq(1.1, 3.5, by = 0.1)
+)
 ```
 
 ## `tipr` Example
@@ -232,24 +205,16 @@ ggplot(sens, aes(x = confounder_outcome_effect, y = hr_adjusted)) +
 ## `tipr` Example
 
 ```{r}
-#| code-line-numbers: "|2"
-library(tipr)
-tip_hr_with_binary(
-  effect_observed = 0.96,
-  exposed_confounder_prev = .04,
-  unexposed_confounder_prev = .06)
-```
-
-## `tipr` Example
-
-```{r}
-#| echo: false
+#| code-line-numbers: "|2|3-5"
+#| output-location: slide
 #| eval: true
-library(tipr)
+library(dplyr)
 tip_hr_with_binary(
   effect_observed = 0.96,
   exposed_confounder_prev = .04,
-  unexposed_confounder_prev = .06)
+  unexposed_confounder_prev = .06
+) |> 
+  select(confounder_outcome_effect)
 ```
 
 # “If heavy alcohol consumption differed between groups, with *4%* prevalence among metformin users and *6%* among sulfonylureas users, it would need to have an association with lung cancer incidence of *3.27 to tip this analysis* at the 5% level, rendering it inconclusive. This effect is larger than the understood association between lung cancer and alcohol consumption." {.tiny}
@@ -277,8 +242,7 @@ tip_hr_with_binary(
 ::: {.column width=30%}
 
 ### Nothing is known
-* `adjust_*` functions in an array
-* `tip_*` functions in an array
+* `adjust_*` or `tip_*` functions in an array
 * `tip_coef_with_r2()` (measured confounders)
 * Robustness value `r_value()` & E-values `e_value()`
 
@@ -288,18 +252,16 @@ tip_hr_with_binary(
 :::
 ::::
 
-## Disney Data
+## Disney Data: Extra magic morning & wait times
 
 ### `tip_coef()`
 
-* `effect_observed`: observed exposure - outcome effect **4.32 minutes (95% CI: 0.0009, 8.36)**
+* `effect_observed`: observed exposure - outcome effect **6.17 minutes (95% CI: 2.02, 10.40)**
 
 ## Disney Data
 
 ### `tip_coef()`
 * `exposure_confounder_effect`: scaled mean difference between the unmeasured confounder in the exposed and unexposed population
-
-
 
 ## Disney Data
 

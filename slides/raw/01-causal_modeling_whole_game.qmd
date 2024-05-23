@@ -1,7 +1,7 @@
 ---
 title: "Causal Modeling in R: Whole Game"
 author: "Malcolm Barrett"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
+institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
@@ -28,9 +28,9 @@ set.seed(1234)
 
 1. Specify causal question (e.g. target trial)
 2. Draw assumptions (causal diagram)
-3. Model assumptions (e.g. propensity score)
-4. Analyze propensities (diagnostics)
-5. Estimate causal effects (e.g. IPW) 
+3. Model assumptions (e.g., propensity)
+4. Diagnose model (e.g., balance)
+5. Estimate causal effects (e.g., IPW) 
 6. Sensitivity analysis (more later!)
 
 

@@ -2,7 +2,6 @@
 title: "Causal Inference with `group_by` and `summarise`"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2022-07-23 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 ---
 
@@ -62,13 +61,11 @@ options(
 
 ## One binary confounder {background-color="#23373B" .center}
 
-## Simulation {.small}
+## Simulation
 
-:::: {.columns}
-
-::: {.column width="50%"}
 ```{r}
 #| code-line-numbers: "|1|3|4-8|9"
+#| output-location: slide
 n <- 1000 
 sim <- tibble(
   confounder = rbinom(n, 1, 0.5),
@@ -78,19 +75,10 @@ sim <- tibble(
   ),
   exposure = rbinom(n, 1, p_exposure),
   outcome = confounder + rnorm(n)
-)
-```
-:::
+) |> select(-p_exposure)
 
-::: {.column width="50%"}
-```{r}
-#| echo: false
-sim |>
-  select(confounder, exposure, outcome)
+sim
 ```
-:::
-
-::::
 
 ## Simulation
 
@@ -155,7 +143,9 @@ sim |>
     names_prefix = "x_"
   ) |>
   summarise(estimate = x_1 - x_0) |>
-  summarise(estimate = mean(estimate)) # note, we would need to weight this if the confounder groups were not equal sized
+  # note: we would need to weight this 
+  # if the confounder groups were not equal sized
+  summarise(estimate = mean(estimate))
 ```
 
 . . .
@@ -166,16 +156,13 @@ sim |>
 
 ## Simulation
 
-:::: {.columns .tiny}
-
-::: {.column width="50%" .fragment}
 ```{r}
-#| code-line-numbers: "|4"
+#| code-line-numbers: "|4-10,12"
+#| output-location: slide
 n <- 1000
 sim2 <- tibble(
   confounder_1 = rbinom(n, 1, 0.5),
   confounder_2 = rbinom(n, 1, 0.5), 
-  
   p_exposure = case_when(
     confounder_1 == 1 & confounder_2 == 1 ~ 0.75,
     confounder_1 == 0 & confounder_2 == 1 ~ 0.9,
@@ -184,19 +171,10 @@ sim2 <- tibble(
   ),
   exposure = rbinom(n, 1, p_exposure),
   outcome = confounder_1 + confounder_2 + rnorm(n) 
-)
-```
-:::
+) |> select(-p_exposure)
 
-::: {.column width="50%" .fragment}
-```{r}
-#| echo: false
-sim2 |>
-  select(confounder_1, confounder_2, exposure, outcome)
+sim2
 ```
-:::
-
-::::
 
 ## Simulation
 
@@ -208,6 +186,8 @@ lm(outcome ~ exposure, data = sim2)
 
 ### Group the dataset by the confounders and exposure
 ### Calculate the mean of the outcome for the groups
+
+`r countdown::countdown(minutes = 2)`
 
 ## *Your Turn 2*
 
@@ -226,20 +206,15 @@ sim2 |>
   summarise(estimate = mean(estimate)) 
 ```
 
-`r countdown::countdown(minutes = 2)`
-
 ## Simulation
 
-:::: {.columns .tiny}
-
-::: {.column width="50%"}
 ```{r}
 #| code-line-numbers: "|1"
-n <- 100000 
+#| output-location: slide
+n <- 100000
 big_sim2 <- tibble(
   confounder_1 = rbinom(n, 1, 0.5),
   confounder_2 = rbinom(n, 1, 0.5), 
-  
   p_exposure = case_when(
     confounder_1 == 1 & confounder_2 == 1 ~ 0.75,
     confounder_1 == 0 & confounder_2 == 1 ~ 0.9,
@@ -248,19 +223,10 @@ big_sim2 <- tibble(
   ),
   exposure = rbinom(n, 1, p_exposure),
   outcome = confounder_1 + confounder_2 + rnorm(n) 
-)
-```
-:::
+) |> select(-p_exposure)
 
-::: {.column width="50%"}
-```{r}
-#| echo: false
-big_sim2 |>
-  select(confounder_1, confounder_2, exposure, outcome)
+big_sim2
 ```
-:::
-
-::::
 
 ## Simulation
 
@@ -276,9 +242,11 @@ lm(outcome ~ exposure, data = big_sim2)
 big_sim2 |>
   group_by(confounder_1, confounder_2, exposure) |>
   summarise(avg_y = mean(outcome)) |>
-  pivot_wider(names_from = exposure,
-              values_from = avg_y,  
-              names_prefix = "x_") |>
+  pivot_wider(
+    names_from = exposure,
+    values_from = avg_y,  
+    names_prefix = "x_"
+  ) |>
   summarise(estimate = x_1 - x_0, .groups = "drop") |>
   summarise(estimate = mean(estimate))  
 ```
@@ -288,31 +256,19 @@ big_sim2 |>
 
 ## Simulation
 
-:::: {.columns .tiny
-}
-
-::: {.column width="50%"}
 ```{r}
 #| code-line-numbers: "|3"
+#| output-location: slide
 n <- 10000 
 sim3 <- tibble(
   confounder = rnorm(n), 
   p_exposure = exp(confounder) / (1 + exp(confounder)),
   exposure = rbinom(n, 1, p_exposure),
   outcome = confounder + rnorm(n) 
-)
-```
-:::
+) |> select(-p_exposure)
 
-::: {.column width="50%"}
-```{r}
-#| echo: false
-sim3 |>
-  select(confounder, exposure, outcome)
+sim3
 ```
-:::
-
-::::
 
 ## Simulation
 

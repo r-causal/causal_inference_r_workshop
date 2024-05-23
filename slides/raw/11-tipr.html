@@ -8,7 +8,7 @@
 <link href="11-tipr_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="11-tipr_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="11-tipr_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <title>Tipping Point Sensitivity Analyses</title>
@@ -31,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -221,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -393,7 +394,6 @@
 
 <section id="title-slide" data-background-color="#23373B" data-color="#EDEEF" class="quarto-title-block center">
   <h1 class="title">Tipping Point Sensitivity Analyses</h1>
-  <p class="subtitle">2021-09-01 (updated: 2023-08-31)</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -445,7 +445,7 @@ Lucy D’Agostino McGowan
 </section>
 <section id="quantifying-unmeasured-confounding-3" class="slide level2">
 <h2><em>Quantifying Unmeasured Confounding</em></h2>
-<p><img data-src="img/tipr-table.png"> <a href="https://doi.org/10.1007/s40471-022-00308-6">D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)</a></p>
+<p><img data-src="img/tipr-table.png" style="width:65.0%"> <a href="https://doi.org/10.1007/s40471-022-00308-6">D’Agostino McGowan, L. Sensitivity Analyses for Unmeasured Confounders. Curr Epidemiol Rep 9, 361–375 (2022)</a></p>
 </section>
 <section id="section-2" class="slide level2">
 <h2></h2>
@@ -514,24 +514,13 @@ Lucy D’Agostino McGowan
 <h2><code>tipr</code> Example</h2>
 <p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tipr)</span>
+<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tipr)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
 <span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
 <span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
 <span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="tipr-example-1" class="slide level2">
-<h2><code>tipr</code> Example</h2>
-<p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
-<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="results-1" class="slide level2">
@@ -543,16 +532,17 @@ Lucy D’Agostino McGowan
 </ul>
 </div>
 </section>
-<section id="tipr-example-2" class="slide level2">
+<section id="tipr-example-1" class="slide level2">
 <h2><code>tipr</code> Example</h2>
 <p><strong>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section>
 <section>
@@ -562,21 +552,20 @@ Lucy D’Agostino McGowan
 <p>Meadows SO, Engel CC, Collins RL, Beckman RL, Cefalu M, Hawes-Dawson J, et al.&nbsp;2015 health related behaviors survey: Substance use among US active-duty service members. RAND; 2018.</p>
 </div>
 </section>
-<section id="tipr-example-3" class="slide level2">
+<section id="tipr-example-2" class="slide level2">
 <h2><code>tipr</code> Example</h2>
 <p><em>What if we assume the effect of alcohol consumption on lung cancer after adjusting for other confounders is 2?</em></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
-<span id="cb4-3"><a href="#cb4-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
-<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">effect_observed =</span> <span class="fu">c</span>(<span class="fl">0.79</span>, <span class="fl">0.87</span>, <span class="fl">0.96</span>),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="dv">2</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="tipr-example-4" class="slide level2">
-<h2><code>tipr</code> Example</h2>
-<div class="cell" data-layout-align="center">
+
+</section><section id="tipr-example-2-output" class="slide level2 output-location-slide"><h2><code>tipr</code> Example</h2><div class="cell output-location-slide" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 5
   hr_adjusted hr_observed exposed_confounder_prev unexposed_confounder_prev
@@ -586,58 +575,53 @@ Lucy D’Agostino McGowan
 3       0.978        0.96                    0.04                      0.06
 # ℹ 1 more variable: confounder_outcome_effect &lt;dbl&gt;</code></pre>
 </div>
-</div>
-</section></section>
+</div></section></section>
 <section>
 <section id="if-heavy-alcohol-consumption-differed-between-groups-with-4-prevalence-among-metformin-users-and-6-among-sulfonylureas-users-and-had-an-hr-of-2-with-lung-cancer-incidence-the-updated-adjusted-effect-of-metformin-on-lung-cancer-incidence-would-be-an-hr-of-0.89-95-ci-0.810.98.-should-an-unmeasured-confounder-like-this-exist-our-effect-of-metformin-on-lung-cancer-incidence-would-be-attenuated-and-fall-much-closer-to-the-null." class="title-slide slide level1 tiny center">
 <h1>“If heavy alcohol consumption differed between groups, with <em>4%</em> prevalence among metformin users and <em>6%</em> among sulfonylureas users, and had an HR of <em>2</em> with lung cancer incidence the updated adjusted effect of metformin on lung cancer incidence would be an HR of <em>0.89 (95% CI: 0.81–0.98)</em>. Should an unmeasured confounder like this exist, our effect of metformin on lung cancer incidence would be attenuated and fall much closer to the null.</h1>
 
 </section>
+<section id="tipr-example-3" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>sens <span class="ot">&lt;-</span> <span class="fu">adjust_hr_with_binary</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="at">confounder_outcome_effect =</span> <span class="fu">seq</span>(<span class="fl">1.1</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tipr-example-4" class="slide level2">
+<h2><code>tipr</code> Example</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">ggplot</span>(sens, <span class="fu">aes</span>(<span class="at">x =</span> confounder_outcome_effect, <span class="at">y =</span> hr_adjusted)) <span class="sc">+</span> </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="11-tipr_files/figure-revealjs/unnamed-chunk-6-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="tipr-example-5" class="slide level2">
 <h2><code>tipr</code> Example</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>sens <span class="ot">&lt;-</span> <span class="fu">adjust_hr_with_binary</span>(</span>
-<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
-<span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
-<span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>,</span>
-<span id="cb6-6"><a href="#cb6-6"></a>  <span class="at">confounder_outcome_effect =</span> <span class="fu">seq</span>(<span class="fl">1.1</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|2|3-5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">tip_hr_with_binary</span>(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="fu">select</span>(confounder_outcome_effect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="tipr-example-6" class="slide level2">
-<h2><code>tipr</code> Example</h2>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">ggplot</span>(sens, <span class="fu">aes</span>(<span class="at">x =</span> confounder_outcome_effect, <span class="at">y =</span> hr_adjusted)) <span class="sc">+</span> </span>
-<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-</div>
-<img data-src="11-tipr_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="tipr-example-7" class="slide level2">
-<h2><code>tipr</code> Example</h2>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(tipr)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">tip_hr_with_binary</span>(</span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="at">effect_observed =</span> <span class="fl">0.96</span>,</span>
-<span id="cb8-4"><a href="#cb8-4"></a>  <span class="at">exposed_confounder_prev =</span> .<span class="dv">04</span>,</span>
-<span id="cb8-5"><a href="#cb8-5"></a>  <span class="at">unexposed_confounder_prev =</span> .<span class="dv">06</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="tipr-example-8" class="slide level2">
-<h2><code>tipr</code> Example</h2>
-<div class="cell" data-layout-align="center">
+</section><section id="tipr-example-5-output" class="slide level2 output-location-slide"><h2><code>tipr</code> Example</h2><div class="cell output-location-slide" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 6
-  effect_adjusted effect_observed exposed_confounder_prev unexposed_confounder…¹
-            &lt;dbl&gt;           &lt;dbl&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;
-1               1            0.96                    0.04                   0.06
-# ℹ abbreviated name: ¹​unexposed_confounder_prev
-# ℹ 2 more variables: confounder_outcome_effect &lt;dbl&gt;,
-#   n_unmeasured_confounders &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 1 × 1
+  confounder_outcome_effect
+                      &lt;dbl&gt;
+1                      3.27</code></pre>
 </div>
-</div>
-</section></section>
+</div></section></section>
 <section>
 <section id="if-heavy-alcohol-consumption-differed-between-groups-with-4-prevalence-among-metformin-users-and-6-among-sulfonylureas-users-it-would-need-to-have-an-association-with-lung-cancer-incidence-of-3.27-to-tip-this-analysis-at-the-5-level-rendering-it-inconclusive.-this-effect-is-larger-than-the-understood-association-between-lung-cancer-and-alcohol-consumption." class="title-slide slide level1 tiny center">
 <h1>“If heavy alcohol consumption differed between groups, with <em>4%</em> prevalence among metformin users and <em>6%</em> among sulfonylureas users, it would need to have an association with lung cancer incidence of <em>3.27 to tip this analysis</em> at the 5% level, rendering it inconclusive. This effect is larger than the understood association between lung cancer and alcohol consumption.”</h1>
@@ -664,8 +648,7 @@ Lucy D’Agostino McGowan
 <div class="column" style="width:30%;">
 <h3 id="nothing-is-known">Nothing is known</h3>
 <ul>
-<li class="fragment"><code>adjust_*</code> functions in an array</li>
-<li class="fragment"><code>tip_*</code> functions in an array</li>
+<li class="fragment"><code>adjust_*</code> or <code>tip_*</code> functions in an array</li>
 <li class="fragment"><code>tip_coef_with_r2()</code> (measured confounders)</li>
 <li class="fragment">Robustness value <code>r_value()</code> &amp; E-values <code>e_value()</code></li>
 </ul>
@@ -674,21 +657,21 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 </section>
-<section id="disney-data" class="slide level2">
-<h2>Disney Data</h2>
+<section id="disney-data-extra-magic-morning-wait-times" class="slide level2">
+<h2>Disney Data: Extra magic morning &amp; wait times</h2>
 <h3 id="tip_coef"><code>tip_coef()</code></h3>
 <ul>
-<li class="fragment"><code>effect_observed</code>: observed exposure - outcome effect <strong>4.32 minutes (95% CI: 0.0009, 8.36)</strong></li>
+<li class="fragment"><code>effect_observed</code>: observed exposure - outcome effect <strong>6.17 minutes (95% CI: 2.02, 10.40)</strong></li>
 </ul>
 </section>
-<section id="disney-data-1" class="slide level2">
+<section id="disney-data" class="slide level2">
 <h2>Disney Data</h2>
 <h3 id="tip_coef-1"><code>tip_coef()</code></h3>
 <ul>
 <li class="fragment"><code>exposure_confounder_effect</code>: scaled mean difference between the unmeasured confounder in the exposed and unexposed population</li>
 </ul>
 </section>
-<section id="disney-data-2" class="slide level2">
+<section id="disney-data-1" class="slide level2">
 <h2>Disney Data</h2>
 <h3 id="tip_coef-2"><code>tip_coef()</code></h3>
 <ul>
@@ -699,7 +682,7 @@ Lucy D’Agostino McGowan
 <h2><em>Your turn</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_2ac03c39" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_5b863892" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -736,7 +719,6 @@ Lucy D’Agostino McGowan
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1035,10 +1017,9 @@ Lucy D’Agostino McGowan
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1048,8 +1029,17 @@ Lucy D’Agostino McGowan
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

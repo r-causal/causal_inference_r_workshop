@@ -8,7 +8,7 @@
 <link href="02-when-standard-methods-succeed_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="02-when-standard-methods-succeed_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="02-when-standard-methods-succeed_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <title>When Standard Methods Succeed</title>
@@ -31,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -221,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -437,7 +438,7 @@ Lucy D’Agostino McGowan
 <h2>Even in these cases, using the methods you will learn here can help!</h2>
 <ol type="1">
 <li class="fragment">Adjusting for baseline covariates can make an estimate <em>more efficient</em></li>
-<li class="fragment">Propensity score weighting is <em>more efficient</em> that direct adjustment</li>
+<li class="fragment">Propensity score weighting is <em>more efficient</em> than direct adjustment</li>
 <li class="fragment">Sometimes we are <em>more comfortable with the functional form of the propensity score</em> (predicting exposure) than the outcome model</li>
 </ol>
 </section>
@@ -468,7 +469,6 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
 <div id="gdnecmmlmp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#gdnecmmlmp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -909,31 +909,33 @@ Lucy D’Agostino McGowan
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">0.93</td>
-<td headers="std.error" class="gt_row gt_center">0.803</td>
-<td headers="ci" class="gt_row gt_center">-0.66, 2.5</td>
-<td headers="p.value" class="gt_row gt_center">0.2</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">0.93</td>
+<td class="gt_row gt_center" headers="std.error">0.803</td>
+<td class="gt_row gt_center" headers="ci">-0.66, 2.5</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -945,24 +947,23 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
-<div id="zqepoxygcp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zqepoxygcp table {
+<div id="kstmjaodhu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kstmjaodhu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zqepoxygcp thead, #zqepoxygcp tbody, #zqepoxygcp tfoot, #zqepoxygcp tr, #zqepoxygcp td, #zqepoxygcp th {
+#kstmjaodhu thead, #kstmjaodhu tbody, #kstmjaodhu tfoot, #kstmjaodhu tr, #kstmjaodhu td, #kstmjaodhu th {
   border-style: none;
 }
 
-#zqepoxygcp p {
+#kstmjaodhu p {
   margin: 0;
   padding: 0;
 }
 
-#zqepoxygcp .gt_table {
+#kstmjaodhu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -988,12 +989,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_caption {
+#kstmjaodhu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zqepoxygcp .gt_title {
+#kstmjaodhu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1005,7 +1006,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#zqepoxygcp .gt_subtitle {
+#kstmjaodhu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1017,7 +1018,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#zqepoxygcp .gt_heading {
+#kstmjaodhu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1029,13 +1030,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_bottom_border {
+#kstmjaodhu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_col_headings {
+#kstmjaodhu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1050,7 +1051,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_col_heading {
+#kstmjaodhu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1070,7 +1071,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#zqepoxygcp .gt_column_spanner_outer {
+#kstmjaodhu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1082,15 +1083,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#zqepoxygcp .gt_column_spanner_outer:first-child {
+#kstmjaodhu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zqepoxygcp .gt_column_spanner_outer:last-child {
+#kstmjaodhu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zqepoxygcp .gt_column_spanner {
+#kstmjaodhu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1102,11 +1103,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#zqepoxygcp .gt_spanner_row {
+#kstmjaodhu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zqepoxygcp .gt_group_heading {
+#kstmjaodhu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1132,7 +1133,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#zqepoxygcp .gt_empty_group_heading {
+#kstmjaodhu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1147,15 +1148,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#zqepoxygcp .gt_from_md > :first-child {
+#kstmjaodhu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zqepoxygcp .gt_from_md > :last-child {
+#kstmjaodhu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zqepoxygcp .gt_row {
+#kstmjaodhu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1174,7 +1175,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#zqepoxygcp .gt_stub {
+#kstmjaodhu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1187,7 +1188,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#zqepoxygcp .gt_stub_row_group {
+#kstmjaodhu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1201,15 +1202,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#zqepoxygcp .gt_row_group_first td {
+#kstmjaodhu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zqepoxygcp .gt_row_group_first th {
+#kstmjaodhu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zqepoxygcp .gt_summary_row {
+#kstmjaodhu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1219,16 +1220,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#zqepoxygcp .gt_first_summary_row {
+#kstmjaodhu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_first_summary_row.thick {
+#kstmjaodhu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zqepoxygcp .gt_last_summary_row {
+#kstmjaodhu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1238,7 +1239,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_grand_summary_row {
+#kstmjaodhu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1248,7 +1249,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#zqepoxygcp .gt_first_grand_summary_row {
+#kstmjaodhu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1258,7 +1259,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_last_grand_summary_row_top {
+#kstmjaodhu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1268,11 +1269,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_striped {
+#kstmjaodhu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zqepoxygcp .gt_table_body {
+#kstmjaodhu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1281,7 +1282,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_footnotes {
+#kstmjaodhu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1295,7 +1296,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_footnote {
+#kstmjaodhu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1304,7 +1305,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#zqepoxygcp .gt_sourcenotes {
+#kstmjaodhu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1318,7 +1319,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#zqepoxygcp .gt_sourcenote {
+#kstmjaodhu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1326,101 +1327,107 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#zqepoxygcp .gt_left {
+#kstmjaodhu .gt_left {
   text-align: left;
 }
 
-#zqepoxygcp .gt_center {
+#kstmjaodhu .gt_center {
   text-align: center;
 }
 
-#zqepoxygcp .gt_right {
+#kstmjaodhu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zqepoxygcp .gt_font_normal {
+#kstmjaodhu .gt_font_normal {
   font-weight: normal;
 }
 
-#zqepoxygcp .gt_font_bold {
+#kstmjaodhu .gt_font_bold {
   font-weight: bold;
 }
 
-#zqepoxygcp .gt_font_italic {
+#kstmjaodhu .gt_font_italic {
   font-style: italic;
 }
 
-#zqepoxygcp .gt_super {
+#kstmjaodhu .gt_super {
   font-size: 65%;
 }
 
-#zqepoxygcp .gt_footnote_marks {
+#kstmjaodhu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zqepoxygcp .gt_asterisk {
+#kstmjaodhu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zqepoxygcp .gt_indent_1 {
+#kstmjaodhu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zqepoxygcp .gt_indent_2 {
+#kstmjaodhu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zqepoxygcp .gt_indent_3 {
+#kstmjaodhu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zqepoxygcp .gt_indent_4 {
+#kstmjaodhu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zqepoxygcp .gt_indent_5 {
+#kstmjaodhu .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">1.0</td>
-<td headers="std.error" class="gt_row gt_center">0.204</td>
-<td headers="ci" class="gt_row gt_center">0.59, 1.4</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">weight</td>
-<td headers="estimate" class="gt_row gt_center">0.34</td>
-<td headers="std.error" class="gt_row gt_center">0.106</td>
-<td headers="ci" class="gt_row gt_center">0.13, 0.55</td>
-<td headers="p.value" class="gt_row gt_center">0.002</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">age</td>
-<td headers="estimate" class="gt_row gt_center">0.20</td>
-<td headers="std.error" class="gt_row gt_center">0.005</td>
-<td headers="ci" class="gt_row gt_center">0.19, 0.22</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">1.0</td>
+<td class="gt_row gt_center" headers="std.error">0.204</td>
+<td class="gt_row gt_center" headers="ci">0.59, 1.4</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">weight</td>
+<td class="gt_row gt_center" headers="estimate">0.34</td>
+<td class="gt_row gt_center" headers="std.error">0.106</td>
+<td class="gt_row gt_center" headers="ci">0.13, 0.55</td>
+<td class="gt_row gt_center" headers="p.value">0.002</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">age</td>
+<td class="gt_row gt_center" headers="estimate">0.20</td>
+<td class="gt_row gt_center" headers="std.error">0.005</td>
+<td class="gt_row gt_center" headers="ci">0.19, 0.22</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -1474,7 +1481,6 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
 <div id="cpjxvbjjeo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#cpjxvbjjeo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1915,31 +1921,33 @@ Lucy D’Agostino McGowan
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">0.96</td>
-<td headers="std.error" class="gt_row gt_center">0.083</td>
-<td headers="ci" class="gt_row gt_center">0.80, 1.1</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">0.96</td>
+<td class="gt_row gt_center" headers="std.error">0.083</td>
+<td class="gt_row gt_center" headers="ci">0.80, 1.1</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -1951,24 +1959,23 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
-<div id="dbpjwigjqb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dbpjwigjqb table {
+<div id="yiusxwtuae" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yiusxwtuae table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#dbpjwigjqb thead, #dbpjwigjqb tbody, #dbpjwigjqb tfoot, #dbpjwigjqb tr, #dbpjwigjqb td, #dbpjwigjqb th {
+#yiusxwtuae thead, #yiusxwtuae tbody, #yiusxwtuae tfoot, #yiusxwtuae tr, #yiusxwtuae td, #yiusxwtuae th {
   border-style: none;
 }
 
-#dbpjwigjqb p {
+#yiusxwtuae p {
   margin: 0;
   padding: 0;
 }
 
-#dbpjwigjqb .gt_table {
+#yiusxwtuae .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1994,12 +2001,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_caption {
+#yiusxwtuae .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#dbpjwigjqb .gt_title {
+#yiusxwtuae .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2011,7 +2018,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#dbpjwigjqb .gt_subtitle {
+#yiusxwtuae .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2023,7 +2030,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#dbpjwigjqb .gt_heading {
+#yiusxwtuae .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2035,13 +2042,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_bottom_border {
+#yiusxwtuae .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_col_headings {
+#yiusxwtuae .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2056,7 +2063,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_col_heading {
+#yiusxwtuae .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2076,7 +2083,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer {
+#yiusxwtuae .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2088,15 +2095,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer:first-child {
+#yiusxwtuae .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer:last-child {
+#yiusxwtuae .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dbpjwigjqb .gt_column_spanner {
+#yiusxwtuae .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2108,11 +2115,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#dbpjwigjqb .gt_spanner_row {
+#yiusxwtuae .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#dbpjwigjqb .gt_group_heading {
+#yiusxwtuae .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2138,7 +2145,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#dbpjwigjqb .gt_empty_group_heading {
+#yiusxwtuae .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2153,15 +2160,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#dbpjwigjqb .gt_from_md > :first-child {
+#yiusxwtuae .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dbpjwigjqb .gt_from_md > :last-child {
+#yiusxwtuae .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dbpjwigjqb .gt_row {
+#yiusxwtuae .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2180,7 +2187,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#dbpjwigjqb .gt_stub {
+#yiusxwtuae .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2193,7 +2200,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_stub_row_group {
+#yiusxwtuae .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2207,15 +2214,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#dbpjwigjqb .gt_row_group_first td {
+#yiusxwtuae .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_row_group_first th {
+#yiusxwtuae .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_summary_row {
+#yiusxwtuae .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2225,16 +2232,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_first_summary_row {
+#yiusxwtuae .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_first_summary_row.thick {
+#yiusxwtuae .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_last_summary_row {
+#yiusxwtuae .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2244,7 +2251,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_grand_summary_row {
+#yiusxwtuae .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2254,7 +2261,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_first_grand_summary_row {
+#yiusxwtuae .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2264,7 +2271,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_last_grand_summary_row_top {
+#yiusxwtuae .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2274,11 +2281,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_striped {
+#yiusxwtuae .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dbpjwigjqb .gt_table_body {
+#yiusxwtuae .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2287,7 +2294,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_footnotes {
+#yiusxwtuae .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2301,7 +2308,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_footnote {
+#yiusxwtuae .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2310,7 +2317,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_sourcenotes {
+#yiusxwtuae .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2324,7 +2331,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_sourcenote {
+#yiusxwtuae .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2332,101 +2339,107 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_left {
+#yiusxwtuae .gt_left {
   text-align: left;
 }
 
-#dbpjwigjqb .gt_center {
+#yiusxwtuae .gt_center {
   text-align: center;
 }
 
-#dbpjwigjqb .gt_right {
+#yiusxwtuae .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dbpjwigjqb .gt_font_normal {
+#yiusxwtuae .gt_font_normal {
   font-weight: normal;
 }
 
-#dbpjwigjqb .gt_font_bold {
+#yiusxwtuae .gt_font_bold {
   font-weight: bold;
 }
 
-#dbpjwigjqb .gt_font_italic {
+#yiusxwtuae .gt_font_italic {
   font-style: italic;
 }
 
-#dbpjwigjqb .gt_super {
+#yiusxwtuae .gt_super {
   font-size: 65%;
 }
 
-#dbpjwigjqb .gt_footnote_marks {
+#yiusxwtuae .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#dbpjwigjqb .gt_asterisk {
+#yiusxwtuae .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dbpjwigjqb .gt_indent_1 {
+#yiusxwtuae .gt_indent_1 {
   text-indent: 5px;
 }
 
-#dbpjwigjqb .gt_indent_2 {
+#yiusxwtuae .gt_indent_2 {
   text-indent: 10px;
 }
 
-#dbpjwigjqb .gt_indent_3 {
+#yiusxwtuae .gt_indent_3 {
   text-indent: 15px;
 }
 
-#dbpjwigjqb .gt_indent_4 {
+#yiusxwtuae .gt_indent_4 {
   text-indent: 20px;
 }
 
-#dbpjwigjqb .gt_indent_5 {
+#yiusxwtuae .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">1.0</td>
-<td headers="std.error" class="gt_row gt_center">0.020</td>
-<td headers="ci" class="gt_row gt_center">0.98, 1.1</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">weight</td>
-<td headers="estimate" class="gt_row gt_center">0.20</td>
-<td headers="std.error" class="gt_row gt_center">0.010</td>
-<td headers="ci" class="gt_row gt_center">0.18, 0.22</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">age</td>
-<td headers="estimate" class="gt_row gt_center">0.20</td>
-<td headers="std.error" class="gt_row gt_center">0.000</td>
-<td headers="ci" class="gt_row gt_center">0.20, 0.20</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">1.0</td>
+<td class="gt_row gt_center" headers="std.error">0.020</td>
+<td class="gt_row gt_center" headers="ci">0.98, 1.1</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">weight</td>
+<td class="gt_row gt_center" headers="estimate">0.20</td>
+<td class="gt_row gt_center" headers="std.error">0.010</td>
+<td class="gt_row gt_center" headers="ci">0.18, 0.22</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">age</td>
+<td class="gt_row gt_center" headers="estimate">0.20</td>
+<td class="gt_row gt_center" headers="std.error">0.000</td>
+<td class="gt_row gt_center" headers="ci">0.20, 0.20</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -2460,14 +2473,7 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 </section>
-<section id="section-12" class="slide level2 center" data-background-color="#23373B">
-<h2></h2>
-<h3 id="time-varying-confounding"><em>time-varying</em> confounding</h3>
-</section>
 <section id="example-3" class="slide level2">
-<h2>Example</h2>
-</section>
-<section id="example-4" class="slide level2">
 <h2>Example</h2>
 <ul>
 <li class="fragment"><strong>simulated</strong> data (10,000 observations)<br>
@@ -2477,14 +2483,14 @@ Lucy D’Agostino McGowan
 <li class="fragment">The treatment effect is <strong>homogeneous</strong></li>
 </ul>
 </section>
-<section id="example-5" class="slide level2">
+<section id="example-4" class="slide level2">
 <h2>Example</h2>
 
 <img data-src="02-when-standard-methods-succeed_files/figure-revealjs/unnamed-chunk-13-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"><ul>
 <li class="fragment"><strong>True average treatment effect</strong>: 1</li>
 </ul>
 </section>
-<section id="section-13" class="slide level2 tiny">
+<section id="section-12" class="slide level2 tiny">
 <h2></h2>
 <div class="columns">
 <div class="column fragment" style="width:33%;">
@@ -2495,7 +2501,6 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
 <div id="cpjxvbjjeo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#cpjxvbjjeo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -2936,31 +2941,33 @@ Lucy D’Agostino McGowan
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">1.8</td>
-<td headers="std.error" class="gt_row gt_center">0.085</td>
-<td headers="ci" class="gt_row gt_center">1.7, 2.0</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">1.8</td>
+<td class="gt_row gt_center" headers="std.error">0.085</td>
+<td class="gt_row gt_center" headers="ci">1.7, 2.0</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -2972,24 +2979,23 @@ Lucy D’Agostino McGowan
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-
-<div id="dbpjwigjqb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dbpjwigjqb table {
+<div id="yiusxwtuae" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yiusxwtuae table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#dbpjwigjqb thead, #dbpjwigjqb tbody, #dbpjwigjqb tfoot, #dbpjwigjqb tr, #dbpjwigjqb td, #dbpjwigjqb th {
+#yiusxwtuae thead, #yiusxwtuae tbody, #yiusxwtuae tfoot, #yiusxwtuae tr, #yiusxwtuae td, #yiusxwtuae th {
   border-style: none;
 }
 
-#dbpjwigjqb p {
+#yiusxwtuae p {
   margin: 0;
   padding: 0;
 }
 
-#dbpjwigjqb .gt_table {
+#yiusxwtuae .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3015,12 +3021,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_caption {
+#yiusxwtuae .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#dbpjwigjqb .gt_title {
+#yiusxwtuae .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3032,7 +3038,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#dbpjwigjqb .gt_subtitle {
+#yiusxwtuae .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3044,7 +3050,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#dbpjwigjqb .gt_heading {
+#yiusxwtuae .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3056,13 +3062,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_bottom_border {
+#yiusxwtuae .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_col_headings {
+#yiusxwtuae .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3077,7 +3083,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_col_heading {
+#yiusxwtuae .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3097,7 +3103,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer {
+#yiusxwtuae .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3109,15 +3115,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer:first-child {
+#yiusxwtuae .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dbpjwigjqb .gt_column_spanner_outer:last-child {
+#yiusxwtuae .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dbpjwigjqb .gt_column_spanner {
+#yiusxwtuae .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3129,11 +3135,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#dbpjwigjqb .gt_spanner_row {
+#yiusxwtuae .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#dbpjwigjqb .gt_group_heading {
+#yiusxwtuae .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3159,7 +3165,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#dbpjwigjqb .gt_empty_group_heading {
+#yiusxwtuae .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3174,15 +3180,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#dbpjwigjqb .gt_from_md > :first-child {
+#yiusxwtuae .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dbpjwigjqb .gt_from_md > :last-child {
+#yiusxwtuae .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dbpjwigjqb .gt_row {
+#yiusxwtuae .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3201,7 +3207,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#dbpjwigjqb .gt_stub {
+#yiusxwtuae .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3214,7 +3220,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_stub_row_group {
+#yiusxwtuae .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3228,15 +3234,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#dbpjwigjqb .gt_row_group_first td {
+#yiusxwtuae .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_row_group_first th {
+#yiusxwtuae .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_summary_row {
+#yiusxwtuae .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3246,16 +3252,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_first_summary_row {
+#yiusxwtuae .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_first_summary_row.thick {
+#yiusxwtuae .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dbpjwigjqb .gt_last_summary_row {
+#yiusxwtuae .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3265,7 +3271,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_grand_summary_row {
+#yiusxwtuae .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3275,7 +3281,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_first_grand_summary_row {
+#yiusxwtuae .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3285,7 +3291,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_last_grand_summary_row_top {
+#yiusxwtuae .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3295,11 +3301,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_striped {
+#yiusxwtuae .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dbpjwigjqb .gt_table_body {
+#yiusxwtuae .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3308,7 +3314,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_footnotes {
+#yiusxwtuae .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3322,7 +3328,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_footnote {
+#yiusxwtuae .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3331,7 +3337,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_sourcenotes {
+#yiusxwtuae .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3345,7 +3351,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#dbpjwigjqb .gt_sourcenote {
+#yiusxwtuae .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3353,101 +3359,107 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#dbpjwigjqb .gt_left {
+#yiusxwtuae .gt_left {
   text-align: left;
 }
 
-#dbpjwigjqb .gt_center {
+#yiusxwtuae .gt_center {
   text-align: center;
 }
 
-#dbpjwigjqb .gt_right {
+#yiusxwtuae .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dbpjwigjqb .gt_font_normal {
+#yiusxwtuae .gt_font_normal {
   font-weight: normal;
 }
 
-#dbpjwigjqb .gt_font_bold {
+#yiusxwtuae .gt_font_bold {
   font-weight: bold;
 }
 
-#dbpjwigjqb .gt_font_italic {
+#yiusxwtuae .gt_font_italic {
   font-style: italic;
 }
 
-#dbpjwigjqb .gt_super {
+#yiusxwtuae .gt_super {
   font-size: 65%;
 }
 
-#dbpjwigjqb .gt_footnote_marks {
+#yiusxwtuae .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#dbpjwigjqb .gt_asterisk {
+#yiusxwtuae .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dbpjwigjqb .gt_indent_1 {
+#yiusxwtuae .gt_indent_1 {
   text-indent: 5px;
 }
 
-#dbpjwigjqb .gt_indent_2 {
+#yiusxwtuae .gt_indent_2 {
   text-indent: 10px;
 }
 
-#dbpjwigjqb .gt_indent_3 {
+#yiusxwtuae .gt_indent_3 {
   text-indent: 15px;
 }
 
-#dbpjwigjqb .gt_indent_4 {
+#yiusxwtuae .gt_indent_4 {
   text-indent: 20px;
 }
 
-#dbpjwigjqb .gt_indent_5 {
+#yiusxwtuae .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-  <thead>
-    
-    <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Beta</strong>"><strong>Beta</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>p-value</strong>"><strong>p-value</strong></th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">treatment</td>
-<td headers="estimate" class="gt_row gt_center">0.98</td>
-<td headers="std.error" class="gt_row gt_center">0.021</td>
-<td headers="ci" class="gt_row gt_center">0.94, 1.0</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">weight</td>
-<td headers="estimate" class="gt_row gt_center">0.20</td>
-<td headers="std.error" class="gt_row gt_center">0.010</td>
-<td headers="ci" class="gt_row gt_center">0.18, 0.22</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">age</td>
-<td headers="estimate" class="gt_row gt_center">0.20</td>
-<td headers="std.error" class="gt_row gt_center">0.000</td>
-<td headers="ci" class="gt_row gt_center">0.20, 0.20</td>
-<td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
-  </tbody>
-  
-  <tfoot class="gt_footnotes">
-    <tr>
-      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
-    </tr>
-  </tfoot>
+
+<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
+<th id="<strong>SE</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SE</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">treatment</td>
+<td class="gt_row gt_center" headers="estimate">0.98</td>
+<td class="gt_row gt_center" headers="std.error">0.021</td>
+<td class="gt_row gt_center" headers="ci">0.94, 1.0</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">weight</td>
+<td class="gt_row gt_center" headers="estimate">0.20</td>
+<td class="gt_row gt_center" headers="std.error">0.010</td>
+<td class="gt_row gt_center" headers="ci">0.18, 0.22</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">age</td>
+<td class="gt_row gt_center" headers="estimate">0.20</td>
+<td class="gt_row gt_center" headers="std.error">0.000</td>
+<td class="gt_row gt_center" headers="ci">0.20, 0.20</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> SE = Standard Error, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
 </table>
+
 </div>
 </div>
 </div>
@@ -3480,6 +3492,10 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 </div>
+</section>
+<section id="section-13" class="slide level2 center" data-background-color="#23373B">
+<h2></h2>
+<h3 id="time-varying-confounding"><em>time-varying</em> confounding</h3>
 <div class="footer footer-default">
 
 </div>
@@ -3510,7 +3526,6 @@ Lucy D’Agostino McGowan
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -3809,10 +3824,9 @@ Lucy D’Agostino McGowan
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -3822,8 +3836,17 @@ Lucy D’Agostino McGowan
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

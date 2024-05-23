@@ -8,9 +8,8 @@
 <link href="00-intro_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="00-intro_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="00-intro_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
-  <meta name="dcterms.date" content="2020-07-29">
   <title>Causal Inference in R: Introduction</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -156,7 +155,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -330,10 +330,9 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2020-07-29</p>
 </section>
-<section id="who_are_weclucy-malcolm" class="slide level2">
-<h2><code>&gt; who_are_we(c("lucy", "malcolm"))</code></h2>
+<section id="who_are_weclucy-malcolm-travis" class="slide level2">
+<h2><code>&gt; who_are_we(c("lucy", "malcolm", "travis"))</code></h2>
 <div class="cell" data-layout-align="center">
 <style type="text/css">
 img {
@@ -344,12 +343,22 @@ img {
 </style>
 </div>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:33.3%;">
 <p><br> <br></p>
 <p><img src="img/ldm.jpg" class="rounded-circle"></p>
-<p><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg> <a href="https://www.lucymcgowan.com/">https://www.lucymcgowan.com/</a></p>
-</div><div class="column" style="width:50%;">
-<p><br> <br> <img src="img/mb.jpg" class="rounded-circle"> <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg> <a href="https://www.malco.io/">https://www.malco.io/</a></p>
+<div class="small">
+<p><br> <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://www.lucymcgowan.com/">https://www.lucymcgowan.com/</a></p>
+</div>
+</div><div class="column" style="width:33.3%;">
+<p><br> <br></p>
+<div class="small">
+<p><img src="img/mb.jpg" class="rounded-circle"> <br> &nbsp;&nbsp;&nbsp; <a href="https://www.malco.io/">https://www.malco.io/</a></p>
+</div>
+</div><div class="column" style="width:33.3%;">
+<p><br> <br> <img src="img/tg.jpg" class="rounded-circle"></p>
+<div class="small">
+<p><br> <br> <br> <a href="https://travisgerke.com/">https://travisgerke.com/</a></p>
+</div>
 </div>
 </div>
 </section>
@@ -375,28 +384,26 @@ img {
 </section>
 <section id="tools-for-causal-inference" class="slide level2" data-background-color="#23373B">
 <h2>Tools for causal inference</h2>
-<ol type="1">
+<ul>
 <li class="fragment">Causal diagrams</li>
 <li class="fragment">Propensity score weighting</li>
 <li class="fragment">Propensity score matching</li>
-</ol>
+<li class="fragment">G-methods &amp; friends</li>
+</ul>
 </section>
 <section id="other-tools-for-causal-inference" class="slide level2" data-background-color="#23373B">
 <h2>Other tools for causal inference</h2>
-<ol type="1">
+<ul>
 <li class="fragment">Randomized trials</li>
-<li class="fragment">G-methods &amp; friends</li>
 <li class="fragment">Instrumental variables &amp; friends</li>
-</ol>
-</section>
-<section id="section-2" class="slide level2 center" data-background-color="#23373B">
-<h2></h2>
-<h3 class="d-flex justify-content-center align-items-center vh-100" id="rstudio-cloud-httpsbit.lycausal-r-cloud"><strong>RStudio Cloud</strong>: <a href="https://bit.ly/causal-r-cloud" class="uri">https://bit.ly/causal-r-cloud</a></h3>
+<li class="fragment">TMLE and other ML for causal inference</li>
+</ul>
 </section>
 <section id="resources" class="slide level2" data-background-color="#23373B">
 <h2>Resources</h2>
+<h3 id="causal-inference-in-r-our-book-free-online."><a href="https://www.r-causal.org/">Causal Inference in R</a>: Our book! Free online.</h3>
 <h3 id="causal-inference-comprehensive-text-on-causal-inference.-free-online."><a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">Causal Inference</a>: Comprehensive text on causal inference. Free online.</h3>
-<h3 id="the-book-of-why-detailed-friendly-intro-to-dags-and-causal-inference.-free-online."><a href="http://bayes.cs.ucla.edu/WHY/">The Book of Why</a>: Detailed, friendly intro to DAGs and causal inference. Free online.</h3>
+<h3 id="the-book-of-why-detailed-friendly-intro-to-dags-and-causal-inference."><a href="http://bayes.cs.ucla.edu/WHY/">The Book of Why</a>: Detailed, friendly intro to DAGs and causal inference.</h3>
 <h3 id="mastering-metrics-friendly-introduction-to-iv-based-methods"><a href="http://www.masteringmetrics.com/">Mastering ’Metrics</a>: Friendly introduction to IV-based methods</h3>
 <div class="footer footer-default">
 
@@ -428,7 +435,6 @@ img {
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -727,10 +733,9 @@ img {
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -740,8 +745,17 @@ img {
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

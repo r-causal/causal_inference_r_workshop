@@ -8,10 +8,9 @@
 <link href="07-using-pscores_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="07-using-pscores_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="07-using-pscores_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Using Propensity Scores</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -406,7 +406,6 @@ Lucy D’Agostino McGowan
     </div>
 </div>
 
-  <p class="date">2021-09-01</p>
 </section>
 <section id="propensity-scores" class="slide level2 large" data-background-color="#23373B">
 <h2>Propensity scores</h2>
@@ -416,13 +415,11 @@ Lucy D’Agostino McGowan
 <p>Direct Adjustment</p>
 <p>…</p>
 </section>
-<section id="estimands" class="slide level2">
-<h2>Estimands</h2>
-<div class="tiny">
-<p>Greifer, N., &amp; Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577. See also <a href="https://www.r-causal.org/chapters/chapter-10#choosing-estimands">Choosing Estimands</a> in our book.</p>
-</div>
-<div class="center">
-<p><img data-src="img/estimand.png" style="width:70.0%"></p>
+<section id="section" class="slide level2">
+<h2></h2>
+
+<img data-src="img/estimands-cake.png" style="width:80.0%" class="r-stretch quarto-figure-center"><div class="tiny">
+<p>Image source: Simon Grund</p>
 </div>
 </section>
 <section id="propensity-scores-1" class="slide level2 large" data-background-color="#23373B">
@@ -435,27 +432,134 @@ Lucy D’Agostino McGowan
 </section>
 <section id="target-estimands" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-ate">Average Treatment Effect (ATE)</h3>
+<h3 id="average-treatment-effect-ate"><em>Average Treatment Effect (ATE)</em></h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0)]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-3-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-1" class="slide level2">
+<h2>Target estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+ATE
+</p>
+</td>
+<td>
+<p>
+Full population
+</p>
+</td>
+<td>
+<p>
+<em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should a specific policy be applied to all eligible observations?</em>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="target-estimands-2" class="slide level2">
 <h2>Target estimands</h2>
 <h3 id="average-treatment-effect-among-the-treated-att">Average Treatment Effect among the Treated (ATT)</h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0) | Z = 1]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-3" class="slide level2">
+<h2>Target estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+ATT
+</p>
+</td>
+<td>
+<p>
+Exposed (treated) observations
+</p>
+</td>
+<td>
+<p>
+<em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should we stop our marketing campaign to those currently receiving it?</em>
+</p>
+<p>
+<em>Should medical providers stop recommending treatment for those currently receiving it?</em>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-att" class="slide level2">
 <h2>Matching in R (ATT)</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
-<span id="cb1-3"><a href="#cb1-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
-<span id="cb1-4"><a href="#cb1-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
-<span id="cb1-5"><a href="#cb1-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
-<span id="cb1-6"><a href="#cb1-6"></a>    wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">data =</span> nhefs_complete)</span>
-<span id="cb1-8"><a href="#cb1-8"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|2|3-7|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
+<span id="cb1-4"><a href="#cb1-4"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
+<span id="cb1-5"><a href="#cb1-5"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb1-6"><a href="#cb1-6"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> </span>
+<span id="cb1-7"><a href="#cb1-7"></a>    active <span class="sc">+</span> wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">data =</span> nhefs_complete</span>
+<span id="cb1-9"><a href="#cb1-9"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -473,104 +577,102 @@ Lucy D’Agostino McGowan
 <h2>Matching in R (ATT)</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">get_matches</span>(m, <span class="at">id =</span> <span class="st">"i"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">glimpse</span>(matched_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">as_tibble</span>(matched_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 806
-Columns: 71
-$ i                 &lt;chr&gt; "11", "1220", "15", "1082", "18"…
-$ subclass          &lt;fct&gt; 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6,…
-$ weights           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-$ seqn              &lt;dbl&gt; 428, 23045, 446, 22294, 596, 140…
-$ qsmk              &lt;dbl&gt; 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,…
-$ death             &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,…
-$ yrdth             &lt;dbl&gt; NA, NA, 88, NA, NA, NA, NA, NA, …
-$ modth             &lt;dbl&gt; NA, NA, 1, NA, NA, NA, NA, NA, N…
-$ dadth             &lt;dbl&gt; NA, NA, 3, NA, NA, NA, NA, NA, N…
-$ sbp               &lt;dbl&gt; 135, 159, 141, 113, 151, NA, 125…
-$ dbp               &lt;dbl&gt; 89, 91, 79, 73, 80, NA, 71, 85, …
-$ sex               &lt;fct&gt; 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0,…
-$ age               &lt;dbl&gt; 43, 49, 71, 36, 48, 51, 56, 40, …
-$ race              &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,…
-$ income            &lt;dbl&gt; 19, 22, 17, 21, 18, 22, 20, 18, …
-$ marital           &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,…
-$ school            &lt;dbl&gt; 12, 12, 0, 12, 12, 9, 12, 10, 17…
-$ education         &lt;fct&gt; 3, 3, 1, 3, 3, 2, 3, 2, 5, 5, 3,…
-$ ht                &lt;dbl&gt; 176.5938, 160.2812, 147.0938, 17…
-$ wt71              &lt;dbl&gt; 63.96, 47.29, 75.64, 68.38, 62.0…
-$ wt82              &lt;dbl&gt; 79.83226, 53.07031, 56.69905, 73…
-$ wt82_71           &lt;dbl&gt; 15.8722571, 5.7803073, -18.94095…
-$ birthplace        &lt;dbl&gt; 42, 30, NA, 19, 36, 47, NA, 42, …
-$ smokeintensity    &lt;dbl&gt; 30, 20, 40, 9, 2, 5, 20, 5, 30, …
-$ smkintensity82_71 &lt;dbl&gt; -30, 0, -40, 1, -2, 1, -20, 0, -…
-$ smokeyrs          &lt;dbl&gt; 24, 29, 41, 30, 30, 29, 11, 20, …
-$ asthma            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ bronch            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0,…
-$ tb                &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,…
-$ hf                &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hbp               &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 1,…
-$ pepticulcer       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ colitis           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hepatitis         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ chroniccough      &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,…
-$ hayfever          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ diabetes          &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ polio             &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ tumor             &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ nervousbreak      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ alcoholpy         &lt;dbl&gt; 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,…
-$ alcoholfreq       &lt;dbl&gt; 3, 0, 4, 0, 1, 2, 3, 1, 3, 0, 2,…
-$ alcoholtype       &lt;dbl&gt; 3, 3, 4, 1, 2, 3, 4, 1, 2, 3, 3,…
-$ alcoholhowmuch    &lt;dbl&gt; 2, 2, NA, 6, 1, 3, NA, 5, 1, 3, …
-$ pica              &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ headache          &lt;dbl&gt; 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,…
-$ otherpain         &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ weakheart         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ allergies         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ nerves            &lt;dbl&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ lackpep           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hbpmed            &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 1,…
-$ boweltrouble      &lt;dbl&gt; 0, 2, 1, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ wtloss            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ infection         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ active            &lt;fct&gt; 1, 2, 1, 0, 1, 0, 0, 0, 0, 1, 2,…
-$ exercise          &lt;fct&gt; 1, 1, 1, 0, 1, 0, 2, 0, 0, 2, 2,…
-$ birthcontrol      &lt;dbl&gt; 2, 0, 0, 2, 0, 2, 0, 0, 2, 0, 2,…
-$ pregnancies       &lt;dbl&gt; NA, 4, 15, NA, 3, NA, 4, 2, NA, …
-$ cholesterol       &lt;dbl&gt; 173, 279, 229, 200, 225, 199, 23…
-$ hightax82         &lt;dbl&gt; 0, 0, NA, 0, 0, 0, NA, 0, 0, 0, …
-$ price71           &lt;dbl&gt; 2.346680, 2.104980, NA, 2.199707…
-$ price82           &lt;dbl&gt; 1.797363, 1.698242, NA, 1.847900…
-$ tax71             &lt;dbl&gt; 1.3649902, 1.0498047, NA, 1.1022…
-$ tax82             &lt;dbl&gt; 0.5718994, 0.4399414, NA, 0.5718…
-$ price71_82        &lt;dbl&gt; 0.54931641, 0.40686035, NA, 0.35…
-$ tax71_82          &lt;dbl&gt; 0.7929688, 0.6099854, NA, 0.5303…
-$ id                &lt;int&gt; 11, 1274, 15, 1135, 18, 564, 23,…
-$ censored          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ older             &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1,…
-$ distance          &lt;dbl&gt; 0.2384597, 0.2381918, 0.2090935,…</code></pre>
+<pre><code># A tibble: 806 × 71
+   i     subclass weights  seqn  qsmk death yrdth modth
+   &lt;chr&gt; &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 11    1              1   428     1     0    NA    NA
+ 2 1220  1              1 23045     0     0    NA    NA
+ 3 15    2              1   446     1     1    88     1
+ 4 1082  2              1 22294     0     0    NA    NA
+ 5 18    3              1   596     1     0    NA    NA
+ 6 534   3              1 14088     0     0    NA    NA
+ 7 23    4              1   618     1     0    NA    NA
+ 8 697   4              1 18085     0     0    NA    NA
+ 9 27    5              1   806     1     0    NA    NA
+10 879   5              1 21128     0     0    NA    NA
+# ℹ 796 more rows
+# ℹ 63 more variables: dadth &lt;dbl&gt;, sbp &lt;dbl&gt;, dbp &lt;dbl&gt;,
+#   sex &lt;fct&gt;, age &lt;dbl&gt;, race &lt;fct&gt;, …</code></pre>
 </div>
 </div>
 </section>
-<section id="target-estimands-2" class="slide level2">
+<section id="target-estimands-4" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-among-the-controls-atc">Average Treatment Effect among the Controls (ATC)</h3>
+<h3 id="average-treatment-effect-among-the-controls-atc"><em>Average Treatment Effect among the Controls (ATC)</em></h3>
 <p><span class="math display">\[\tau = E[Y(1) - Y(0) | Z = 0]\]</span></p>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-7-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-5" class="slide level2">
+<h2>Target estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+ATU
+</p>
+</td>
+<td>
+<p>
+Unexposed (control) observations
+</p>
+</td>
+<td>
+<p>
+<em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Should we extend our marketing campaign to those not receiving it?</em>
+</p>
+<p>
+<em>Should medical providers extend treatment to those not currently receiving it?</em>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-atc" class="slide level2">
 <h2>Matching in R (ATC)</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
+<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
 <span id="cb5-3"><a href="#cb5-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
 <span id="cb5-4"><a href="#cb5-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
-<span id="cb5-5"><a href="#cb5-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
-<span id="cb5-6"><a href="#cb5-6"></a>    wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb5-5"><a href="#cb5-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> </span>
+<span id="cb5-6"><a href="#cb5-6"></a>    active <span class="sc">+</span> wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
 <span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">data =</span> nhefs_complete,</span>
-<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">estimand =</span> <span class="st">"ATC"</span>)</span>
-<span id="cb5-9"><a href="#cb5-9"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">estimand =</span> <span class="st">"ATC"</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -584,24 +686,79 @@ $ distance          &lt;dbl&gt; 0.2384597, 0.2381918, 0.2090935,…</code></pre>
 </div>
 </div>
 </section>
-<section id="target-estimands-3" class="slide level2">
+<section id="target-estimands-6" class="slide level2">
 <h2>Target estimands</h2>
-<h3 id="average-treatment-effect-among-the-matched-atm">Average Treatment Effect among the Matched (ATM)</h3>
+<h3 id="average-treatment-effect-among-the-matched-atm"><em>Average Treatment Effect among the Matched (ATM)</em></h3>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-9-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-10-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-7" class="slide level2">
+<h2>Target estimands</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 71%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+<p>
+Estimand
+</p>
+</th>
+<th>
+<p>
+Target population
+</p>
+</th>
+<th>
+<p>
+Example Research Question
+</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+ATM
+</p>
+</td>
+<td>
+<p>
+Evenly matchable
+</p>
+</td>
+<td>
+<p>
+<em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em>
+</p>
+<p>
+<em>Is there an effect of the exposure for some observations?</em>
+</p>
+<p>
+<em>Should those at clinical equipoise receive treatment?</em>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="matching-in-r-atm" class="slide level2">
 <h2>Matching in R (ATM)</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|8-9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
+<div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|8-9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  qsmk <span class="sc">~</span> sex <span class="sc">+</span> </span>
 <span id="cb7-3"><a href="#cb7-3"></a>    race <span class="sc">+</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> education <span class="sc">+</span> </span>
 <span id="cb7-4"><a href="#cb7-4"></a>    smokeintensity <span class="sc">+</span> <span class="fu">I</span>(smokeintensity<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
-<span id="cb7-5"><a href="#cb7-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> active <span class="sc">+</span> </span>
-<span id="cb7-6"><a href="#cb7-6"></a>    wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb7-5"><a href="#cb7-5"></a>    smokeyrs <span class="sc">+</span> <span class="fu">I</span>(smokeyrs<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> exercise <span class="sc">+</span> </span>
+<span id="cb7-6"><a href="#cb7-6"></a>    active <span class="sc">+</span> wt71 <span class="sc">+</span> <span class="fu">I</span>(wt71<span class="sc">^</span><span class="dv">2</span>), </span>
 <span id="cb7-7"><a href="#cb7-7"></a>  <span class="at">data =</span> nhefs_complete,</span>
 <span id="cb7-8"><a href="#cb7-8"></a>  <span class="at">link =</span> <span class="st">"linear.logit"</span>, </span>
-<span id="cb7-9"><a href="#cb7-9"></a>  <span class="at">caliper =</span> <span class="fl">0.1</span>) </span>
-<span id="cb7-10"><a href="#cb7-10"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="at">caliper =</span> <span class="fl">0.1</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>) </span>
+<span id="cb7-11"><a href="#cb7-11"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 <div class="fragment">
@@ -623,81 +780,24 @@ $ distance          &lt;dbl&gt; 0.2384597, 0.2381918, 0.2090935,…</code></pre>
 <h2>Matching in R (ATM)</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">get_matches</span>(m, <span class="at">id =</span> <span class="st">"i"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">glimpse</span>(matched_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">as_tibble</span>(matched_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 780
-Columns: 71
-$ i                 &lt;chr&gt; "11", "1220", "15", "1082", "18"…
-$ subclass          &lt;fct&gt; 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6,…
-$ weights           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-$ seqn              &lt;dbl&gt; 428, 23045, 446, 22294, 596, 140…
-$ qsmk              &lt;dbl&gt; 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,…
-$ death             &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,…
-$ yrdth             &lt;dbl&gt; NA, NA, 88, NA, NA, NA, NA, NA, …
-$ modth             &lt;dbl&gt; NA, NA, 1, NA, NA, NA, NA, NA, N…
-$ dadth             &lt;dbl&gt; NA, NA, 3, NA, NA, NA, NA, NA, N…
-$ sbp               &lt;dbl&gt; 135, 159, 141, 113, 151, NA, 125…
-$ dbp               &lt;dbl&gt; 89, 91, 79, 73, 80, NA, 71, 85, …
-$ sex               &lt;fct&gt; 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1,…
-$ age               &lt;dbl&gt; 43, 49, 71, 36, 48, 51, 56, 40, …
-$ race              &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,…
-$ income            &lt;dbl&gt; 19, 22, 17, 21, 18, 22, 20, 18, …
-$ marital           &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,…
-$ school            &lt;dbl&gt; 12, 12, 0, 12, 12, 9, 12, 10, 17…
-$ education         &lt;fct&gt; 3, 3, 1, 3, 3, 2, 3, 2, 5, 5, 2,…
-$ ht                &lt;dbl&gt; 176.5938, 160.2812, 147.0938, 17…
-$ wt71              &lt;dbl&gt; 63.96, 47.29, 75.64, 68.38, 62.0…
-$ wt82              &lt;dbl&gt; 79.83226, 53.07031, 56.69905, 73…
-$ wt82_71           &lt;dbl&gt; 15.8722571, 5.7803073, -18.94095…
-$ birthplace        &lt;dbl&gt; 42, 30, NA, 19, 36, 47, NA, 42, …
-$ smokeintensity    &lt;dbl&gt; 30, 20, 40, 9, 2, 5, 20, 5, 30, …
-$ smkintensity82_71 &lt;dbl&gt; -30, 0, -40, 1, -2, 1, -20, 0, -…
-$ smokeyrs          &lt;dbl&gt; 24, 29, 41, 30, 30, 29, 11, 20, …
-$ asthma            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ bronch            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0,…
-$ tb                &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,…
-$ hf                &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hbp               &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ pepticulcer       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ colitis           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hepatitis         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ chroniccough      &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,…
-$ hayfever          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ diabetes          &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ polio             &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ tumor             &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ nervousbreak      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ alcoholpy         &lt;dbl&gt; 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,…
-$ alcoholfreq       &lt;dbl&gt; 3, 0, 4, 0, 1, 2, 3, 1, 3, 0, 1,…
-$ alcoholtype       &lt;dbl&gt; 3, 3, 4, 1, 2, 3, 4, 1, 2, 3, 3,…
-$ alcoholhowmuch    &lt;dbl&gt; 2, 2, NA, 6, 1, 3, NA, 5, 1, 3, …
-$ pica              &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ headache          &lt;dbl&gt; 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,…
-$ otherpain         &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ weakheart         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ allergies         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ nerves            &lt;dbl&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ lackpep           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ hbpmed            &lt;dbl&gt; 0, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ boweltrouble      &lt;dbl&gt; 0, 2, 1, 2, 0, 0, 0, 0, 0, 2, 0,…
-$ wtloss            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ infection         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ active            &lt;fct&gt; 1, 2, 1, 0, 1, 0, 0, 0, 0, 1, 1,…
-$ exercise          &lt;fct&gt; 1, 1, 1, 0, 1, 0, 2, 0, 0, 2, 2,…
-$ birthcontrol      &lt;dbl&gt; 2, 0, 0, 2, 0, 2, 0, 0, 2, 0, 0,…
-$ pregnancies       &lt;dbl&gt; NA, 4, 15, NA, 3, NA, 4, 2, NA, …
-$ cholesterol       &lt;dbl&gt; 173, 279, 229, 200, 225, 199, 23…
-$ hightax82         &lt;dbl&gt; 0, 0, NA, 0, 0, 0, NA, 0, 0, 0, …
-$ price71           &lt;dbl&gt; 2.346680, 2.104980, NA, 2.199707…
-$ price82           &lt;dbl&gt; 1.797363, 1.698242, NA, 1.847900…
-$ tax71             &lt;dbl&gt; 1.3649902, 1.0498047, NA, 1.1022…
-$ tax82             &lt;dbl&gt; 0.5718994, 0.4399414, NA, 0.5718…
-$ price71_82        &lt;dbl&gt; 0.54931641, 0.40686035, NA, 0.35…
-$ tax71_82          &lt;dbl&gt; 0.7929688, 0.6099854, NA, 0.5303…
-$ id                &lt;int&gt; 11, 1274, 15, 1135, 18, 564, 23,…
-$ censored          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ older             &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1,…
-$ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
+<pre><code># A tibble: 780 × 71
+   i     subclass weights  seqn  qsmk death yrdth modth
+   &lt;chr&gt; &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 11    1              1   428     1     0    NA    NA
+ 2 1220  1              1 23045     0     0    NA    NA
+ 3 15    2              1   446     1     1    88     1
+ 4 1082  2              1 22294     0     0    NA    NA
+ 5 18    3              1   596     1     0    NA    NA
+ 6 534   3              1 14088     0     0    NA    NA
+ 7 23    4              1   618     1     0    NA    NA
+ 8 697   4              1 18085     0     0    NA    NA
+ 9 27    5              1   806     1     0    NA    NA
+10 879   5              1 21128     0     0    NA    NA
+# ℹ 770 more rows
+# ℹ 63 more variables: dadth &lt;dbl&gt;, sbp &lt;dbl&gt;, dbp &lt;dbl&gt;,
+#   sex &lt;fct&gt;, age &lt;dbl&gt;, race &lt;fct&gt;, …</code></pre>
 </div>
 </div>
 </section>
@@ -705,9 +805,9 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_b412d8fd" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_30faf00d" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 </div>
 </div>
@@ -721,6 +821,10 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <p>Direct Adjustment</p>
 <p>…</p>
 </section>
+<section id="histogram-of-propensity-scores" class="slide level2">
+<h2>Histogram of propensity scores</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-ate" class="slide level2" data-background-color="#23373B">
 <h2>Target estimands: ATE</h2>
 <p>Average Treatment Effect (ATE)</p>
@@ -729,6 +833,10 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>(Z <span class="sc">/</span> p) <span class="sc">+</span> ((<span class="dv">1</span> <span class="sc">-</span> Z) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="ate" class="slide level2">
+<h2>ATE</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-att-atc" class="slide level2" data-background-color="#23373B">
 <h2>Target estimands: ATT &amp; ATC</h2>
 <div class="fragment">
@@ -745,6 +853,14 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>(((<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> Z) <span class="sc">/</span> p) <span class="sc">+</span> (((<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> Z)) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="att" class="slide level2">
+<h2>ATT</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="atc" class="slide level2">
+<h2>ATC</h2>
+
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="target-estimands-atm-ato" class="slide level2" data-background-color="#23373B">
 <h2>Target estimands: ATM &amp; ATO</h2>
 <div class="fragment">
@@ -761,30 +877,33 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>(<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">*</span> Z <span class="sc">+</span> p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> Z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="histogram-of-propensity-scores" class="slide level2">
-<h2>Histogram of propensity scores</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-19-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="ate" class="slide level2">
-<h2>ATE</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="att" class="slide level2">
-<h2>ATT</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
-<section id="atc" class="slide level2">
-<h2>ATC</h2>
-
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-22-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<section id="target-estimands-8" class="slide level2">
+<h2>Target estimands</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Estimand</th>
+<th>Target population</th>
+<th>Example Research Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dATO</td>
+<td>Overlap population</td>
+<td><em>Same as ATM</em></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="atm" class="slide level2">
 <h2>ATM</h2>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-23-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-24-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="ato" class="slide level2">
 <h2>ATO</h2>
 
-<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-24-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="07-using-pscores_files/figure-revealjs/unnamed-chunk-25-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
 <section id="ate-in-r" class="slide level2">
 <h2>ATE in R <img data-src="img/hex/propensity.png" class="absolute" style="top: 0px; right: 0px; width: 140px; "></h2>
 <p><br></p>
@@ -796,13 +915,13 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
 <span id="cb16-4"><a href="#cb16-4"></a>  <span class="fu">mutate</span>(<span class="at">w_ate =</span> <span class="fu">wt_ate</span>(.fitted, qsmk)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="your-turn" class="slide level2">
-<h2><em>Your Turn</em></h2>
+<section id="your-turn-2" class="slide level2">
+<h2><em>Your Turn 2</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_3be75737" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_0ff4d973" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 </div>
 </div>
@@ -838,7 +957,6 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1137,10 +1255,9 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1150,8 +1267,17 @@ $ distance          &lt;dbl&gt; -1.1611429, -1.1626186, -1.33039…</code></pre>
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

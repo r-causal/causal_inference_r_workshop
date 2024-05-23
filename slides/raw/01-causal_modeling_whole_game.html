@@ -8,10 +8,9 @@
 <link href="01-causal_modeling_whole_game_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="01-causal_modeling_whole_game_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="01-causal_modeling_whole_game_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.67">
+  <meta name="generator" content="quarto-1.4.358">
 
   <meta name="author" content="Malcolm Barrett">
-  <meta name="dcterms.date" content="2021-09-01">
   <title>Causal Modeling in R: Whole Game</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -398,19 +398,21 @@
 <div class="quarto-title-author-name">
 Malcolm Barrett 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            Stanford University
+          </p>
+    </div>
 </div>
 
-  <p class="date">2021-09-01</p>
 </section>
 <section id="section" class="slide level2" data-background-color="#23373B">
 <h2></h2>
 <ol type="1">
 <li class="fragment">Specify causal question (e.g.&nbsp;target trial)</li>
 <li class="fragment">Draw assumptions (causal diagram)</li>
-<li class="fragment">Model assumptions (e.g.&nbsp;propensity score)</li>
-<li class="fragment">Analyze propensities (diagnostics)</li>
-<li class="fragment">Estimate causal effects (e.g.&nbsp;IPW)</li>
+<li class="fragment">Model assumptions (e.g., propensity)</li>
+<li class="fragment">Diagnose model (e.g., balance)</li>
+<li class="fragment">Estimate causal effects (e.g., IPW)</li>
 <li class="fragment">Sensitivity analysis (more later!)</li>
 </ol>
 </section>
@@ -760,7 +762,6 @@ Malcolm Barrett
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1059,10 +1060,9 @@ Malcolm Barrett
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1072,8 +1072,17 @@ Malcolm Barrett
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

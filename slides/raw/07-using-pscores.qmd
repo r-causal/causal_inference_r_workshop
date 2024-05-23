@@ -2,7 +2,6 @@
 title: "Using Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: kakashi-revealjs
 ---
 
@@ -14,7 +13,7 @@ options(
 )
 ```
 
-## Propensity scores {background-color="#23373B" .large}
+## Propensity scores {.large background-color="#23373B"}
 
 Matching
 
@@ -26,17 +25,18 @@ Direct Adjustment
 
 ...
 
-## Estimands 
+## 
 
-::: {.tiny}
-Greifer, N., & Stuart, E. A. (2021). Choosing the estimand when matching or weighting in observational studies. arXiv preprint arXiv:2106.10577. See also [Choosing Estimands](https://www.r-causal.org/chapters/chapter-10#choosing-estimands) in our book.
+```{r}
+#| echo: false
+knitr::include_graphics("img/estimands-cake.png")
+```
+
+::: tiny
+Image source: Simon Grund
 :::
 
-::: {.center}
-![](img/estimand.png){width="70%"}
-:::
-
-## Propensity scores {background-color="#23373B" .large}
+## Propensity scores {.large background-color="#23373B"}
 
 **Matching**
 
@@ -66,9 +66,10 @@ propensity_model <- glm(
 )
 ```
 
-### Average Treatment Effect (ATE)
+### *Average Treatment Effect (ATE)*
 
 $$\tau = E[Y(1) - Y(0)]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 2.0
@@ -90,9 +91,35 @@ ggplot(p, aes(x = x, y = y, color = col)) +
 
 ## Target estimands
 
+<table style="width:99%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATE</p></td>
+<td><p>Full population</p></td>
+<td><p><em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should a specific policy be applied to all eligible observations?</em></p></td>
+</tr>
+</tbody>
+</table>
+
+## Target estimands
+
 ### Average Treatment Effect among the Treated (ATT)
 
 $$\tau = E[Y(1) - Y(0) | Z = 1]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 3.0
@@ -109,17 +136,46 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0, 0.8))
 ```
 
+## Target estimands
+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATT</p></td>
+<td><p>Exposed (treated) observations</p></td>
+<td><p><em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should we stop our marketing campaign to those currently receiving it?</em></p>
+<p><em>Should medical providers stop recommending treatment for those currently receiving it?</em></p></td>
+</tr>
+</tbody>
+</table>
+
 ## Matching in R (ATT)
 
 ```{r}
 #| output-location: fragment
+#| code-line-numbers: "|2|3-7|"
 library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
-  data = nhefs_complete)
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
+  data = nhefs_complete
+)
 m
 ```
 
@@ -128,14 +184,15 @@ m
 ```{r}
 #| output-location: fragment
 matched_data <- get_matches(m, id = "i")
-glimpse(matched_data)
+as_tibble(matched_data)
 ```
 
 ## Target estimands
 
-### Average Treatment Effect among the Controls (ATC)
+### *Average Treatment Effect among the Controls (ATC)*
 
 $$\tau = E[Y(1) - Y(0) | Z = 0]$$
+
 ```{r}
 #| echo: false
 #| fig.height: 3.0
@@ -152,24 +209,52 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0.115, 1))
 ```
 
+## Target estimands
+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATU</p></td>
+<td><p>Unexposed (control) observations</p></td>
+<td><p><em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Should we extend our marketing campaign to those not receiving it?</em></p>
+<p><em>Should medical providers extend treatment to those not currently receiving it?</em></p></td>
+</tr>
+</tbody>
+</table>
+
 ## Matching in R (ATC)
 
 ```{r}
 #| output-location: fragment
-library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+#| code-line-numbers: "|8"
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
   data = nhefs_complete,
-  estimand = "ATC")
+  estimand = "ATC"
+)
 m
 ```
 
 ## Target estimands
 
-### Average Treatment Effect among the Matched (ATM)
+### *Average Treatment Effect among the Matched (ATM)*
 
 ```{r}
 #| echo: false
@@ -187,20 +272,47 @@ ggplot(aes(x = x, y = y, color = color)) +
   geom_vline(xintercept = c(0.115, 0.8))
 ```
 
+## Target estimands
+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>Estimand</p></th>
+<th><p>Target population</p></th>
+<th><p>Example Research Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>ATM</p></td>
+<td><p>Evenly matchable</p></td>
+<td><p><em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<p><em>Is there an effect of the exposure for some observations?</em></p>
+<p><em>Should those at clinical equipoise receive treatment?</em></p></td>
+</tr>
+</tbody>
+</table>
+
 ## Matching in R (ATM)
 
 ```{r}
 #| code-line-numbers: "|8-9"
 #| output-location: slide
-library(MatchIt)
-m <- matchit(qsmk ~ sex + 
+m <- matchit(
+  qsmk ~ sex + 
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
+    smokeyrs + I(smokeyrs^2) + exercise + 
+    active + wt71 + I(wt71^2), 
   data = nhefs_complete,
   link = "linear.logit", 
-  caliper = 0.1) 
+  caliper = 0.1
+) 
 m
 ```
 
@@ -212,7 +324,7 @@ Observations with propensity scores (on the linear logit scale) within 0.1 stand
 
 ```{r}
 matched_data <- get_matches(m, id = "i")
-glimpse(matched_data)
+as_tibble(matched_data)
 ```
 
 ## *Your Turn 1*
@@ -220,12 +332,12 @@ glimpse(matched_data)
 ```{r}
 #| echo: false
 #| eval: true
-countdown::countdown(minutes = 10)
+countdown::countdown(minutes = 6)
 ```
 
 ### Using the propensity scores you created in the previous exercise, create a "matched" data set using the ATM method with a caliper of 0.2.
 
-## Propensity scores {background-color="#23373B".large}
+## Propensity scores {.large background-color="#23373B"}
 
 Matching
 
@@ -237,38 +349,21 @@ Direct Adjustment
 
 ...
 
-## Target estimands: ATE {background-color="#23373B"}
-
-Average Treatment Effect (ATE)
-
-$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
-```{r}
-#| eval: false
-(Z / p) + ((1 - Z) / (1 - p))
-```
-
 ## Histogram of propensity scores
 
 ```{r}
 #| include: false
+library(propensity)
 df <- propensity_model |>
   augment(type.predict = "response", data = nhefs_complete) |>
-  mutate(wts = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted),
-    w_ate = (qsmk / .fitted) + 
-      ((1 - qsmk) / (1 - .fitted)),
-    w_att = ((.fitted * qsmk) / .fitted) + 
-      ((.fitted * (1 - qsmk)) / (1 - .fitted)),
-    w_atc = (((1 - .fitted) * qsmk) / .fitted) + 
-      (((1 - .fitted) * (1 - qsmk)) / (1 - .fitted)),
-    w_atm = pmin(.fitted, 1 - .fitted) / 
-      (qsmk * .fitted + (1 - qsmk) * (1 - .fitted)),
-    w_ato = (1 - .fitted) * qsmk + 
-      .fitted * (1 - qsmk),
+  mutate(
+    w_ate = wt_ate(.fitted, qsmk),
+    w_att = wt_att(.fitted, qsmk),
+    w_atc = wt_atu(.fitted, qsmk),
+    w_atm = wt_atm(.fitted, qsmk),
+    w_ato = wt_ato(.fitted, qsmk),
     qsmk = factor(qsmk)
   )
-
-d <- df |>
-  pivot_wider(names_from = qsmk, values_from = .fitted, names_prefix = "qsmk_p")
 ```
 
 ```{r}
@@ -283,6 +378,17 @@ ggplot(df, aes(.fitted)) +
   xlab("propensity score") +
   scale_y_continuous(labels = abs) +
   theme(legend.position = "bottom")
+```
+
+## Target estimands: ATE {background-color="#23373B"}
+
+Average Treatment Effect (ATE)
+
+$$\Large w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$$
+
+```{r}
+#| eval: false
+(Z / p) + ((1 - Z) / (1 - p))
 ```
 
 ## ATE
@@ -306,8 +412,7 @@ ggplot(df, aes(.fitted)) +
 
 . . .
 
-Average Treatment Effect Among the Treated (ATT)
-$$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
+Average Treatment Effect Among the Treated (ATT) $$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
 
 ```{r}
 #| eval: false
@@ -316,8 +421,7 @@ $$\Large w_{ATT} = \frac{p_i Z_i}{p_i} + \frac{p_i (1-Z_i)}{1-p_i}$$
 
 ## Target estimands: ATT & ATC {background-color="#23373B"}
 
-Average Treatment Effect Among the Controls (ATC)
-$$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
+Average Treatment Effect Among the Controls (ATC) $$\Large w_{ATC} = \frac{(1-p_i)Z_i}{p_i} + \frac{(1-p_i)(1-Z_i)}{(1-p_i)}$$
 
 ```{r}
 #| eval: false
@@ -358,14 +462,11 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
-
 ## Target estimands: ATM & ATO {background-color="#23373B"}
 
 . . .
 
-Average Treatment Effect Among the Evenly Matchable (ATM)
-$$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
-
+Average Treatment Effect Among the Evenly Matchable (ATM) $$\Large w_{ATM} = \frac{\min \{p_i, 1-p_i\}}{Z_ip_i + (1-Z_i)(1-p_i)}$$
 
 ```{r}
 #| eval: false
@@ -374,14 +475,18 @@ pmin(p, 1 - p) / (Z * p + (1 - Z) * (1 - p))
 
 ## Target estimands: ATM & ATO {background-color="#23373B"}
 
-Average Treatment Effect Among the Overlap Population
-$$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
-
+Average Treatment Effect Among the Overlap Population $$\Large w_{ATO} = (1-p_i)Z_i + p_i(1-Z_i)$$
 
 ```{r}
 #| eval: false
 (1 - p) * Z + p * (1 - Z)
 ```
+
+## Target estimands
+
+| Estimand | Target population  | Example Research Question |
+|----------|--------------------|---------------------------|
+| dATO     | Overlap population | *Same as ATM*             |
 
 ## ATM
 
@@ -417,13 +522,12 @@ ggplot(df, aes(.fitted)) +
   theme(legend.position = "bottom")
 ```
 
-## ATE in R ![](img/hex/propensity.png){.absolute top=0 right=0 width=140}
+## ATE in R ![](img/hex/propensity.png){.absolute top="0" right="0" width="140"}
 
 <br />
 
-Average Treatment Effect (ATE)
-$w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
-  
+Average Treatment Effect (ATE) $w_{ATE} = \frac{Z_i}{p_i} + \frac{1-Z_i}{1 - p_i}$
+
 ```{r}
 #| code-line-numbers: "|4"
 library(propensity)
@@ -432,12 +536,12 @@ df <- propensity_model |>
   mutate(w_ate = wt_ate(.fitted, qsmk)) 
 ```
 
-## *Your Turn* 
+## *Your Turn 2*
 
 ```{r}
 #| echo: false
 #| eval: true
-countdown::countdown(minutes = 10)
+countdown::countdown(minutes = 6)
 ```
 
 ### Using the propensity scores you created in the previous exercise, add the ATE weights to your data frame

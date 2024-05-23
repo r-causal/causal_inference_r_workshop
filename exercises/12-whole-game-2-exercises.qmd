@@ -119,7 +119,8 @@ mosquito_dag |>
   theme_dag(base_size = 14) +
   theme(legend.position = "none") +
   labs(caption = "Thanks to Andrew Heiss for the data!") +
-  coord_cartesian(clip = "off")
+  coord_cartesian(clip = "off") +
+  ggokabeito::scale_color_okabe_ito(na.value = "grey90")
 ```
 
 # Your Turn

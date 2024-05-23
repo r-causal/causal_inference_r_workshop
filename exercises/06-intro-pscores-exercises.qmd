@@ -28,32 +28,32 @@ Below is a proposed DAG for this question.
 set.seed(1234)
 
 coord_dag <- list(
-  x = c(Season = 0, close = 0, weather = -1, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather = 0, x = 0, y = 0)
+  x = c(season = 0, close = 0, weather = -1, emm = 1, wait_posted = 2),
+  y = c(season = -1, close = 1, weather = 0, emm = 0, wait_posted = 0)
 )
 
 labels <- c(
-  x = "Extra Magic Morning",
-  y = "Average wait",
-  Season = "Ticket Season",
+  emm = "Extra Magic Morning",
+  wait_posted = "Average wait",
+  season = "Ticket Season",
   weather = "Historic high temperature",
   close = "Time park closed"
 )
 
 dagify(
-  y ~ x + close + Season + weather,
-  x ~ weather + close + Season,
+  wait_posted ~ emm + close + season + weather,
+  emm ~ weather + close + season,
   coords = coord_dag,
   labels = labels,
-  exposure = "x",
-  outcome = "y"
+  exposure = "emm",
+  outcome = "wait_posted"
 ) |>
   tidy_dagitty() |>
   node_status() |>
   ggplot(
     aes(x, y, xend = xend, yend = yend, color = status)
   ) +
-  geom_dag_edges_arc(curvature = c(rep(0, 5), .3, 0)) +
+  geom_dag_edges_arc(curvature = c(rep(0, 6), .3)) +
   geom_dag_point() +
   geom_dag_label_repel(
     aes(x, y, label = label),
@@ -108,12 +108,9 @@ Here's a data dictionary of the variables we need in the `seven_dwarfs` data set
 
 ## Your Turn
 
-*After updating the code chunks below, change `eval: true` before rendering*
-
 Now, fit a propensity score model for `park_extra_magic_morning` using the above proposed confounders.
 
 ```{r}
-#| eval: false
 propensity_model <- ___(
   ___ ~ ___,
   data = seven_dwarfs,
@@ -124,7 +121,6 @@ propensity_model <- ___(
 Add the propensity scores to the `seven_dwarfs` data set, call this new dataset `df`.
 
 ```{r}
-#| eval: false
 df <- propensity_model |>
   ____(type.predict = ____, data = ____)
 ```

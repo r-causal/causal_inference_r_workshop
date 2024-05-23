@@ -1,7 +1,7 @@
 ---
 title: "Causal Diagrams in R"
 author: "Malcolm Barrett"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
+institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
@@ -165,6 +165,7 @@ dagify(
 ### Specify a DAG with `dagify()`. Write your assumption that `smoking` causes `cancer` as a formula. 
 ### We're going to assume that coffee does not cause cancer, so there's no formula for that. But we still need to declare our causal question. Specify "coffee" as the exposure and "cancer" as the outcome (both in quotations marks).
 ### Plot the DAG using `ggdag()`
+### Finish early? Try the *stretch goals*
 
 `r countdown::countdown(minutes = 5)`
 
@@ -262,8 +263,9 @@ smk_wt_dag |>
 
 ### Call `tidy_dagitty()` on `coffee_cancer_dag` to create a tidy DAG, then pass the results to `dag_paths()`. What's different about these data?
 ### Plot the open paths with `ggdag_paths()`. (Just give it `coffee_cancer_dag` rather than using `dag_paths()`; the quick plot function will do that for you.) Remember, since we assume there is *no* causal path from coffee to lung cancer, any open paths must be confounding pathways. 
+### Finish early? Try the *stretch goals*
 
-`r countdown::countdown(minutes = 5)`
+`r countdown::countdown(minutes = 4)`
 
 ## *Your Turn 2*
 
@@ -467,7 +469,9 @@ adjustmentSets(smk_wt_dag)
 ### Use `ggdag_adjustment_set()` to visualize the adjustment sets. Add the arguments `use_labels = "label"` and `text = FALSE`.
 ### Write an R formula for each adjustment set, as you might if you were fitting a model in `lm()` or `glm()`
 
-`r countdown::countdown(minutes = 5)`
+### Finish early? Try the *stretch goals*
+
+`r countdown::countdown(minutes = 4)`
 
 ## *Your Turn 3*
 
@@ -532,6 +536,59 @@ bind_rows(
   )
 ```
 
+## Time-ordering
+
+```{r}
+#| echo: false
+#| fig.width: 10
+map(list(fork = fork, chain = chain, collider = collider), tidy_dagitty, layout = "time_ordered") |> 
+    map("data") |> 
+    list_rbind(names_to = "dag") |> 
+    mutate(dag = factor(dag, levels = c("fork", "chain", "collider"))) |> ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+    geom_dag_edges(edge_width = 1) + 
+    geom_dag_point() + 
+    geom_dag_text() + 
+    facet_wrap(~ dag) +
+    expand_plot(
+        expand_x = expansion(c(.1, .1)),
+        expand_y = expansion(c(0.2, 0.2))
+    ) +
+    theme_dag()
+```
+
+## {background-color="#23373B" .large .center .middle}
+
+### **don't adjust for the future!**
+
+## *Your Turn 4*
+
+Recreate the DAG we've been working with using `time_ordered_coords()`, then visualize the DAG. You don't need to use any arguments for this function, so `coords = time_ordered_coords()` will do.
+
+`r countdown::countdown(minutes = 2)`
+
+## *Your Turn 4*
+
+```{r}
+#| output-location: slide
+#| code-line-numbers: "|7"
+coffee_cancer_dag_to <- dagify(
+  cancer ~ smoking,
+  smoking ~ addictive,
+  coffee ~ addictive,
+  exposure = "coffee",
+  outcome = "cancer",
+  coords = time_ordered_coords(),
+  labels = c(
+    "coffee" = "Coffee", 
+    "cancer" = "Lung Cancer", 
+    "smoking" = "Smoking", 
+    "addictive" = "Addictive \nBehavior"
+  )
+)
+
+ggdag(coffee_cancer_dag_to, use_labels = "label", text = FALSE)
+```
+
 ## Choosing what variables to include {.large}
 
 . . .
@@ -569,57 +626,6 @@ bind_rows(
 . . .
 
 **Incorrect functional form for confounders (e.g. BMI often non-linear)**
-
-## Time-ordering
-
-```{r}
-#| echo: false
-#| fig.width: 10
-map(list(fork = fork, chain = chain, collider = collider), tidy_dagitty, layout = "time_ordered") |> 
-    map("data") |> 
-    list_rbind(names_to = "dag") |> 
-    mutate(dag = factor(dag, levels = c("fork", "chain", "collider"))) |> ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
-    geom_dag_edges(edge_width = 1) + 
-    geom_dag_point() + 
-    geom_dag_text() + 
-    facet_wrap(~ dag) +
-    expand_plot(
-        expand_x = expansion(c(.1, .1)),
-        expand_y = expansion(c(0.2, 0.2))
-    ) +
-    theme_dag()
-```
-
-## {background-color="#23373B" .large .center .middle}
-
-### **don't adjust for the future!**
-
-## *Your Turn 4*
-
-Recreate the DAG we've been working with using `time_ordered_coords()`, then visualize the DAG. You don't need to use any arguments for this function, so `coords = time_ordered_coords()` will do.
-
-## *Your Turn 4*
-
-```{r}
-#| output-location: slide
-#| code-line-numbers: "|7"
-coffee_cancer_dag_to <- dagify(
-  cancer ~ smoking,
-  smoking ~ addictive,
-  coffee ~ addictive,
-  exposure = "coffee",
-  outcome = "cancer",
-  coords = time_ordered_coords(),
-  labels = c(
-    "coffee" = "Coffee", 
-    "cancer" = "Lung Cancer", 
-    "smoking" = "Smoking", 
-    "addictive" = "Addictive \nBehavior"
-  )
-)
-
-ggdag(coffee_cancer_dag_to, use_labels = "label", text = FALSE)
-```
 
 ## Resources: ggdag vignettes {background-color="#23373B"}
 ### [An Introduction to ggdag](https://ggdag.malco.io/articles/intro-to-ggdag.html)

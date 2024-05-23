@@ -2,7 +2,6 @@
 title: "Propensity Scores"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 ---
 
@@ -66,9 +65,11 @@ library(broom)
 
 ```{r}
 #| eval: false
-glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
-    data = df,
-    family = binomial())
+glm(
+  exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+  data = df,
+  family = binomial()
+)
 ```
 
 ---
@@ -77,10 +78,12 @@ glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ...,
 
 ```{r}
 #| eval: false
-#| code-line-numbers: "|4"
-glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
-    data = df,
-    family = binomial()) |>
+#| code-line-numbers: "|6"
+glm(
+  exposure ~ confounder_1 + confounder_2 + confounder_3 + ..., 
+  data = df,
+  family = binomial()
+) |>
   augment(type.predict = "response", data = df) 
 ```
 
@@ -88,7 +91,7 @@ glm(exposure ~ confounder_1 + confounder_2 + confounder_3 + ...,
 
 ![](img/pscores.png)
 
-## Example {.small}
+## Example: The Seven Dwarfs Mine Train {.small}
 
 :::: {.columns}
 
@@ -110,7 +113,7 @@ The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typi
 
 ## {background-color="#23373B" .large .center}
 
-**We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am.**
+*We are interested in examining the relationship between whether there were* **"Extra Magic Hours"** *in the morning and* **the average wait time** *for the Seven Dwarfs Mine Train the same day between 9am and 10am.*
 
 ---
 
@@ -139,32 +142,32 @@ geom_dag_label_repel <- function(..., seed = 10) {
 }
 
 coord_dag <- list(
-  x = c(Season = 0, close = 0, weather = -1, x = 1, y = 2),
-  y = c(Season = -1, close = 1, weather = 0, x = 0, y = 0)
+  x = c(season = 0, close = 0, weather = -1, emm = 1, posted_wait = 2),
+  y = c(season = -1, close = 1, weather = 0, emm = 0, posted_wait = 0)
 )
 
 labels <- c(
-  x = "Extra Magic Morning",
-  y = "Average wait",
-  Season = "Ticket Season",
+  emm = "Extra Magic Morning",
+  posted_wait = "Average wait",
+  season = "Ticket Season",
   weather = "Historic high temperature",
   close = "Time park closed"
 )
 
 dagify(
-  y ~ x + close + Season + weather,
-  x ~ weather + close + Season,
+  posted_wait ~ emm + close + season + weather,
+  emm ~ weather + close + season,
   coords = coord_dag,
   labels = labels,
-  exposure = "x",
-  outcome = "y"
+  exposure = "emm",
+  outcome = "posted_wait"
 ) |>
   tidy_dagitty() |>
   node_status() |>
   ggplot(
     aes(x, y, xend = xend, yend = yend, color = status)
   ) +
-  geom_dag_edges_arc(curvature = c(rep(0, 5), .3, 0)) +
+  geom_dag_edges_arc(curvature = c(rep(0, 6), .3)) +
   geom_dag_point() +
   geom_dag_label_repel(seed = 1630) +
   scale_color_okabe_ito(na.value = "grey90") +
@@ -186,11 +189,12 @@ dagify(
   )
 ```
 
-## **Your turn**
+## *Your turn*
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 6)`
 
-### Using the **confounders** identified in the previous DAG, fit a propensity score model for `park_extra_magic_morning`
+### Using the confounders identified in the previous DAG, fit a propensity score model for `park_extra_magic_morning`
+
 ### *Stretch*: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without
 
 

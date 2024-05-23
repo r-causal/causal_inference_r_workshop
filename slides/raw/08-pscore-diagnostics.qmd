@@ -2,7 +2,6 @@
 title: "Propensity Score Diagnostics"
 author: "Lucy D'Agostino McGowan"
 institute: "Wake Forest University"
-date: "2021-09-01 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 knitr:
   opts_chunk: 
@@ -35,7 +34,7 @@ Calculate standardized mean differences
 ```{r}
 #| message: false
 #| warning: false
-#| code-line-numbers: "|4|6|7|8"
+#| code-line-numbers: "|4|6|7|8|9"
 library(halfmoon)
 library(tidyverse)
 
@@ -43,7 +42,8 @@ smds <- tidy_smd(
   df,
   .vars = c(confounder_1, confounder_2, ...),
   .group = exposure,
-  .wts = wts # weight is optional
+  .wts = wts # optional,
+  make_dummy_vars = TRUE # optional
 )
 ```
 
@@ -62,8 +62,8 @@ ggplot(
   aes(
     x = abs(smd), 
     y = variable, 
-    group = weights, 
-    color = weights
+    group = method, 
+    color = method
   )
 ) +  
   geom_love()
@@ -80,6 +80,7 @@ library(halfmoon)
 library(tidyverse)
 library(broom)
 library(causaldata)
+library(propensity)
 
 propensity_model <- glm(
   qsmk ~ sex + 
@@ -93,7 +94,7 @@ propensity_model <- glm(
 
 df <- propensity_model |>
   augment(type.predict = "response", data = nhefs_complete) |>
-  mutate(w_ate = 1 / ifelse(qsmk == 0, 1 - .fitted, .fitted))
+  mutate(w_ate = wt_ate(.fitted, qsmk))
 
 vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
           "exercise", "active", "wt71")
@@ -102,11 +103,13 @@ plot_df <- tidy_smd(
   df,
   all_of(vars),
   qsmk,
-  w_ate
+  w_ate,
+  make_dummy_vars = TRUE
 )
-
+plot_df |> 
+  arrange(method, abs(smd)) |>
+  mutate(variable = fct_inorder(variable)) |> 
 ggplot(
-  data = plot_df,
   mapping = aes(x = abs(smd), y = variable, group = method, color = method)
 ) +
   geom_line(orientation = "y") +
@@ -116,7 +119,7 @@ ggplot(
 
 ## Your turn 1
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 6)`
 
 ### Create a Love Plot for the propensity score weighting you created in the previous exercise
 
@@ -124,7 +127,7 @@ ggplot(
 
 For continuous variables, it can be helpful to look at the _whole_ distribution pre and post-weighting rather than a single summary measure
 
-. . .
+## ECDF
 
 ```{r}
 #| echo: false
@@ -176,7 +179,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 
 ## *Your turn 2*
 
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 6)`
 
 ### Create an unweighted ECDF examining the `park_temperature_high` confounder by whether or not the day had Extra Magic Hours.
 ### Create a weighted ECDF examining the `park_temperature_high` confounder
@@ -234,3 +237,9 @@ tbl_svysummary(svy_des, by = qsmk, include = -w_ate) |>
   add_difference(everything() ~ "smd") |>
   modify_column_hide(ci)
 ```
+
+
+## {background-color="#23373B" .center .huge}
+
+### *Bonus Your Turn*: Weighted Tables
+

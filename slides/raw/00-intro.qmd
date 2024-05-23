@@ -1,10 +1,9 @@
 ---
 title: "Causal Inference in R: Introduction"
-date: "2020-07-29 (updated: `r Sys.Date()`)"
 format: "kakashi-revealjs"
 ---
 
-## `> who_are_we(c("lucy", "malcolm"))`
+## `> who_are_we(c("lucy", "malcolm", "travis"))`
 
 ```{r}
 #| label: setup
@@ -26,22 +25,44 @@ img {
 
 :::: {.columns}
 
-::: {.column width="50%"}
+::: {.column width="33.3%"}
 <br />
 <br />
 
 <img src="img/ldm.jpg" class="rounded-circle" />
 
+::: {.small}
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `r fontawesome::fa("globe")` [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)
+:::
 :::
 
-::: {.column width="50%"}
+::: {.column width="33.3%"}
 <br />
 <br />
+
+::: {.small}
 <img src="img/mb.jpg" class="rounded-circle" />
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `r fontawesome::fa("globe")` [https://www.malco.io/](https://www.malco.io/)
+&nbsp;&nbsp;&nbsp; [https://www.malco.io/](https://www.malco.io/)
+:::
+:::
+
+
+::: {.column width="33.3%"}
+<br />
+<br />
+<img src="img/tg.jpg" class="rounded-circle" />
+
+
+
+::: {.small}
+<br />
+<br />
+<br />
+[https://travisgerke.com/](https://travisgerke.com/)
+:::
 :::
 
 ::::
@@ -69,22 +90,19 @@ img {
 
 ## Tools for causal inference {background-color="#23373B"}
 
-1. Causal diagrams
-1. Propensity score weighting
-1. Propensity score matching
+- Causal diagrams
+- Propensity score weighting
+- Propensity score matching
+- G-methods & friends
 
 ## Other tools for causal inference {background-color="#23373B"}
 
-1. Randomized trials
-1. G-methods & friends
-1. Instrumental variables & friends
-
-
-## {background-color="#23373B" .center}
-
-### **RStudio Cloud**: <https://bit.ly/causal-r-cloud> {.d-flex .justify-content-center .align-items-center .vh-100}
+- Randomized trials
+- Instrumental variables & friends
+- TMLE and other ML for causal inference
 
 ## Resources {background-color="#23373B"}
+### [Causal Inference in R](https://www.r-causal.org/): Our book! Free online.
 ### [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.
-### [The Book of Why](http://bayes.cs.ucla.edu/WHY/): Detailed, friendly intro to DAGs and causal inference. Free online.
+### [The Book of Why](http://bayes.cs.ucla.edu/WHY/): Detailed, friendly intro to DAGs and causal inference. 
 ### [Mastering 'Metrics](http://www.masteringmetrics.com/): Friendly introduction to IV-based methods

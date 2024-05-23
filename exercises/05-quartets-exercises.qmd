@@ -11,19 +11,21 @@ library(quartets)
 
 ## Your turn 1
 
-For each of the following 4 datasets, look at the correlation between `exposure` and `covariate`: 
+For each of the following 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`: 
 
 * `causal_collider`
 * `causal_confounding`
 * `causal_mediator`
 * `causal_m_bias`
 
+(Alternatively, you can work with `causal_quartet`, which has all four datasets stacked on top of one another.)
 
 ```{r}
 
 ```
 
-For each of the above 4 datasets, create a scatterplot looking at the relationship between `exposure` and `outcome`
+For each of the above 4 datasets, look at the correlation between `exposure` and `covariate`
+
 
 ```{r}
 
@@ -37,12 +39,14 @@ For each of the above 4 datasets, fit a linear model to examine the relationship
 
 ## Your turn 2
 
-For each of the following 4 datasets, fit a linear linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: 
+For each of the following 4 datasets, fit a linear model examining the relationship between `outcome_followup` and `exposure_baseline` adjusting for `covariate_baseline`: 
 
 * `causal_collider_time`
 * `causal_confounding_time`
 * `causal_mediator_time`
 * `causal_m_bias_time`
+
+(Alternatively, you can work with `causal_quartet_time`, which has all four datasets stacked on top of one another.)
 
 ```{r}
 
