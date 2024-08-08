@@ -50,8 +50,8 @@ help you do that! You can install
 from GitHub with:
 
 ``` r
-install.packages("remotes")
-remotes::install_github("malcolmbarrett/causalworkshop")
+install.packages("pak")
+pak::pak("r-causal/causalworkshop")
 ```
 
 Once you’ve installed the package, install the workshop with

@@ -38,8 +38,8 @@ We will provide a link to a Posit Cloud space for the workshop. However, we reco
 To install the required packages and course materials, we have an R package called {[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)} to help you do that! You can install {[causalworkshop](https://github.com/malcolmbarrett/causalworkshop)} from GitHub with:
 
 ``` r
-install.packages("remotes")
-remotes::install_github("malcolmbarrett/causalworkshop")
+install.packages("pak")
+pak::pak("r-causal/causalworkshop")
 ```
 
 Once you've installed the package, install the workshop with
