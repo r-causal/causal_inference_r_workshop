@@ -8,7 +8,7 @@
 <link href="05-quartets_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="05-quartets_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="05-quartets_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.358">
+  <meta name="generator" content="quarto-1.5.56">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <title>Causal inference is not just a statistics problem</title>
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -70,7 +70,7 @@
     code span.at { color: #657422; } /* Attribute */
     code span.bn { color: #ad0000; } /* BaseN */
     code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
     code span.ch { color: #20794d; } /* Char */
     code span.cn { color: #8f5902; } /* Constant */
     code span.co { color: #5e5e5e; } /* Comment */
@@ -84,7 +84,7 @@
     code span.fu { color: #4758ab; } /* Function */
     code span.im { color: #00769e; } /* Import */
     code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; } /* Keyword */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
     code span.op { color: #5e5e5e; } /* Operator */
     code span.ot { color: #003b4f; } /* Other */
     code span.pp { color: #ad0000; } /* Preprocessor */
@@ -423,7 +423,7 @@ Lucy D’Agostino McGowan
 <p>We have measured variables, what should we adjust for?</p>
 </div>
 <div class="fragment">
-<table>
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th><strong>exposure</strong></th>
@@ -479,7 +479,7 @@ Lucy D’Agostino McGowan
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-2-1.png" style="width:80.0%"></p>
+<p><img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -487,7 +487,7 @@ Lucy D’Agostino McGowan
 <p><strong>One unit increase in the exposure yields an average increase in the outcome of 1</strong></p>
 </div><div class="column">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">cor</span>(exposure, covariate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">cor</span>(exposure, covariate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -495,8 +495,7 @@ Lucy D’Agostino McGowan
 </div>
 </div>
 <p><strong>The exposure and measured factor are positively correlated</strong></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="section" class="slide level2">
 <h2></h2>
@@ -505,13 +504,12 @@ Lucy D’Agostino McGowan
 <p><img data-src="img/shake.png"></p>
 </div><div class="column">
 <h3 id="to-adjust-or-not-adjust-that-is-the-question.">To adjust or not adjust? That is the question.</h3>
-</div>
-</div>
+</div></div>
 </section>
 <section id="causal-quartet" class="slide level2">
 <h2><em>Causal Quartet</em></h2>
 
-<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
 <section id="section-1" class="slide level2 center middle">
 <h2></h2>
 
@@ -522,18 +520,18 @@ Lucy D’Agostino McGowan
 <h3 id="for-each-of-the-following-4-datasets-create-a-scatterplot-looking-at-the-relationship-between-exposure-and-outcome-causal_collider-causal_confounding-causal_mediator-causal_m_bias">For each of the following 4 datasets, create a scatterplot looking at the relationship between <code>exposure</code> and <code>outcome</code>: <code>causal_collider</code>, <code>causal_confounding</code>, <code>causal_mediator</code>, <code>causal_m_bias</code></h3>
 <h3 id="for-each-of-the-above-4-datasets-look-at-the-correlation-between-exposure-and-covariate">For each of the above 4 datasets, look at the correlation between <code>exposure</code> and <code>covariate</code></h3>
 <h3 id="stretch-goal-for-each-of-the-above-4-datasets-fit-a-linear-model-to-examine-the-relationship-between-the-exposure-and-the-outcome"><em>Stretch goal</em>: For each of the above 4 datasets, fit a linear model to examine the relationship between the <code>exposure</code> and the <code>outcome</code></h3>
-<p></p><div class="countdown" id="timer_c437002e" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_60396fab" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="relationship-between-exposure-and-outcome" class="slide level2">
 <h2><em>Relationship between exposure and outcome</em></h2>
 
-<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-6-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
 <section id="relationship-between-exposure-and-covariate" class="slide level2">
 <h2><em>Relationship between exposure and covariate</em></h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">summarise</span>(<span class="at">corr =</span> <span class="fu">cor</span>(exposure, covariate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href=""></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">corr =</span> <span class="fu">cor</span>(exposure, covariate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
   dataset         corr
@@ -549,23 +547,23 @@ Lucy D’Agostino McGowan
 <h2><em>Observed effects</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="vdhmbwvref" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vdhmbwvref table {
+<div id="lakzyivauk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lakzyivauk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vdhmbwvref thead, #vdhmbwvref tbody, #vdhmbwvref tfoot, #vdhmbwvref tr, #vdhmbwvref td, #vdhmbwvref th {
+#lakzyivauk thead, #lakzyivauk tbody, #lakzyivauk tfoot, #lakzyivauk tr, #lakzyivauk td, #lakzyivauk th {
   border-style: none;
 }
 
-#vdhmbwvref p {
+#lakzyivauk p {
   margin: 0;
   padding: 0;
 }
 
-#vdhmbwvref .gt_table {
+#lakzyivauk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -591,12 +589,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_caption {
+#lakzyivauk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vdhmbwvref .gt_title {
+#lakzyivauk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -608,7 +606,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#vdhmbwvref .gt_subtitle {
+#lakzyivauk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -620,7 +618,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#vdhmbwvref .gt_heading {
+#lakzyivauk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -632,13 +630,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_bottom_border {
+#lakzyivauk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_col_headings {
+#lakzyivauk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -653,7 +651,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_col_heading {
+#lakzyivauk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -673,7 +671,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#vdhmbwvref .gt_column_spanner_outer {
+#lakzyivauk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -685,15 +683,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#vdhmbwvref .gt_column_spanner_outer:first-child {
+#lakzyivauk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vdhmbwvref .gt_column_spanner_outer:last-child {
+#lakzyivauk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vdhmbwvref .gt_column_spanner {
+#lakzyivauk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -705,11 +703,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#vdhmbwvref .gt_spanner_row {
+#lakzyivauk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vdhmbwvref .gt_group_heading {
+#lakzyivauk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -735,7 +733,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#vdhmbwvref .gt_empty_group_heading {
+#lakzyivauk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -750,15 +748,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#vdhmbwvref .gt_from_md > :first-child {
+#lakzyivauk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vdhmbwvref .gt_from_md > :last-child {
+#lakzyivauk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vdhmbwvref .gt_row {
+#lakzyivauk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -777,7 +775,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#vdhmbwvref .gt_stub {
+#lakzyivauk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -790,7 +788,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#vdhmbwvref .gt_stub_row_group {
+#lakzyivauk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -804,15 +802,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#vdhmbwvref .gt_row_group_first td {
+#lakzyivauk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vdhmbwvref .gt_row_group_first th {
+#lakzyivauk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vdhmbwvref .gt_summary_row {
+#lakzyivauk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -822,16 +820,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#vdhmbwvref .gt_first_summary_row {
+#lakzyivauk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_first_summary_row.thick {
+#lakzyivauk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vdhmbwvref .gt_last_summary_row {
+#lakzyivauk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -841,7 +839,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_grand_summary_row {
+#lakzyivauk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -851,7 +849,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#vdhmbwvref .gt_first_grand_summary_row {
+#lakzyivauk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -861,7 +859,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_last_grand_summary_row_top {
+#lakzyivauk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -871,11 +869,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_striped {
+#lakzyivauk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vdhmbwvref .gt_table_body {
+#lakzyivauk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -884,7 +882,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_footnotes {
+#lakzyivauk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -898,7 +896,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_footnote {
+#lakzyivauk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -907,7 +905,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#vdhmbwvref .gt_sourcenotes {
+#lakzyivauk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -921,7 +919,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#vdhmbwvref .gt_sourcenote {
+#lakzyivauk .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -929,68 +927,77 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#vdhmbwvref .gt_left {
+#lakzyivauk .gt_left {
   text-align: left;
 }
 
-#vdhmbwvref .gt_center {
+#lakzyivauk .gt_center {
   text-align: center;
 }
 
-#vdhmbwvref .gt_right {
+#lakzyivauk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vdhmbwvref .gt_font_normal {
+#lakzyivauk .gt_font_normal {
   font-weight: normal;
 }
 
-#vdhmbwvref .gt_font_bold {
+#lakzyivauk .gt_font_bold {
   font-weight: bold;
 }
 
-#vdhmbwvref .gt_font_italic {
+#lakzyivauk .gt_font_italic {
   font-style: italic;
 }
 
-#vdhmbwvref .gt_super {
+#lakzyivauk .gt_super {
   font-size: 65%;
 }
 
-#vdhmbwvref .gt_footnote_marks {
+#lakzyivauk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vdhmbwvref .gt_asterisk {
+#lakzyivauk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vdhmbwvref .gt_indent_1 {
+#lakzyivauk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vdhmbwvref .gt_indent_2 {
+#lakzyivauk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vdhmbwvref .gt_indent_3 {
+#lakzyivauk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vdhmbwvref .gt_indent_4 {
+#lakzyivauk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vdhmbwvref .gt_indent_5 {
+#lakzyivauk .gt_indent_5 {
   text-indent: 25px;
+}
+
+#lakzyivauk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#lakzyivauk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
 <th id="Data generating mechanism" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Data generating mechanism</th>
@@ -1037,28 +1044,28 @@ Lucy D’Agostino McGowan
 <section id="the-solution" class="slide level2">
 <h2>The solution</h2>
 
-<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-9-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
 <section id="correct-effects" class="slide level2">
 <h2><em>Correct effects</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="egzoltnejs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#egzoltnejs table {
+<div id="kmwmvfefza" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kmwmvfefza table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#egzoltnejs thead, #egzoltnejs tbody, #egzoltnejs tfoot, #egzoltnejs tr, #egzoltnejs td, #egzoltnejs th {
+#kmwmvfefza thead, #kmwmvfefza tbody, #kmwmvfefza tfoot, #kmwmvfefza tr, #kmwmvfefza td, #kmwmvfefza th {
   border-style: none;
 }
 
-#egzoltnejs p {
+#kmwmvfefza p {
   margin: 0;
   padding: 0;
 }
 
-#egzoltnejs .gt_table {
+#kmwmvfefza .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1084,12 +1091,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_caption {
+#kmwmvfefza .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#egzoltnejs .gt_title {
+#kmwmvfefza .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1101,7 +1108,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#egzoltnejs .gt_subtitle {
+#kmwmvfefza .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1113,7 +1120,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#egzoltnejs .gt_heading {
+#kmwmvfefza .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1125,13 +1132,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_bottom_border {
+#kmwmvfefza .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_col_headings {
+#kmwmvfefza .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1146,7 +1153,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_col_heading {
+#kmwmvfefza .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1166,7 +1173,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#egzoltnejs .gt_column_spanner_outer {
+#kmwmvfefza .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1178,15 +1185,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#egzoltnejs .gt_column_spanner_outer:first-child {
+#kmwmvfefza .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#egzoltnejs .gt_column_spanner_outer:last-child {
+#kmwmvfefza .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#egzoltnejs .gt_column_spanner {
+#kmwmvfefza .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1198,11 +1205,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#egzoltnejs .gt_spanner_row {
+#kmwmvfefza .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#egzoltnejs .gt_group_heading {
+#kmwmvfefza .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1228,7 +1235,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#egzoltnejs .gt_empty_group_heading {
+#kmwmvfefza .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1243,15 +1250,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#egzoltnejs .gt_from_md > :first-child {
+#kmwmvfefza .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#egzoltnejs .gt_from_md > :last-child {
+#kmwmvfefza .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#egzoltnejs .gt_row {
+#kmwmvfefza .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1270,7 +1277,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#egzoltnejs .gt_stub {
+#kmwmvfefza .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1283,7 +1290,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#egzoltnejs .gt_stub_row_group {
+#kmwmvfefza .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1297,15 +1304,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#egzoltnejs .gt_row_group_first td {
+#kmwmvfefza .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#egzoltnejs .gt_row_group_first th {
+#kmwmvfefza .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#egzoltnejs .gt_summary_row {
+#kmwmvfefza .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1315,16 +1322,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#egzoltnejs .gt_first_summary_row {
+#kmwmvfefza .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_first_summary_row.thick {
+#kmwmvfefza .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#egzoltnejs .gt_last_summary_row {
+#kmwmvfefza .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1334,7 +1341,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_grand_summary_row {
+#kmwmvfefza .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1344,7 +1351,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#egzoltnejs .gt_first_grand_summary_row {
+#kmwmvfefza .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1354,7 +1361,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_last_grand_summary_row_top {
+#kmwmvfefza .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1364,11 +1371,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_striped {
+#kmwmvfefza .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#egzoltnejs .gt_table_body {
+#kmwmvfefza .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1377,7 +1384,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_footnotes {
+#kmwmvfefza .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1391,7 +1398,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_footnote {
+#kmwmvfefza .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1400,7 +1407,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#egzoltnejs .gt_sourcenotes {
+#kmwmvfefza .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1414,7 +1421,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#egzoltnejs .gt_sourcenote {
+#kmwmvfefza .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1422,68 +1429,77 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#egzoltnejs .gt_left {
+#kmwmvfefza .gt_left {
   text-align: left;
 }
 
-#egzoltnejs .gt_center {
+#kmwmvfefza .gt_center {
   text-align: center;
 }
 
-#egzoltnejs .gt_right {
+#kmwmvfefza .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#egzoltnejs .gt_font_normal {
+#kmwmvfefza .gt_font_normal {
   font-weight: normal;
 }
 
-#egzoltnejs .gt_font_bold {
+#kmwmvfefza .gt_font_bold {
   font-weight: bold;
 }
 
-#egzoltnejs .gt_font_italic {
+#kmwmvfefza .gt_font_italic {
   font-style: italic;
 }
 
-#egzoltnejs .gt_super {
+#kmwmvfefza .gt_super {
   font-size: 65%;
 }
 
-#egzoltnejs .gt_footnote_marks {
+#kmwmvfefza .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#egzoltnejs .gt_asterisk {
+#kmwmvfefza .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#egzoltnejs .gt_indent_1 {
+#kmwmvfefza .gt_indent_1 {
   text-indent: 5px;
 }
 
-#egzoltnejs .gt_indent_2 {
+#kmwmvfefza .gt_indent_2 {
   text-indent: 10px;
 }
 
-#egzoltnejs .gt_indent_3 {
+#kmwmvfefza .gt_indent_3 {
   text-indent: 15px;
 }
 
-#egzoltnejs .gt_indent_4 {
+#kmwmvfefza .gt_indent_4 {
   text-indent: 20px;
 }
 
-#egzoltnejs .gt_indent_5 {
+#kmwmvfefza .gt_indent_5 {
   text-indent: 25px;
+}
+
+#kmwmvfefza .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kmwmvfefza div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
 <th id="Data generating mechanism" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Data generating mechanism</th>
@@ -1526,7 +1542,7 @@ Lucy D’Agostino McGowan
 <h2>The <em>partial</em> solution</h2>
 <div class="small">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>causal_collider_time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>causal_collider_time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 6
    exposure_baseline outcome_baseline covariate_baseline
@@ -1554,14 +1570,14 @@ Lucy D’Agostino McGowan
 <section id="time-varying-dag" class="slide level2">
 <h2>Time-varying DAG</h2>
 
-<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-13-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"><div class="fragment">
+<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"><div class="fragment">
 <p><strong>True causal effect</strong>: 1 <strong>Estimated causal effect</strong>: 0.55</p>
 </div>
 </section>
 <section id="time-varying-dag-1" class="slide level2">
 <h2>Time-varying DAG</h2>
 
-<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"><div class="fragment">
+<img data-src="05-quartets_files/figure-revealjs/unnamed-chunk-14-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"><div class="fragment">
 <p><strong>True causal effect</strong>: 1 <strong>Estimated causal effect</strong>: 1</p>
 </div>
 </section></section>
@@ -1573,29 +1589,29 @@ Lucy D’Agostino McGowan
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your turn 2</em></h2>
 <h3 id="for-each-of-the-following-4-datasets-fit-a-linear-linear-model-examining-the-relationship-between-outcome_followup-and-exposure_baseline-adjusting-for-covariate_baseline-causal_collider_time-causal_confounding_time-causal_mediator_time-causal_m_bias_time">For each of the following 4 datasets, fit a linear linear model examining the relationship between <code>outcome_followup</code> and <code>exposure_baseline</code> adjusting for <code>covariate_baseline</code>: <code>causal_collider_time</code>, <code>causal_confounding_time</code>, <code>causal_mediator_time</code>, <code>causal_m_bias_time</code></h3>
-<p></p><div class="countdown" id="timer_5d29de57" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_7bd2d458" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="the-partial-solution-1" class="slide level2">
 <h2>The <em>partial</em> solution</h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="yrtfmaaast" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#yrtfmaaast table {
+<div id="pmglffccfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pmglffccfm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#yrtfmaaast thead, #yrtfmaaast tbody, #yrtfmaaast tfoot, #yrtfmaaast tr, #yrtfmaaast td, #yrtfmaaast th {
+#pmglffccfm thead, #pmglffccfm tbody, #pmglffccfm tfoot, #pmglffccfm tr, #pmglffccfm td, #pmglffccfm th {
   border-style: none;
 }
 
-#yrtfmaaast p {
+#pmglffccfm p {
   margin: 0;
   padding: 0;
 }
 
-#yrtfmaaast .gt_table {
+#pmglffccfm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1621,12 +1637,12 @@ Lucy D’Agostino McGowan
   border-left-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_caption {
+#pmglffccfm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#yrtfmaaast .gt_title {
+#pmglffccfm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1638,7 +1654,7 @@ Lucy D’Agostino McGowan
   border-bottom-width: 0;
 }
 
-#yrtfmaaast .gt_subtitle {
+#pmglffccfm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1650,7 +1666,7 @@ Lucy D’Agostino McGowan
   border-top-width: 0;
 }
 
-#yrtfmaaast .gt_heading {
+#pmglffccfm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1662,13 +1678,13 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_bottom_border {
+#pmglffccfm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_col_headings {
+#pmglffccfm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1683,7 +1699,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_col_heading {
+#pmglffccfm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1703,7 +1719,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#yrtfmaaast .gt_column_spanner_outer {
+#pmglffccfm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1715,15 +1731,15 @@ Lucy D’Agostino McGowan
   padding-right: 4px;
 }
 
-#yrtfmaaast .gt_column_spanner_outer:first-child {
+#pmglffccfm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yrtfmaaast .gt_column_spanner_outer:last-child {
+#pmglffccfm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yrtfmaaast .gt_column_spanner {
+#pmglffccfm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1735,11 +1751,11 @@ Lucy D’Agostino McGowan
   width: 100%;
 }
 
-#yrtfmaaast .gt_spanner_row {
+#pmglffccfm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#yrtfmaaast .gt_group_heading {
+#pmglffccfm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1765,7 +1781,7 @@ Lucy D’Agostino McGowan
   text-align: left;
 }
 
-#yrtfmaaast .gt_empty_group_heading {
+#pmglffccfm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1780,15 +1796,15 @@ Lucy D’Agostino McGowan
   vertical-align: middle;
 }
 
-#yrtfmaaast .gt_from_md > :first-child {
+#pmglffccfm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yrtfmaaast .gt_from_md > :last-child {
+#pmglffccfm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yrtfmaaast .gt_row {
+#pmglffccfm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1807,7 +1823,7 @@ Lucy D’Agostino McGowan
   overflow-x: hidden;
 }
 
-#yrtfmaaast .gt_stub {
+#pmglffccfm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1820,7 +1836,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#yrtfmaaast .gt_stub_row_group {
+#pmglffccfm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1834,15 +1850,15 @@ Lucy D’Agostino McGowan
   vertical-align: top;
 }
 
-#yrtfmaaast .gt_row_group_first td {
+#pmglffccfm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#yrtfmaaast .gt_row_group_first th {
+#pmglffccfm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#yrtfmaaast .gt_summary_row {
+#pmglffccfm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1852,16 +1868,16 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#yrtfmaaast .gt_first_summary_row {
+#pmglffccfm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_first_summary_row.thick {
+#pmglffccfm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#yrtfmaaast .gt_last_summary_row {
+#pmglffccfm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1871,7 +1887,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_grand_summary_row {
+#pmglffccfm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1881,7 +1897,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#yrtfmaaast .gt_first_grand_summary_row {
+#pmglffccfm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1891,7 +1907,7 @@ Lucy D’Agostino McGowan
   border-top-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_last_grand_summary_row_top {
+#pmglffccfm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1901,11 +1917,11 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_striped {
+#pmglffccfm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yrtfmaaast .gt_table_body {
+#pmglffccfm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1914,7 +1930,7 @@ Lucy D’Agostino McGowan
   border-bottom-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_footnotes {
+#pmglffccfm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1928,7 +1944,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_footnote {
+#pmglffccfm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1937,7 +1953,7 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#yrtfmaaast .gt_sourcenotes {
+#pmglffccfm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1951,7 +1967,7 @@ Lucy D’Agostino McGowan
   border-right-color: #D3D3D3;
 }
 
-#yrtfmaaast .gt_sourcenote {
+#pmglffccfm .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1959,68 +1975,77 @@ Lucy D’Agostino McGowan
   padding-right: 5px;
 }
 
-#yrtfmaaast .gt_left {
+#pmglffccfm .gt_left {
   text-align: left;
 }
 
-#yrtfmaaast .gt_center {
+#pmglffccfm .gt_center {
   text-align: center;
 }
 
-#yrtfmaaast .gt_right {
+#pmglffccfm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yrtfmaaast .gt_font_normal {
+#pmglffccfm .gt_font_normal {
   font-weight: normal;
 }
 
-#yrtfmaaast .gt_font_bold {
+#pmglffccfm .gt_font_bold {
   font-weight: bold;
 }
 
-#yrtfmaaast .gt_font_italic {
+#pmglffccfm .gt_font_italic {
   font-style: italic;
 }
 
-#yrtfmaaast .gt_super {
+#pmglffccfm .gt_super {
   font-size: 65%;
 }
 
-#yrtfmaaast .gt_footnote_marks {
+#pmglffccfm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#yrtfmaaast .gt_asterisk {
+#pmglffccfm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#yrtfmaaast .gt_indent_1 {
+#pmglffccfm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#yrtfmaaast .gt_indent_2 {
+#pmglffccfm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#yrtfmaaast .gt_indent_3 {
+#pmglffccfm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#yrtfmaaast .gt_indent_4 {
+#pmglffccfm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#yrtfmaaast .gt_indent_5 {
+#pmglffccfm .gt_indent_5 {
   text-indent: 25px;
+}
+
+#pmglffccfm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#pmglffccfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
-<table class="gt_table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
 <th id="Data generating mechanism" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Data generating mechanism</th>
@@ -2074,8 +2099,10 @@ Lucy D’Agostino McGowan
 <li class="fragment">Asymptotic theory shows that induction of M-bias is quite sensitive to various deviations from the exact M-Structure (Ding and Miratrix 2014)</li>
 </ul>
 </div>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </section></section>
     </div>
@@ -2358,18 +2385,7 @@ Lucy D’Agostino McGowan
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -2401,7 +2417,47 @@ Lucy D’Agostino McGowan
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
       function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
@@ -2438,7 +2494,11 @@ Lucy D’Agostino McGowan
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {
