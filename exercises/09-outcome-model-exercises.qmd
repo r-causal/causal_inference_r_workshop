@@ -20,7 +20,7 @@ We are interested in examining the relationship between whether there were "Extr
 
 ## Your turn
 
-Create a function called `ipw_fit` that fits the propensity score model from Exercise 03, incorporates the ATE weights calculated in Exercise 04, and fits a weighted outcome model.
+Create a function called `ipw_fit` that fits the propensity score model and incorporates the ATE weights (as calculated in the previous exercises), then uses the weights in a weighted outcome model.
 
 ```{r}
 fit_ipw <- function(split, ...) { 
