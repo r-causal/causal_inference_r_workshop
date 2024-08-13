@@ -35,8 +35,8 @@ Rosenbaum and Rubin showed in observational studies, conditioning on **propensit
 
 ## Quantifying Unmeasured Confounding {background-color="#23373B"}
 
-1. The exposure-outcome 
-1. The exposure-unmeasured 
+1. The exposure-outcome effect
+1. The exposure-unmeasured confounder effect
 1. The unmeasured confounder-outcome effect
 
 ## *Quantifying Unmeasured Confounding*
