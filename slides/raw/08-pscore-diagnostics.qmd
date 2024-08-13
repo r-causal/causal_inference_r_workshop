@@ -47,9 +47,58 @@ smds <- tidy_smd(
 )
 ```
 
+## Calculating SMDs 
+
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+#| eval: true
+library(halfmoon)
+library(tidyverse)
+library(broom)
+library(causaldata)
+library(propensity)
+
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete
+)
+
+nhefs_complete_wts <- propensity_model |>
+  augment(type.predict = "response", data = nhefs_complete) |>
+  mutate(w_ate = wt_ate(.fitted, qsmk))
+```
+
+
+```{r}
+#| output-location: slide
+#| eval: true
+vars <- c(
+  "sex", "race", "age", "education",
+  "smokeintensity", "smokeyrs", 
+  "exercise", "active", "wt71"
+)
+
+smds <- tidy_smd(
+  nhefs_complete_wts,
+  .vars = all_of(vars),
+  .group = qsmk,
+  .wts = w_ate,
+  make_dummy_vars = TRUE
+)
+
+smds
+```
+
 ---
 
-## SMD in R ![](img/hex/halfmoon.png){.absolute top=0 right=0 width=140}
+## Plotting SMDs ![](img/hex/halfmoon.png){.absolute top=0 right=0 width=140}
 
 <br />
 
@@ -76,37 +125,7 @@ ggplot(
 #| eval: true
 #| message: false
 #| warning: false
-library(halfmoon)
-library(tidyverse)
-library(broom)
-library(causaldata)
-library(propensity)
-
-propensity_model <- glm(
-  qsmk ~ sex + 
-    race + age + I(age^2) + education + 
-    smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
-  family = binomial(), 
-  data = nhefs_complete
-)
-
-df <- propensity_model |>
-  augment(type.predict = "response", data = nhefs_complete) |>
-  mutate(w_ate = wt_ate(.fitted, qsmk))
-
-vars <- c("sex", "race", "age", "education", "smokeintensity", "smokeyrs", 
-          "exercise", "active", "wt71")
-
-plot_df <- tidy_smd(
-  df,
-  all_of(vars),
-  qsmk,
-  w_ate,
-  make_dummy_vars = TRUE
-)
-plot_df |> 
+smds |> 
   arrange(method, abs(smd)) |>
   mutate(variable = fct_inorder(variable)) |> 
 ggplot(
@@ -134,7 +153,7 @@ For continuous variables, it can be helpful to look at the _whole_ distribution 
 #| message: false
 #| warning: false
 #| eval: true
-ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+ggplot(nhefs_complete_wts, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf() +
   scale_color_manual("Quit smoking", values = c("#5154B8", "#5DB854"),
                      labels = c("Yes", "No")) + 
@@ -148,7 +167,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 #| code-line-numbers: "|1|2"
 #| eval: true
 #| output-location: slide
-ggplot(df, aes(x = wt71, color = factor(qsmk))) + 
+ggplot(nhefs_complete_wts, aes(x = wt71, color = factor(qsmk))) + 
   geom_ecdf() +
   scale_color_manual(
     "Quit smoking", 
@@ -166,7 +185,7 @@ ggplot(df, aes(x = wt71, color = factor(qsmk))) +
 #| eval: true
 #| code-line-numbers: "|2"
 #| output-location: slide
-ggplot(df, aes(x = wt71, color = factor(qsmk))) +
+ggplot(nhefs_complete_wts, aes(x = wt71, color = factor(qsmk))) +
   geom_ecdf(aes(weights = w_ate)) +
   scale_color_manual(
     "Quit smoking", 
@@ -228,7 +247,7 @@ library(gtsummary)
 
 svy_des <- svydesign(
   ids = ~ 1,
-  data = df |> select(wt71, race, age, sex, smokeintensity, smokeyrs, exercise, active, w_ate, qsmk),
+  data = nhefs_complete_wts |> select(wt71, race, age, sex, smokeintensity, smokeyrs, exercise, active, w_ate, qsmk),
   weights = ~ w_ate
 )
 theme_gtsummary_compact()

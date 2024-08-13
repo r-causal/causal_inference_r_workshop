@@ -8,7 +8,7 @@
 <link href="06-pscores_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="06-pscores_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="06-pscores_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.358">
+  <meta name="generator" content="quarto-1.5.56">
 
   <meta name="author" content="Lucy D’Agostino McGowan">
   <title>Propensity Scores</title>
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -70,7 +70,7 @@
     code span.at { color: #657422; } /* Attribute */
     code span.bn { color: #ad0000; } /* BaseN */
     code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
     code span.ch { color: #20794d; } /* Char */
     code span.cn { color: #8f5902; } /* Constant */
     code span.co { color: #5e5e5e; } /* Comment */
@@ -84,7 +84,7 @@
     code span.fu { color: #4758ab; } /* Function */
     code span.im { color: #00769e; } /* Import */
     code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; } /* Keyword */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
     code span.op { color: #5e5e5e; } /* Operator */
     code span.ot { color: #003b4f; } /* Other */
     code span.pp { color: #ad0000; } /* Preprocessor */
@@ -450,29 +450,29 @@ Lucy D’Agostino McGowan
 <section id="propensity-scores-2" class="slide level2">
 <h2>Propensity scores</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(broom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href=""></a><span class="fu">library</span>(broom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-scores-3" class="slide level2">
 <h2>Propensity scores</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">glm</span>(</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">data =</span> df,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
-<span id="cb2-5"><a href="#cb2-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">glm</span>(</span>
+<span id="cb2-2"><a href=""></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
+<span id="cb2-3"><a href=""></a>  <span class="at">data =</span> df,</span>
+<span id="cb2-4"><a href=""></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb2-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-scores-4" class="slide level2">
 <h2>Propensity scores</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">glm</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">data =</span> df,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
-<span id="cb3-5"><a href="#cb3-5"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> df) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">glm</span>(</span>
+<span id="cb3-2"><a href=""></a>  exposure <span class="sc">~</span> confounder_1 <span class="sc">+</span> confounder_2 <span class="sc">+</span> confounder_3 <span class="sc">+</span> ..., </span>
+<span id="cb3-3"><a href=""></a>  <span class="at">data =</span> df,</span>
+<span id="cb3-4"><a href=""></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb3-5"><a href=""></a>) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href=""></a>  <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> df) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-scores-5" class="slide level2" data-background-color="#23373B">
@@ -489,8 +489,7 @@ Lucy D’Agostino McGowan
 <p>Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during “Extra Magic Hours” during which the park was closed to all other guests.</p>
 <p>These extra hours could be in the morning or evening.</p>
 <p>The Seven Dwarfs Mine Train is a ride at Walt Disney World’s Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these “Extra Magic Hours”.</p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="section-2" class="slide level2 large center" data-background-color="#23373B">
 <h2></h2>
@@ -499,14 +498,16 @@ Lucy D’Agostino McGowan
 <section class="slide level2">
 
 
-<img data-src="06-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:80.0%" class="r-stretch quarto-figure-center"></section>
+<img data-src="06-pscores_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
 <section id="your-turn" class="slide level2">
 <h2><em>Your turn</em></h2>
-<p></p><div class="countdown" id="timer_698ee452" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_db3e927f" data-update-every="1" tabindex="0" style="right:0;bottom:0;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">06</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 <h3 id="using-the-confounders-identified-in-the-previous-dag-fit-a-propensity-score-model-for-park_extra_magic_morning">Using the confounders identified in the previous DAG, fit a propensity score model for <code>park_extra_magic_morning</code></h3>
 <h3 id="stretch-create-two-histograms-one-of-the-propensity-scores-for-days-with-extra-morning-magic-hours-and-one-for-those-without"><em>Stretch</em>: Create two histograms, one of the propensity scores for days with extra morning magic hours and one for those without</h3>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </section>
     </div>
@@ -789,18 +790,7 @@ Lucy D’Agostino McGowan
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -832,7 +822,47 @@ Lucy D’Agostino McGowan
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
       function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
@@ -869,7 +899,11 @@ Lucy D’Agostino McGowan
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {
