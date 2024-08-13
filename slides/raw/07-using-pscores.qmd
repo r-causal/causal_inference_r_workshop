@@ -486,7 +486,7 @@ Average Treatment Effect Among the Overlap Population $$\Large w_{ATO} = (1-p_i)
 
 | Estimand | Target population  | Example Research Question |
 |----------|--------------------|---------------------------|
-| dATO     | Overlap population | *Same as ATM*             |
+| ATO     | Overlap population | *Same as ATM*             |
 
 ## ATM
 
