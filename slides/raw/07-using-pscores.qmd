@@ -108,7 +108,7 @@ ggplot(p, aes(x = x, y = y, color = col)) +
 <tr class="odd">
 <td><p>ATE</p></td>
 <td><p>Full population</p></td>
-<td><p><em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<td><p><em>Should we decide whether to have extra magic hours all mornings to change the wait time for Seven Dwarfs Mine Train between 9-10 AM?</em></p>
 <p><em>Should a specific policy be applied to all eligible observations?</em></p></td>
 </tr>
 </tbody>
@@ -155,7 +155,7 @@ ggplot(aes(x = x, y = y, color = color)) +
 <tr class="odd">
 <td><p>ATT</p></td>
 <td><p>Exposed (treated) observations</p></td>
-<td><p><em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<td><p><em>Should we stop extra magic hours to change the wait time for Seven Dwarfs Mine Train between 9-10 AMpm?</em></p>
 <p><em>Should we stop our marketing campaign to those currently receiving it?</em></p>
 <p><em>Should medical providers stop recommending treatment for those currently receiving it?</em></p></td>
 </tr>
@@ -228,7 +228,7 @@ ggplot(aes(x = x, y = y, color = color)) +
 <tr class="odd">
 <td><p>ATU</p></td>
 <td><p>Unexposed (control) observations</p></td>
-<td><p><em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<td><p><em>Should we add extra magic hours for all days to change the wait time for Seven Dwarfs Mine Train between 9-10 AMpm?</em></p>
 <p><em>Should we extend our marketing campaign to those not receiving it?</em></p>
 <p><em>Should medical providers extend treatment to those not currently receiving it?</em></p></td>
 </tr>
@@ -291,7 +291,7 @@ ggplot(aes(x = x, y = y, color = color)) +
 <tr class="odd">
 <td><p>ATM</p></td>
 <td><p>Evenly matchable</p></td>
-<td><p><em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 5-6pm?</em></p>
+<td><p><em>Are there some days we should change whether we are offering extra magic hours in order to change the wait time for Seven Dwarfs Mine Train between 9-10 AMpm?</em></p>
 <p><em>Is there an effect of the exposure for some observations?</em></p>
 <p><em>Should those at clinical equipoise receive treatment?</em></p></td>
 </tr>
