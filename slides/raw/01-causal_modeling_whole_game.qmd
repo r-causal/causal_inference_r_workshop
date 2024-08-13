@@ -249,7 +249,7 @@ smk_wt_dag |>
 #| code-line-numbers: "|1-8"
 #| output-location: fragment
 lm( 
-  wt82_71~ qsmk + sex +  
+  wt82_71 ~ qsmk + sex +  
     race + age + I(age^2) + education + 
     smokeintensity + I(smokeintensity^2) + 
     smokeyrs + I(smokeyrs^2) + exercise + active + 
