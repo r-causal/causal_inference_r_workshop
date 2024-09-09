@@ -272,9 +272,9 @@ Now let's try the bootstrap. First, we need to wrap our model in a function so w
 
 ```{r}
 # fit ipw model for a single bootstrap sample
-fit_ipw_not_quite_rightly <- function(split, ...) {
-  # get bootstrapped data sample with `rsample::analysis()`
-  .df <- analysis(split)
+fit_ipw_not_quite_rightly <- function(.split, ...) {
+  # get bootstrapped data frame
+  .df <- as.data.frame(.split)
   
   # fit ipw model
   lm(wt82_71 ~ qsmk, data = .df, weights = wts) |>
@@ -285,8 +285,9 @@ fit_ipw_not_quite_rightly <- function(split, ...) {
 The problem is that we need to account for the *entire* modeling process, so we need to include the first step of our analysis -- fitting the inverse probability weights.
 
 ```{r}
-fit_ipw <- function(split, ...) {
-  .df <- analysis(split)
+fit_ipw <- function(.split, ...) {
+  # get bootstrapped data frame
+  .df <- as.data.frame(.split)
   
   # fit propensity score model
   propensity_model <- glm(

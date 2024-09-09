@@ -48,8 +48,8 @@ lm(outcome ~ exposure, data = df, weights = wts) |>
 
 ```{r}
 #| code-line-numbers: "|1-2|5-13|16-18|21-22"
-fit_ipw <- function(split, ...) {
-  .df <- analysis(split)
+fit_ipw <- function(.split, ...) {
+  .df <- as.data.frame(.split)
   
   # fit propensity score model
   propensity_model <- glm(
