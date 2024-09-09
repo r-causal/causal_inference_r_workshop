@@ -102,8 +102,9 @@ Finish early? Try bootstrapping the G-computation model with censoring weights
 Remember, you need to bootstrap the entire modeling process, including fitting both regression models, cloning the data sets, and calculating the effects.
 
 ```{r}
-fit_gcomp_cens <- function(split, ...) { 
-  .df <- analysis(split) 
+fit_gcomp_cens <- function(.split, ...) { 
+  # get bootstrapped data frame
+  .df <- as.data.frame(.split)
   
   # fit the censoring model. remember to model using `.df` instead of `nhefs_censored`
 

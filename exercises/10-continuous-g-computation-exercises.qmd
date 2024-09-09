@@ -171,8 +171,9 @@ Remember, you need to bootstrap the entire modeling process, including the regre
 set.seed(1234)
 library(rsample)
 
-fit_gcomp <- function(split, ...) { 
-  .df <- analysis(split) 
+fit_gcomp <- function(.split, ...) { 
+  # get bootstrapped data frame
+  .df <- as.data.frame(.split)
   
   # fit outcome model. remember to model using `.df` instead of `wait_times`
   

@@ -183,8 +183,9 @@ There's nothing new here. Just remember, you need to bootstrap the entire modeli
 set.seed(1234)
 library(rsample)
 
-fit_model <- function(split, ...) { 
-  .df <- analysis(split) 
+fit_model <- function(.split, ...) { 
+  # get bootstrapped data frame
+  .df <- as.data.frame(.split)
   
   # fill in the rest!
 }
