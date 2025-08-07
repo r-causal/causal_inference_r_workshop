@@ -1,0 +1,621 @@
+---
+title: "Machine Learning for Causal Inference"
+format: html
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(broom)
+library(touringplans)
+library(propensity)
+library(SuperLearner)
+library(tmle)
+library(yardstick)
+library(ggdag)
+library(ggokabeito)
+```
+
+## The Causal Question
+
+We'll be looking at an example using Walt Disney World ride data from the touringplans package.
+
+Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during "Extra Magic Hours" during which the park was closed to all other guests.
+These extra hours could be in the morning or evening.
+The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these "Extra Magic Hours".
+
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning and the average wait time for the Seven Dwarfs Mine Train the same day between 9am and 10am.
+
+Below is a proposed DAG for this question.
+
+```{r}
+set.seed(1234)
+
+coord_dag <- list(
+  x = c(season = 0, close = 0, weather = -1, emm = 1, wait_posted = 2),
+  y = c(season = -1, close = 1, weather = 0, emm = 0, wait_posted = 0)
+)
+
+labels <- c(
+  emm = "Extra Magic Morning",
+  wait_posted = "Average wait",
+  season = "Ticket Season",
+  weather = "Historic high temperature",
+  close = "Time park closed"
+)
+
+dagify(
+  wait_posted ~ emm + close + season + weather,
+  emm ~ weather + close + season,
+  coords = coord_dag,
+  labels = labels,
+  exposure = "emm",
+  outcome = "wait_posted"
+) |>
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_edges_arc(curvature = c(rep(0, 6), .3)) +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = 1630,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3
+  ) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text()
+  ) +
+  coord_cartesian(clip = "off") +
+  scale_x_continuous(
+    limits = c(-1.25, 2.25),
+    breaks = c(-1, 0, 1, 2),
+    labels = c(
+      "\n(one year ago)",
+      "\n(6 months ago)",
+      "\n(3 months ago)",
+      "9am - 10am\n(Today)"
+    )
+  )
+```
+
+Here we are proposing that there are three confounders: the historic high temperature on the day, the time the park closed, and the ticket season: value, regular, or peak.
+
+## Review: IPW and G-computation
+
+Before using machine learning methods, let's review how we implement IPW and G-computation with parametric models. IPW and G-computation are two estimators we can use to estimate our estimand, the average treatment effect (ATE), in the presence of confounding.
+
+### Inverse Probability Weighting (IPW)
+
+In IPW, we first fit a propensity score model to estimate the probability of treatment given confounders. The goal is to create a pseudo-population where treatment assignment is independent of confounders. We then calculate weights based on these propensity scores and fit a weighted outcome model to estimate the average treatment effect (ATE).
+
+The algorithm is:
+1. Fit a propensity score model to estimate the probability of treatment given confounders.
+2. Calculate weights: for treated units, (for the ATE, it is `1 / propensity score` for the treated units, and `1 / (1 - propensity score)` for the control units; `propensity::wt_ate()` will calculate this for you.
+3. Fit a weighted outcome model using the calculated weights. This model only includes the treatment variable and no confounders, as the weights adjust for confounding.
+
+```{r}
+# Prepare data: filter to 9am wait times
+seven_dwarfs <- seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9)
+
+# Step 1: Fit propensity score model (exposure model)
+propensity_model <- glm(
+  park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
+  data = seven_dwarfs,
+  family = binomial()
+)
+
+# Get propensity scores
+propensity_scores <- predict(propensity_model, type = "response")
+
+# Step 2: Calculate ATE weights
+# For treated: 1/PS, for control: 1/(1-PS)
+ate_weights <- wt_ate(
+  propensity_scores, 
+  seven_dwarfs$park_extra_magic_morning
+)
+
+# Step 3: Fit weighted outcome model
+ipw_model <- lm(
+  wait_minutes_posted_avg ~ park_extra_magic_morning,
+  data = seven_dwarfs,
+  weights = ate_weights
+)
+
+# For proper inference, we need bootstrapping. 
+# See the appendix at the bottom of this document.
+tidy(ipw_model)
+```
+
+### G-computation
+
+In G-computation, we fit an outcome model that includes the exposure and confounders. We then create two counterfactual datasets: one where everyone is treated and one where everyone is control. We use the fitted outcome model to predict outcomes under each scenario and calculate the ATE as the average difference in predicted outcomes.
+
+The algorithm is:
+1. Fit an outcome model with the exposure and confounders.
+2. Clone the dataset to create two scenarios: one where everyone is treated and one where everyone is control.
+3. Predict outcomes under each scenario using the fitted outcome model.
+4. Calculate the average treatment effect (ATE) as the mean difference in predicted outcomes.
+
+```{r}
+# Step 1: Fit outcome model with exposure and all confounders
+outcome_model <- lm(
+  wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season + 
+    park_close + park_temperature_high,
+  data = seven_dwarfs
+)
+
+tidy(outcome_model)
+
+# Step 2: Clone datasets with different exposure values
+# Create datasets where everyone is treated vs everyone is control
+data_all_treated <- seven_dwarfs |>
+  mutate(park_extra_magic_morning = 1)
+
+data_all_control <- seven_dwarfs |>
+  mutate(park_extra_magic_morning = 0)
+
+# Step 3: Predict outcomes under each scenario
+pred_treated <- predict(outcome_model, newdata = data_all_treated)
+pred_control <- predict(outcome_model, newdata = data_all_control)
+
+# Step 4: Calculate average treatment effect
+# For proper inference, we need bootstrapping. 
+# See the appendix at the bottom of this document.
+ate_gcomp <- mean(pred_treated - pred_control)
+ate_gcomp
+```
+
+## Your Turn 1
+
+1. First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
+2. Fit a SuperLearner for the outcome model using the `SuperLearner` package. The predictors for this model should be the confounders plus the exposure: `park_extra_magic_morning`, `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `wait_minutes_posted_avg`.
+3. Inspect the fitted SuperLearner objects.
+
+```{r}
+set.seed(1234)
+
+seven_dwarfs <- seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9)
+
+sl_library <- c(________, ________, ________, ________)
+
+exposure_sl <- __________(
+  Y = seven_dwarfs$__________,
+  X = seven_dwarfs |> 
+    select(__________, __________, __________) |>
+    mutate(park_close = as.numeric(park_close)),
+  family = binomial(),
+  SL.library = __________,
+  cvControl = list(V = 5)
+)
+
+exposure_sl
+
+outcome_sl <- __________(
+  Y = seven_dwarfs$__________,
+  X = seven_dwarfs |> 
+    select(__________, __________, __________, __________) |>
+    mutate(park_close = as.numeric(park_close)),
+  family = gaussian(),
+  SL.library = __________,
+  cvControl = list(V = 5)
+)
+
+outcome_sl
+```
+
+4. Inspect the predictions from the fitted SuperLearner models.
+5. Check AUC with the `yardstick` package for the exposure model. For this, we need a data frame with the true exposure values and predicted propensity scores to use with `roc_auc()`.
+6. Check RMSE with the `yardstick` package for the outcome model. For this, we need a data frame with the true outcome values and predicted outcomes to use with `rmse()`.
+
+```{r}
+propensity_scores <- predict(______, type = "response")$pred[, 1]
+propensity_scores
+
+outcome_preds <- predict(______)$pred[, 1]
+outcome_preds
+
+exposure_results <- tibble(
+  truth = factor(seven_dwarfs$______),
+  predicted = ______
+)
+
+# Need event_level = "second" because yardstick treats first level ("0") 
+# as event by default
+exposure_auc <- roc_auc(exposure_results, truth, predicted, event_level = "second")
+exposure_auc
+
+outcome_results <- tibble(
+  truth = seven_dwarfs$______,
+  predicted = ______
+)
+outcome_rmse <- rmse(outcome_results, truth, predicted)
+outcome_rmse
+```
+
+**Stretch goal**: Add more algorithms to the SuperLearner and fit the models using the new stack of algorithms.
+
+```{r}
+sl_library_extended <- c(
+  "SL.glm", 
+  "SL.ranger", 
+  "SL.earth",
+  "SL.gam",
+  "SL.glm.interaction",
+  "SL.mean", 
+  "SL.glmnet"
+)
+
+# fit the superlearner models again with the extended library
+exposure_sl_extended <- ________
+
+exposure_sl_extended
+
+outcome_sl_extended <- ________
+
+outcome_sl_extended
+```
+
+## Your Turn 2
+
+1. Implement Inverse Probability Weighting (IPW) using the fitted SuperLearner for the exposure model.
+ - First, calculate the ATE weights using `wt_ate()` with the predicted propensity scores from the fitted SuperLearner.
+ - Then, fit a weighted outcome model using `lm()` with `wait_minutes_posted_avg` as the outcome and `park_extra_magic_morning` as the only predictor, using the ATE weights in the `weights` argument of `lm()`.
+
+```{r}
+# IPW with SuperLearner propensity scores
+# Step 1: Use predicted propensity scores from SuperLearner
+# Already done!
+propensity_scores
+
+# Step 2: Calculate ATE weights using wt_ate()
+ate_weights <- wt_ate(
+  # the propensity score
+  .propensity = ________,
+  # the actual exposure values
+  .exposure = seven_dwarfs$________
+)
+
+# Step 3: Fit weighted outcome model
+# The formula should be: `wait_minutes_posted_avg` as the outcome and  `park_extra_magic_morning` as the only predictor
+ipw_model <- lm(
+  ________ ~ ________,
+  data = seven_dwarfs,
+  weights = ________
+)
+
+# Extract ATE estimate
+tidy(ipw_model) |>
+  filter(term == "park_extra_magic_morning")
+```
+
+2. Implement G-computation using the fitted SuperLearner for the outcome model.
+  - First, create two counterfactual datasets: one where everyone is treated (`park_extra_magic_morning` = 1) and one where everyone is control (`park_extra_magic_morning` = 0).
+  - Then, predict outcomes under each scenario using the fitted SuperLearner for the outcome model.
+  - Finally, calculate the average treatment effect (ATE) as the mean difference in predicted outcomes between the treated and control scenarios.
+
+```{r}
+# G-computation with SuperLearner outcome model
+# Step 1: Create counterfactual datasets
+# For SuperLearner prediction, we need only the columns used in the model
+
+# Dataset where everyone is treated, `park_extra_magic_morning` = 1
+data_all_treated <- seven_dwarfs |> 
+  select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
+  mutate(
+    park_close = as.numeric(park_close),
+    park_extra_magic_morning = ___
+  )
+
+# Dataset where everyone is control, `park_extra_magic_morning` = 0
+data_all_control <- seven_dwarfs |> 
+  select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
+  mutate(
+    park_close = as.numeric(park_close),
+    park_extra_magic_morning = ___
+  )
+
+# Step 2: Predict outcomes under each scenario using SuperLearner
+pred_treated <- predict(______, newdata = ______)$pred[, 1]
+pred_control <- predict(______, newdata = ______)$pred[, 1]
+
+# Step 3: Calculate average treatment effect
+gcomp_ate <- mean(______ - ______)
+gcomp_ate
+```
+
+## Your Turn 3
+
+1. First, bound the continuous outcome to [0,1] range for TMLE. Store the min and max values for later transformation back.
+2. Fit a new SuperLearner on the bounded outcome specifically for TMLE.
+3. Get initial predictions from this bounded SuperLearner (they will already be in [0,1] scale).
+4. Create `initial_pred_observed`, which contains the predicted values for each observation based on their actual treatment assignment.
+
+```{r}
+# Step 1: Bound the continuous outcome to [0,1] for TMLE
+min_y <- min(seven_dwarfs$wait_minutes_posted_avg)
+max_y <- max(seven_dwarfs$wait_minutes_posted_avg)
+y_bounded <- (seven_dwarfs$__________ - min_y) / (max_y - min_y)
+
+# Step 2: Fit new SuperLearner on bounded outcome
+# For TMLE with continuous outcomes, we need to fit on the bounded Y
+outcome_sl_bounded <- SuperLearner(
+  Y = __________,
+  X = seven_dwarfs |> 
+    select(__________, park_ticket_season, park_close, park_temperature_high) |>
+    mutate(park_close = as.numeric(park_close)),
+  family = quasibinomial(),
+  SL.library = __________,
+  cvControl = list(V = 5)
+)
+
+# Step 3: Get initial predictions (already in [0,1] scale)
+initial_pred_treated <- predict(__________, newdata = ______)$pred[, 1]
+initial_pred_control <- predict(__________, newdata = ______)$pred[, 1]
+
+# each observation gets the counterfactual prediction based on their actual treatment
+# this is the same as predicting on the original dataset, but since we already calculated these, we'll just put it together ourselves
+initial_pred_observed <- ifelse(
+  seven_dwarfs$park_extra_magic_morning == 1, 
+  initial_pred_treated, 
+  initial_pred_control
+)
+```
+
+5. Create the "clever covariate" using the propensity scores from the fitted SuperLearner model. This will be used in the TMLE targeting step. For treated units, it should be `1 /propensity_scores`, and for control units, it should be `-1 / (1 - propensity_scores)`.
+
+```{r}
+# Step 2: Create the "clever covariate": this is the key to TMLE
+# It weights observations based on their propensity scores to achieve balance
+# For treated units: 1 / propensity_scores 
+# For control units: -1 / (1 - propensity_scores) 
+# This is NOT the ATE weights; it's a component of the efficient influence function
+# But it IS related, as it is also a consequence of targeting the ATE
+clever_covariate <- ifelse(
+  seven_dwarfs$park_extra_magic_morning == 1,
+  __________,
+  __________
+)
+```
+
+6. Fit a fluctuation model with the bounded outcome, using `qlogis(initial_pred_observed)` as an offset and the clever covariate as a predictor (with no intercept). Use binomial family for the model.
+7. Get the fluctuation parameter `epsilon` from the model coefficients; this is the coefficient for the clever covariate. 
+
+```{r}
+# Step 3: The targeting step - a small parametric fluctuation of initial estimates
+# We're not re-fitting from scratch; we're making a targeted adjustment
+# The offset keeps our initial predictions on the logit scale
+# No intercept because we're adjusting around the initial predictions, not estimating a new model
+# Use binomial family for bounded continuous outcomes
+fluctuation_model <- glm(
+  __________ ~ -1 + offset(qlogis(__________)) + __________,
+  family = binomial()
+)
+
+# Epsilon: the fluctuation parameter that solves the efficient influence function
+# It tells us how much our initial estimate needs to be adjusted to be unbiased
+# Small epsilon = initial estimate was already good; large = needed more correction
+# This is the coefficient for clever_covariate
+epsilon <- __________
+epsilon
+```
+
+8. Now that we've calculated the fluctuation parameter, we can update our predictions to obtain targeted predictions that are minimize the bias-variance tradeoff for the average treatment effect. 
+   - For treated units, we add `epsilon * (1 / propensity_scores)`.
+   - For control units, we add `epsilon * (-1 / (1 - propensity_scores)`.
+
+```{r}
+# Step 4: Update our predictions using the fluctuation parameter
+# This update ensures our estimate solves the efficient influence function equation
+# which helps us estimate: 1) unbiased estimate of ATE, 2) valid standard errors
+# We adjust the initial predictions (on the logit scale) by adding epsilon * clever_covariate
+# 1 / propensity_scores for treated (since everyone in initial_pred_treated is treated counterfactually)
+# -1 / (1 - propensity_scores) for controls
+logit_pred_treated <- qlogis(initial_pred_treated) + epsilon * __________
+logit_pred_control <- qlogis(initial_pred_control) + epsilon * __________
+
+# Transform back to probability scale
+targeted_pred_treated <- plogis(__________)
+targeted_pred_control <- plogis(__________)
+
+# we'll need this later for calculating the variance and confidence intervals
+targeted_pred_observed <- ifelse(
+  seven_dwarfs$park_extra_magic_morning == 1, 
+  targeted_pred_treated, 
+  targeted_pred_control
+)
+```
+
+9. Let's visualize the initial vs targeted individual-level predictions for treated and control units. Set the x-axis to the initial predictions and the y-axis to the targeted predictions. For the first plot, use `initial_pred_treated` and `targeted_pred_treated`, and for the second plot, use `initial_pred_control` and `targeted_pred_control`. 
+
+```{r}
+# plot the initial vs targeted individual-level predictions for treated units
+ggplot(seven_dwarfs, aes(x = __________, y = __________)) +
+  geom_point() +
+  # perfect prediction line: y = x
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Initial Predictions (Treated)",
+    y = "Targeted Predictions (Treated)"
+  ) + 
+  theme_minimal()
+
+# plot the initial vs targeted individual-level predictions for control units
+ggplot(seven_dwarfs, aes(x = __________, y = __________)) +
+  geom_point() +
+  # perfect prediction line: y = x
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Initial Predictions (Control)",
+    y = "Targeted Predictions (Control)"
+  ) + 
+  theme_minimal()
+```
+
+## Your Turn 4
+
+1. Let's compare the mean difference in **initial** predictions between treated and control units, and the mean difference in **targeted** predictions between treated and control units. The first calculation is identical to the g-computation ATE estimate. The second calculation is the TMLE estimate. Remember to transform back to the original scale!
+
+```{r}
+# Compare: initial estimate (good prediction, possibly biased for causal effect)
+# vs targeted estimate (adjusted to be unbiased for the causal parameter)
+# the g-computation ATE is the mean difference in initial predictions
+# Transform back to original scale by multiplying by (max_y - min_y)
+initial_ate <- mean(__________ - __________) * (max_y - min_y)
+initial_ate
+
+# the TMLE ATE is the mean difference in targeted predictions
+# Transform back to original scale
+targeted_ate <- mean(__________ - __________) * (max_y - min_y)
+targeted_ate
+```
+
+2. Now let's calculate its standard error using the efficient influence curve (IC). The IC captures the uncertainty in our estimate and allows us to construct valid confidence intervals. There's no code to change here, just read through the comments to understand how the IC is constructed and how it relates to the TMLE estimate.
+
+```{r}
+# Calculate the efficient influence curve (IC) for each observation
+# The IC has two components:
+# 1. clever_covariate * residual: captures remaining uncertainty in the outcome model
+# 2. (targeted_pred_treated - targeted_pred_control - tmle_ate): captures uncertainty in the treatment effect
+# Each observation's IC value represents its contribution to the overall uncertainty
+# Note: IC uses bounded outcomes and predictions
+ic <- clever_covariate * (y_bounded - targeted_pred_observed) + 
+  targeted_pred_treated - targeted_pred_control - targeted_ate / (max_y - min_y)
+
+# Standard error is the standard deviation of IC values divided by sqrt(n)
+# This works because TMLE constructs the estimate to behave like a sample mean of IC values
+# Even though we used ML, the targeting step ensures valid statistical inference
+# Transform SE back to original scale
+se_tmle <- sqrt(var(ic) / nrow(seven_dwarfs)) * (max_y - min_y)
+
+# Calculate 95% confidence interval using normal approximation
+# Valid because TMLE is asymptotically normal with the IC-based variance
+ci_lower <- targeted_ate - 1.96 * se_tmle
+ci_upper <- targeted_ate + 1.96 * se_tmle
+
+tibble(
+  targeted_ate,
+  se_tmle,
+  ci_lower,
+  ci_upper
+)
+```
+
+## Bonus: Fit with `tmle::tmle()`
+
+R has several packages for TMLE: tmle, ltmle, and tmle3, all with slightly different designs and capabilities. We'll use the `tmle` package here, which is quite simple and works with SuperLearner.
+
+```{r}
+confounders <- seven_dwarfs |> 
+  select(park_ticket_season, park_close, park_temperature_high) |>
+  mutate(park_close = as.numeric(park_close))
+
+tmle_result <- tmle(
+  # Y is the outcome
+  Y = seven_dwarfs$wait_minutes_posted_avg,
+  # A is the exposure
+  A = seven_dwarfs$park_extra_magic_morning,
+  W = confounders,
+  # Q is the outcome model
+  Q.SL.library = sl_library,
+  # g is the exposure model (propensity score)
+  g.SL.library = sl_library
+)
+
+tmle_result
+summary(tmle_result)
+```
+
+***
+
+# Take aways
+
+* Machine learning methods can improve causal inference by reducing bias and variance in treatment effect estimates.
+* SuperLearner provides a flexible framework for combining multiple machine learning algorithms.
+* TMLE provides a robust framework for estimating treatment effects while addressing bias and variance.
+* The targeting step in TMLE is crucial for improving estimates and reducing bias
+
+
+# Appendix: Bootstrapping for IPW and G-computation
+
+## IPW
+
+
+```{r}
+library(rsample)
+set.seed(1234)
+
+fit_ipw <- function(split, ...) {
+  .df <- as.data.frame(split)
+  
+  # Fit propensity score model
+  ps_model <- glm(
+    park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
+    data = .df,
+    family = binomial()
+  )
+  
+  # Calculate weights
+  ps <- augment(ps_model, type.predict = "response", data = .df)$.fitted
+  weights <- wt_ate(ps, .df$park_extra_magic_morning, exposure_type = "binary")
+  
+  # Fit weighted outcome model
+  lm(wait_minutes_posted_avg ~ park_extra_magic_morning, 
+     data = .df, 
+     weights = weights) |>
+    tidy()
+}
+
+# Bootstrap confidence intervals
+ipw_boot <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, fit_ipw))
+
+int_bca(ipw_boot, results, .fn = fit_ipw) |>
+  filter(term == "park_extra_magic_morning")
+```
+
+## G-computation
+
+```{r}
+fit_gcomp <- function(split, ...) {
+  .df <- as.data.frame(split)
+  
+  # Fit outcome model
+  mod <- lm(
+    wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season + 
+      park_close + park_temperature_high,
+    data = .df
+  )
+  
+  # Clone and predict
+  df_treat <- .df |> mutate(park_extra_magic_morning = 1)
+  df_control <- .df |> mutate(park_extra_magic_morning = 0)
+  
+  pred_treat <- augment(mod, newdata = df_treat)$.fitted
+  pred_control <- augment(mod, newdata = df_control)$.fitted
+  
+  # Return results
+  tibble(
+    term = "ate",
+    estimate = mean(pred_treat - pred_control)
+  )
+}
+
+gcomp_boot <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
+  mutate(results = map(splits, fit_gcomp))
+
+int_bca(gcomp_boot, results, .fn = fit_gcomp)
+```
+
