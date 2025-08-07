@@ -36,7 +36,7 @@
   Bias](https://causal-inference-r-workshop.netlify.app/13-bonus-selection-bias.html)
 - [14 Bonus: Continous Exposures with Propensity
   Scores](https://causal-inference-r-workshop.netlify.app/14-bonus-continuous-pscores.html)
-  \#### [15 Bonus: Machine Learning for Causal
+- [15 Bonus: Machine Learning for Causal
   Inference](https://causal-inference-r-workshop.netlify.app/15-bonus-ml-for-causal.html)
 
 ### Installing materials locally
