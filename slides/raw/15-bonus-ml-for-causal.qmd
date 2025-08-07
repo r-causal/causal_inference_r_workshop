@@ -1,0 +1,784 @@
+---
+title: "Machine Learning for Causal Inference"
+author: "Malcolm Barrett"
+institute: "Stanford University"
+format: "kakashi-revealjs"
+---
+
+```{r}
+#| label: setup
+#| include: false
+options(
+  tibble.max_extra_cols = 6, 
+  tibble.width = 60
+)
+
+library(tidyverse)
+library(broom)
+library(causaldata)
+library(touringplans)
+library(propensity)
+library(SuperLearner)
+library(tmle)
+library(yardstick)
+library(ggdag)
+library(ggokabeito)
+
+set.seed(1234)
+
+# prepare NHEFS data
+nhefs_complete_uc <- nhefs_complete |>
+  filter(censored == 0)
+```
+
+# Machine learning cannot automate causal inference... but maybe it can help some difficult parts of estimating causal effects {background-color="#23373B"}
+
+# Review: Estimands, estimators, and estimates {background-color="#23373B"}
+
+## {background-color="#23373B" .huge .center}
+
+Normal regression estimates associations. But we want *causal* estimates: what would happen if *everyone* in the study were exposed to x vs if *no one* was exposed.
+
+##
+
+```{r}
+#| echo: false
+knitr::include_graphics("img/estimands-cake.png")
+```
+
+::: tiny
+Image source: Simon Grund
+:::
+
+## What part of the DAG do we want to try to deal with?
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(ggdag)
+library(ggokabeito)
+
+coord_dag <- list(
+  x = c(z = 0, x = 1, y = 2),
+  y = c(z = 0.5, x = 0, y = 0)
+)
+
+labels <- c(
+  x = "Exposure",
+  y = "Outcome",
+  z = "Confounder"
+)
+
+dag <- dagify(
+  y ~ x + z,
+  x ~ z,
+  coords = coord_dag,
+  labels = labels,
+  exposure = "x",
+  outcome = "y"
+) |>
+  tidy_dagitty() |>
+  node_status()
+
+dag_base <- dag |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_point() +
+  geom_dag_label_repel2(aes(label = label), seed = 1234) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(legend.position = "none")
+
+dag_base + geom_dag_edges()
+```
+
+## What part of the DAG do we want to try to deal with?
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# Propensity score approach - highlight z -> x
+dag_base +
+  geom_dag_edges(edge_color = "grey80") +
+  geom_dag_edges(
+    data_directed = \(.x) filter(.x, to == "x"),
+    edge_width = 1.1
+  )
+```
+
+## What part of the DAG do we want to try to deal with?
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# Outcome model approach - highlight z -> y
+dag_base +
+  geom_dag_edges(edge_color = "grey80") +
+  geom_dag_edges(
+    data_directed = \(.x) filter(.x, name == "z", to == "y"),
+    edge_width = 1.1
+  )
+```
+
+
+## Inverse Probability Weighting (IPW) {background-color="#23373B"}
+
+1. Fit a model for `x ~ z` where z is all confounders 
+2. Calculate the propensity score for each observation
+3. Calculate the weights
+4. Fit a weighted regression model for `y ~ x` using the weights 
+
+## Inverse Probability Weighting (IPW)
+
+```{r}
+#| echo: false
+propensity_model <- glm(
+  qsmk ~ sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2), 
+  family = binomial(), 
+  data = nhefs_complete_uc
+)
+
+nhefs_complete_uc <- propensity_model |>
+  augment(type.predict = "response", data = nhefs_complete_uc) |>
+  mutate(
+    wts = wt_ate(.fitted, qsmk),
+    qsmk = factor(qsmk, levels = c(0, 1), labels = c("No", "Yes"))
+  )
+
+halfmoon::plot_mirror_distributions(
+  nhefs_complete_uc |>
+    mutate(weighted = wts), 
+  .fitted, 
+  .group = qsmk, 
+  .wts = weighted
+) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold", size = 12)
+  ) +
+  labs(x = "propensity score", fill = "treated") +
+  ggokabeito::scale_fill_okabe_ito()
+```
+
+## G-computation
+
+1. Fit a model for `y ~ x + z` where z is all confounders
+2. Create a duplicate of your data set for each level of `x`
+3. Set the value of x to a single value for each cloned data set (e.g `x = 1` for one, `x = 0` for the other)
+4. Make predictions using the model on the cloned data sets
+5. Calculate the estimate you want, e.g. `mean(x_1) - mean(x_0)`
+
+## G-computation
+
+```{r}
+#| echo: false
+outcome_model <- lm(
+  wt82_71 ~ qsmk + sex + 
+    race + age + I(age^2) + education + 
+    smokeintensity + I(smokeintensity^2) + 
+    smokeyrs + I(smokeyrs^2) + exercise + active + 
+    wt71 + I(wt71^2),
+  data = nhefs_complete_uc
+)
+
+data_all_quit <- nhefs_complete_uc |>
+  mutate(qsmk = "Yes")
+
+data_all_no_quit <- nhefs_complete_uc |>
+  mutate(qsmk = "No")
+
+pred_quit <- predict(outcome_model, newdata = data_all_quit)
+pred_no_quit <- predict(outcome_model, newdata = data_all_no_quit)
+
+gcomp_data <- bind_rows(
+  tibble(
+    predicted_weight_change = pred_quit,
+    scenario = "All Treated"
+  ),
+  tibble(
+    predicted_weight_change = pred_no_quit,
+    scenario = "None Treated"
+  )
+) |>
+  mutate(scenario = factor(scenario, levels = c("None Treated", "All Treated")))
+
+
+ggplot(gcomp_data, aes(x = predicted_weight_change)) +
+  geom_density(
+    aes(fill = scenario),
+    alpha = 0.7,
+    color = "white",
+    linewidth = 0.5
+  ) +
+  facet_wrap(~ scenario, ncol = 1, scales = "free_y") +
+  scale_fill_okabe_ito() +
+  labs(
+    x = "Predicted Outcome",
+    y = "Density"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold", size = 12)
+  )
+```
+
+## What part of the DAG do we want to try to deal with?
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# Doubly robust approach - highlight both z -> x and z -> y
+dag_base +
+  geom_dag_edges(
+    data_directed = \(.x) filter(.x, name == "x", to == "y"),
+    edge_color = "grey80"
+  ) +
+  geom_dag_edges(
+    data_directed = \(.x) filter(.x, name == "z"),
+    edge_width = 1.1
+  )
+```
+
+# Two Causal Questions {background-color="#23373B"}
+
+## **Does quitting smoking cause weight gain?**
+
+```{r}
+#| echo: false
+smk_wt_dag <- dagify(
+  qsmk ~ sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  wt82_71 ~ qsmk + sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  exposure = "qsmk", 
+  outcome = "wt82_71",
+  coords = time_ordered_coords(),
+  labels = c(
+    "qsmk" = "quit\nsmoking",
+    "wt82_71" = "change in\nweight",
+    "age" = "age",
+    "sex" = "sex",
+    "race" = "race",
+    "education" = "education",
+    "wt71" = "baseline\nweight",
+    "active" = "daily\nactivity",
+    "exercise" = "exercise",
+    "smokeintensity" = "smoking\nintensity",
+    "smokeyrs" = "years\nsmoking"
+  )
+) |>
+  tidy_dagitty() |>
+  node_status()
+
+smk_wt_dag |>
+  ggplot(aes(x, y, xend = xend, yend = yend, color = status)) +
+  geom_dag_edges() +
+  geom_dag_point() +
+  geom_dag_label_repel(aes(label = label), seed = 1234) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(legend.position = "none")
+```
+
+## Example: The Seven Dwarfs Mine Train {.small}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+<img src="img/Mickey_and_Walt_Disney.jpg" height="300"></img>
+
+Photo by Anna [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
+:::
+
+::: {.column width="50%"}
+Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during "Extra Magic Hours" during which the park was closed to all other guests.
+
+These extra hours could be in the morning or evening.  
+
+The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these "Extra Magic Hours".
+:::
+
+::::
+
+## {background-color="#23373B" .large .center}
+
+*We are interested in examining the relationship between whether there were* **"Extra Magic Hours"** *in the morning and* **the average wait time** *for the Seven Dwarfs Mine Train the same day between 9am and 10am.*
+
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig.height: 4.0
+library(tidyverse)
+library(ggdag)
+library(ggokabeito)
+
+geom_dag_label_repel <- function(..., seed = 10) {
+  ggdag::geom_dag_label_repel(
+    aes(x, y, label = label),
+    box.padding = 3.5, 
+    inherit.aes = FALSE,
+    max.overlaps = Inf, 
+    family = "sans",
+    seed = seed,
+    label.size = NA, 
+    label.padding = 0.1,
+    size = 14 / 3,
+    ...
+  ) 
+}
+
+coord_dag <- list(
+  x = c(season = 0, close = 0, weather = -1, emm = 1, posted_wait = 2),
+  y = c(season = -1, close = 1, weather = 0, emm = 0, posted_wait = 0)
+)
+
+labels <- c(
+  emm = "Extra Magic Morning",
+  posted_wait = "Average wait",
+  season = "Ticket Season",
+  weather = "Historic high temperature",
+  close = "Time park closed"
+)
+
+dagify(
+  posted_wait ~ emm + close + season + weather,
+  emm ~ weather + close + season,
+  coords = coord_dag,
+  labels = labels,
+  exposure = "emm",
+  outcome = "posted_wait"
+) |>
+  tidy_dagitty() |>
+  node_status() |>
+  ggplot(
+    aes(x, y, xend = xend, yend = yend, color = status)
+  ) +
+  geom_dag_edges_arc(curvature = c(rep(0, 6), .3)) +
+  geom_dag_point() +
+  geom_dag_label_repel(seed = 1630) +
+  scale_color_okabe_ito(na.value = "grey90") +
+  theme_dag() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text()
+  ) +
+  coord_cartesian(clip = "off") +
+  scale_x_continuous(
+    limits = c(-1.25, 2.25),
+    breaks = c(-1, 0, 1, 2),
+    labels = c(
+      "\n(one year ago)",
+      "\n(6 months ago)",
+      "\n(3 months ago)",
+      "9am - 10am\n(Today)"
+    )
+  )
+```
+
+# Machine Learning for Causal Inference {background-color="#23373B"}
+
+## What algorithm should we use to make predictions?
+
+```{r}
+#| echo: false
+knitr::include_graphics("img/ml_algorithms.png")
+```
+
+## Ensemble Algorithms with SuperLearner
+
+```{r}
+#| echo: false
+knitr::include_graphics("img/superlearner.png")
+```
+
+:::{.fragment}
+Given a set of candidate algorithms (and hyperparameters), stacked ensembles combine them to minimize (cross-validated) prediction error. Stacked ensembles will perform at least as well as the best individual algorithm.
+:::
+
+## SuperLearner: Exposure Model
+
+```{r}
+#| code-line-numbers: "|1,3,8|4-7|"
+#| cache: true
+sl_library <- c("SL.glm", "SL.ranger", "SL.xgboost", "SL.gam")
+
+propensity_sl <- SuperLearner(
+  Y = nhefs_complete_uc$qsmk |> as.integer(),
+  X = nhefs_complete_uc |> 
+    select(sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+    mutate(across(everything(), as.numeric)),
+  family = binomial(),
+  SL.library = sl_library,
+  cvControl = list(V = 5)
+)
+```
+
+## SuperLearner: Exposure Model
+
+```{r}
+#| echo: true
+propensity_sl
+```
+
+## SuperLearner: Outcome Model
+
+```{r}
+#| code-line-numbers: "|2|3-5|"
+#| cache: true
+outcome_sl <- SuperLearner(
+  Y = nhefs_complete_uc$wt82_71,
+  X = nhefs_complete_uc |> 
+    select(qsmk, sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+    mutate(across(everything(), as.numeric)),
+  family = gaussian(),
+  SL.library = sl_library,
+  cvControl = list(V = 5)
+)
+```
+
+## SuperLearner: Outcome Model
+
+```{r}
+outcome_sl
+```
+
+## *Your Turn 1*
+
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 8)
+```
+
+### First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.xgboost", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
+### Fit a SuperLearner for the outcome model using the `SuperLearner` package. The predictors for this model should be the confounders plus the exposure: `park_extra_magic_morning`, `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `wait_minutes_posted_avg`.
+### Inspect the fitted SuperLearner objects.
+
+## IPW with SuperLearner
+
+```{r}
+#| echo: true
+#| code-line-numbers: "|1|3|5-9"
+propensity_scores <- predict(propensity_sl, type = "response")$pred[, 1]
+
+ate_weights <- wt_ate(propensity_scores, nhefs_complete_uc$qsmk)
+
+ipw_model <- lm(
+  wt82_71 ~ qsmk,
+  data = nhefs_complete_uc,
+  weights = ate_weights
+)
+```
+
+## IPW with SuperLearner
+
+```{r}
+tidy(ipw_model)
+```
+
+## G-computation with SuperLearner
+
+```{r}
+#| code-line-numbers: "|1-2,7|4-5,8|10"
+data_all_quit <- nhefs_complete_uc |>
+  select(qsmk, sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+  mutate(across(everything(), as.numeric)) |>
+  mutate(qsmk = 1)
+
+data_all_no_quit <- nhefs_complete_uc |>
+  select(qsmk, sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+  mutate(across(everything(), as.numeric)) |>
+  mutate(qsmk = 0)
+
+pred_quit <- predict(outcome_sl, newdata = data_all_quit)$pred[, 1]
+pred_no_quit <- predict(outcome_sl, newdata = data_all_no_quit)$pred[, 1]
+
+mean(pred_quit - pred_no_quit)
+```
+
+## *Your Turn 2*
+
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 8)
+```
+
+### Implement the IPW algorithm using the SuperLearner propensity scores
+### Implement the G-computation algorithm using the SuperLearner outcome predictions
+
+# Targeted Maximum Likelihood Estimation (TMLE) {background-color="#23373B"}
+
+## Targeted Learning
+- TMLE is a flexible, efficient method for estimating causal effects based in semi-parametric theory
+- TMLE solves three problems: doubly robustness, targeted estimation, and valid statistical inference
+
+## Targeted Learning: doubly robustness
+
+- In **IPW** and **G-computation**, we estimate the propensity score and outcome model separately. If either model is misspecified, the estimate will be biased. 
+- In **TMLE**, we combine the two models in a way that is doubly robust: if either the propensity score or outcome model is correctly specified, the estimate will be consistent.
+
+## Targeted Learning: targeted estimation
+
+- In **IPW** and **G-computation**, we estimate the average treatment effect (ATE) using predictions from the exposure and outcome models. But these algorithms optimize for the predictions, not the ATE.
+- In **TMLE**, we adjust the predictions to specifically target the ATE. We change the bias-variance tradeoff to focus on the ATE rather than just minimizing prediction error. This is a debiasing step that also improves the efficiency of the estimate!
+- Targeting is a general technique that can be applied to many problems, not just causal ones
+
+## Targeted Learning: valid statistical inference
+- In **IPW** and **G-computation**, we can using ML algorithms to make predictions, but we cannot easily get valid confidence intervals. Bootstrapping is often used, but it can be computationally intensive and not always valid.
+- In **TMLE**, we can use the influence curve to get valid confidence intervals. The influence curve is a way to estimate the variance of the TMLE estimate, even when using complex ML algorithms.
+
+## The TMLE Algorithm {background-color="#23373B"}
+
+1. Start with SuperLearner predictions for the outcome
+2. Calculate the propensity scores using SuperLearner
+3. Create the clever covariate using the propensity scores
+4. Fit the fluctuation model to learn how much to adjust the outcome predictions
+5. Update the predictions with the targeted adjustment
+6. Calculate the TMLE estimate and standard error using the influence curve
+
+## TMLE Step 1: Initial Predictions (on the bounded [0,1] scale)
+
+```{r}
+#| echo: true
+#| cache: true
+# For TMLE with continuous outcomes, fit SuperLearner on bounded Y
+min_y <- min(nhefs_complete_uc$wt82_71)
+max_y <- max(nhefs_complete_uc$wt82_71)
+y_bounded <- (nhefs_complete_uc$wt82_71 - min_y) / (max_y - min_y)
+
+# Fit new SuperLearner on bounded outcome
+outcome_sl_bounded <- SuperLearner(
+  Y = y_bounded,
+  X = nhefs_complete_uc |> 
+    select(qsmk, sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+    mutate(across(everything(), as.numeric)),
+  family = binomial(),
+  SL.library = sl_library,
+  cvControl = list(V = 5)
+)
+```
+
+## TMLE Step 1: Initial Predictions (on the bounded [0,1] scale)
+
+```{r}
+initial_pred_quit <- predict(outcome_sl_bounded, newdata = data_all_quit)$pred[, 1]
+initial_pred_no_quit <- predict(outcome_sl_bounded, newdata = data_all_no_quit)$pred[, 1]
+
+# Predictions for observed treatment
+initial_pred_observed <- ifelse(
+  nhefs_complete_uc$qsmk == 1,
+  initial_pred_quit,
+  initial_pred_no_quit
+)
+```
+
+## TMLE Step 2: Clever Covariate
+
+```{r}
+#| echo: true
+clever_covariate <- ifelse(
+  nhefs_complete_uc$qsmk == 1,
+  1 / propensity_scores,
+  -1 / (1 - propensity_scores)
+)
+```
+
+::: incremental
+- Not the same as IPW weights!
+- Part of the efficient influence function
+- Helps target the ATE specifically
+:::
+
+## TMLE Step 3: Targeting
+
+```{r}
+#| echo: true
+# Fluctuation model - learns how much to adjust
+# Use binomial family and work on logit scale
+fluctuation_model <- glm(
+  y_bounded ~
+     -1 + 
+     offset(qlogis(initial_pred_observed)) +
+     clever_covariate,
+  family = quasibinomial()
+)
+
+epsilon <- coef(fluctuation_model)
+epsilon
+```
+
+::: incremental
+- Small epsilon = initial estimate was good
+- Large epsilon = needed more adjustment
+:::
+
+## TMLE Step 4: Update Predictions
+
+```{r}
+#| code-line-numbers: "|1-2|5-6"
+# Update predictions on logit scale, then transform back
+logit_pred_quit <- qlogis(initial_pred_quit) + epsilon * (1 / propensity_scores)
+logit_pred_no_quit <- qlogis(initial_pred_no_quit) + epsilon * (-1 / (1 - propensity_scores))
+
+# Transform back to probability scale
+targeted_pred_quit <- plogis(logit_pred_quit)
+targeted_pred_no_quit <- plogis(logit_pred_no_quit)
+```
+
+## 
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5
+library(patchwork)
+
+targeting_data <- tibble(
+  initial_quit = initial_pred_quit,
+  targeted_quit = targeted_pred_quit,
+  initial_no_quit = initial_pred_no_quit,
+  targeted_no_quit = targeted_pred_no_quit
+)
+
+p_quit <- ggplot(targeting_data, aes(x = initial_quit, y = targeted_quit)) +
+  geom_point(alpha = 0.6, color = "#009E73") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Initial Predictions (Quit Smoking)",
+    y = "Targeted Predictions (Quit Smoking)"
+  ) + 
+  theme_minimal(base_size = 14) +
+  coord_fixed()
+
+p_no_quit <- ggplot(targeting_data, aes(x = initial_no_quit, y = targeted_no_quit)) +
+  geom_point(alpha = 0.6, color = "#E69F00") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Initial Predictions (No Quit)",
+    y = "Targeted Predictions (No Quit)"
+  ) + 
+  theme_minimal(base_size = 14) +
+  coord_fixed()
+
+p_quit + p_no_quit
+```
+
+## *Your Turn 3*
+
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 10)
+```
+
+### Calculate initial predictions for treated/control scenarios
+### Create the clever covariate using propensity scores
+### Fit the fluctuation model with offset and no intercept
+### Update predictions with the targeted adjustment
+
+## TMLE ATE
+
+```{r}
+initial_ate <- mean(
+  initial_pred_quit - initial_pred_no_quit
+  # Transform back to original scale for ATE
+) * (max_y - min_y)
+
+targeted_ate <- mean(
+  targeted_pred_quit - targeted_pred_no_quit
+) * (max_y - min_y)
+
+c(initial = initial_ate, targeted = targeted_ate)
+```
+
+## TMLE Inference
+
+```{r}
+#| echo: true
+targeted_pred_observed <- ifelse(
+  nhefs_complete_uc$qsmk == 1,
+  targeted_pred_quit,
+  targeted_pred_no_quit
+)
+
+# IC uses bounded outcomes and predictions
+ic <- clever_covariate * (y_bounded - targeted_pred_observed) + 
+      targeted_pred_quit - targeted_pred_no_quit - targeted_ate / (max_y - min_y)
+
+# Standard error on original scale
+se_tmle <- sqrt(var(ic) / nrow(nhefs_complete_uc)) * (max_y - min_y)
+
+# 95% CI
+tibble(
+  ate = targeted_ate,
+  se = se_tmle,
+  lower_ci = targeted_ate - 1.96 * se_tmle, 
+  upper_ci = targeted_ate + 1.96 * se_tmle
+)
+```
+
+## Using the tmle Package
+
+```{r}
+#| cache: true
+#| output-location: slide
+library(tmle)
+
+tmle_result <- tmle(
+  Y = nhefs_complete_uc$wt82_71,
+  A = nhefs_complete_uc$qsmk |> as.integer(),
+  W = nhefs_complete_uc |> 
+    select(sex, race, age, education, smokeintensity, 
+           smokeyrs, exercise, active, wt71) |> 
+    mutate(across(everything(), as.numeric)),
+  Q.SL.library = sl_library,
+  g.SL.library = sl_library
+)
+
+summary(tmle_result)
+```
+
+## *Your Turn 4*
+
+```{r}
+#| echo: false
+#| eval: true
+countdown::countdown(minutes = 5)
+```
+
+### Calculate the TMLE ATE and compare to the initial (g-computation) estimate
+### Work through the code to compute the variance and CIs (nothing to change here)
+
+## Key Takeaways
+
+- ML improves flexibility for confounding functional form, not identification
+- Still need DAGs and causal assumptions
+- TMLE is statistically efficient, updates predictions to target the causal effect 
+- Valid inference even with complex ML
+
+## Resources {background-color="#23373B"}
+
+### *Targeted Learning* by Mark van der Laan and Sherri Rose (THE book... see the sequel for longitudinal problems)
+### [*Introduction to Modern Causal Inference*](https://alejandroschuler.github.io/mci/introduction-to-modern-causal-inference.html) by Alejandro Schuler and Mark van der Laan (Great introduction to the math and theory)
