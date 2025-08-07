@@ -179,7 +179,7 @@ ate_gcomp
 
 ## Your Turn 1
 
-1. First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.xgboost", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
+1. First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
 2. Fit a SuperLearner for the outcome model using the `SuperLearner` package. The predictors for this model should be the confounders plus the exposure: `park_extra_magic_morning`, `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `wait_minutes_posted_avg`.
 3. Inspect the fitted SuperLearner objects.
 
@@ -251,7 +251,6 @@ outcome_rmse
 sl_library_extended <- c(
   "SL.glm", 
   "SL.ranger", 
-  "SL.xgboost",
   "SL.earth",
   "SL.gam",
   "SL.glm.interaction",
@@ -310,16 +309,23 @@ tidy(ipw_model) |>
 ```{r}
 # G-computation with SuperLearner outcome model
 # Step 1: Create counterfactual datasets
-seven_dwarfs_clone <- seven_dwarfs |> 
-  mutate(park_close = as.numeric(park_close))
+# For SuperLearner prediction, we need only the columns used in the model
 
 # Dataset where everyone is treated, `park_extra_magic_morning` = 1
-data_all_treated <- seven_dwarfs_clone |> 
-  mutate(park_extra_magic_morning = ___)
+data_all_treated <- seven_dwarfs |> 
+  select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
+  mutate(
+    park_close = as.numeric(park_close),
+    park_extra_magic_morning = ___
+  )
 
 # Dataset where everyone is control, `park_extra_magic_morning` = 0
-data_all_control <- seven_dwarfs_clone |> 
-  mutate(park_extra_magic_morning = ___)
+data_all_control <- seven_dwarfs |> 
+  select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
+  mutate(
+    park_close = as.numeric(park_close),
+    park_extra_magic_morning = ___
+  )
 
 # Step 2: Predict outcomes under each scenario using SuperLearner
 pred_treated <- predict(______, newdata = ______)$pred[, 1]
@@ -350,7 +356,7 @@ outcome_sl_bounded <- SuperLearner(
   X = seven_dwarfs |> 
     select(__________, park_ticket_season, park_close, park_temperature_high) |>
     mutate(park_close = as.numeric(park_close)),
-  family = binomial(),
+  family = quasibinomial(),
   SL.library = __________,
   cvControl = list(V = 5)
 )
