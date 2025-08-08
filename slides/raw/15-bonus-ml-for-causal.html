@@ -333,9 +333,9 @@ Malcolm Barrett
 <span id="cb1-2"><a href=""></a></span>
 <span id="cb1-3"><a href=""></a>propensity_sl <span class="ot">&lt;-</span> <span class="fu">SuperLearner</span>(</span>
 <span id="cb1-4"><a href=""></a>  <span class="at">Y =</span> <span class="fu">as.integer</span>(nhefs_complete_uc<span class="sc">$</span>qsmk <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
-<span id="cb1-5"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span> </span>
-<span id="cb1-6"><a href=""></a>    <span class="fu">select</span>(sex, race, age, education, smokeintensity, </span>
-<span id="cb1-7"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb1-5"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href=""></a>    <span class="fu">select</span>(sex, race, age, education, smokeintensity,</span>
+<span id="cb1-7"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb1-8"><a href=""></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)),</span>
 <span id="cb1-9"><a href=""></a>  <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
 <span id="cb1-10"><a href=""></a>  <span class="at">SL.library =</span> sl_library,</span>
@@ -367,9 +367,9 @@ SL.gam_All    0.1825974 0.94752522</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|2|3-5|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>outcome_sl <span class="ot">&lt;-</span> <span class="fu">SuperLearner</span>(</span>
 <span id="cb4-2"><a href=""></a>  <span class="at">Y =</span> nhefs_complete_uc<span class="sc">$</span>wt82_71,</span>
-<span id="cb4-3"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href=""></a>    <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity, </span>
-<span id="cb4-5"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href=""></a>    <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity,</span>
+<span id="cb4-5"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb4-6"><a href=""></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)),</span>
 <span id="cb4-7"><a href=""></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
 <span id="cb4-8"><a href=""></a>  <span class="at">SL.library =</span> sl_library,</span>
@@ -389,11 +389,10 @@ SuperLearner(Y = nhefs_complete_uc$wt82_71, X = mutate(select(nhefs_complete_uc,
     active, wt71), across(everything(), as.numeric)), family = gaussian(),  
     SL.library = sl_library, cvControl = list(V = 5)) 
 
-                   Risk       Coef
-SL.glm_All     55.41405 0.01678317
-SL.ranger_All  57.24412 0.13366720
-SL.xgboost_All 72.77471 0.00000000
-SL.gam_All     54.53583 0.84954963</code></pre>
+                  Risk       Coef
+SL.glm_All    55.41405 0.02228551
+SL.ranger_All 57.09105 0.15288964
+SL.gam_All    54.53583 0.82482486</code></pre>
 </div>
 </div>
 </section>
@@ -401,13 +400,13 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <h2><em>Your Turn 1</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_a0f4b7bd" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_d2c6aace" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">08</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 </div>
 </div>
-<h3 id="first-create-a-character-vector-sl_library-that-specifies-the-following-algorithms-sl.glm-sl.ranger-sl.xgboost-sl.gam.-then-fit-a-superlearner-for-the-exposure-model-using-the-superlearner-package.-the-predictors-for-this-model-should-be-the-confounders-identified-in-the-dag-park_ticket_season-park_close-and-park_temperature_high.-the-outcome-is-park_extra_magic_morning.">First, create a character vector <code>sl_library</code> that specifies the following algorithms: “SL.glm”, “SL.ranger”, “SL.xgboost”, “SL.gam”. Then, Fit a SuperLearner for the exposure model using the <code>SuperLearner</code> package. The predictors for this model should be the confounders identified in the DAG: <code>park_ticket_season</code>, <code>park_close</code>, and <code>park_temperature_high</code>. The outcome is <code>park_extra_magic_morning</code>.</h3>
+<h3 id="first-create-a-character-vector-sl_library-that-specifies-the-following-algorithms-sl.glm-sl.ranger-sl.gam.-then-fit-a-superlearner-for-the-exposure-model-using-the-superlearner-package.-the-predictors-for-this-model-should-be-the-confounders-identified-in-the-dag-park_ticket_season-park_close-and-park_temperature_high.-the-outcome-is-park_extra_magic_morning.">First, create a character vector <code>sl_library</code> that specifies the following algorithms: “SL.glm”, “SL.ranger”, “SL.gam”. Then, Fit a SuperLearner for the exposure model using the <code>SuperLearner</code> package. The predictors for this model should be the confounders identified in the DAG: <code>park_ticket_season</code>, <code>park_close</code>, and <code>park_temperature_high</code>. The outcome is <code>park_extra_magic_morning</code>.</h3>
 <h3 id="fit-a-superlearner-for-the-outcome-model-using-the-superlearner-package.-the-predictors-for-this-model-should-be-the-confounders-plus-the-exposure-park_extra_magic_morning-park_ticket_season-park_close-and-park_temperature_high.-the-outcome-is-wait_minutes_posted_avg.">Fit a SuperLearner for the outcome model using the <code>SuperLearner</code> package. The predictors for this model should be the confounders plus the exposure: <code>park_extra_magic_morning</code>, <code>park_ticket_season</code>, <code>park_close</code>, and <code>park_temperature_high</code>. The outcome is <code>wait_minutes_posted_avg</code>.</h3>
 <h3 id="inspect-the-fitted-superlearner-objects.">Inspect the fitted SuperLearner objects.</h3>
 </section>
@@ -442,14 +441,14 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <h2>G-computation with SuperLearner</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10" data-code-line-numbers="|1,5,7,11|13-14|16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>data_all_quit <span class="ot">&lt;-</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href=""></a>  <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity, </span>
-<span id="cb10-3"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href=""></a>  <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity,</span>
+<span id="cb10-3"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb10-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)) <span class="sc">|&gt;</span></span>
 <span id="cb10-5"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">qsmk =</span> <span class="dv">1</span>)</span>
 <span id="cb10-6"><a href=""></a></span>
 <span id="cb10-7"><a href=""></a>data_all_no_quit <span class="ot">&lt;-</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
-<span id="cb10-8"><a href=""></a>  <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity, </span>
-<span id="cb10-9"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb10-8"><a href=""></a>  <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity,</span>
+<span id="cb10-9"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb10-10"><a href=""></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)) <span class="sc">|&gt;</span></span>
 <span id="cb10-11"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">qsmk =</span> <span class="dv">0</span>)</span>
 <span id="cb10-12"><a href=""></a></span>
@@ -458,7 +457,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb10-15"><a href=""></a></span>
 <span id="cb10-16"><a href=""></a><span class="fu">mean</span>(pred_quit <span class="sc">-</span> pred_no_quit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.979202</code></pre>
+<pre><code>[1] 2.912559</code></pre>
 </div>
 </div>
 </section>
@@ -466,7 +465,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <h2><em>Your Turn 2</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_e6a6285f" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_9b909a09" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">08</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -535,9 +534,9 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb12-6"><a href=""></a><span class="co"># Fit new SuperLearner on bounded outcome</span></span>
 <span id="cb12-7"><a href=""></a>outcome_sl_bounded <span class="ot">&lt;-</span> <span class="fu">SuperLearner</span>(</span>
 <span id="cb12-8"><a href=""></a>  <span class="at">Y =</span> y_bounded,</span>
-<span id="cb12-9"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span> </span>
-<span id="cb12-10"><a href=""></a>    <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity, </span>
-<span id="cb12-11"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb12-9"><a href=""></a>  <span class="at">X =</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href=""></a>    <span class="fu">select</span>(qsmk, sex, race, age, education, smokeintensity,</span>
+<span id="cb12-11"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb12-12"><a href=""></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)),</span>
 <span id="cb12-13"><a href=""></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>(),</span>
 <span id="cb12-14"><a href=""></a>  <span class="at">SL.library =</span> sl_library,</span>
@@ -581,7 +580,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb15-2"><a href=""></a><span class="co"># Use binomial family and work on logit scale</span></span>
 <span id="cb15-3"><a href=""></a>fluctuation_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
 <span id="cb15-4"><a href=""></a>  y_bounded <span class="sc">~</span></span>
-<span id="cb15-5"><a href=""></a>     <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> </span>
+<span id="cb15-5"><a href=""></a>     <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span></span>
 <span id="cb15-6"><a href=""></a>     <span class="fu">offset</span>(<span class="fu">qlogis</span>(initial_pred_observed)) <span class="sc">+</span></span>
 <span id="cb15-7"><a href=""></a>     clever_covariate,</span>
 <span id="cb15-8"><a href=""></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>()</span>
@@ -593,7 +592,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code>clever_covariate 
-     0.002936146 </code></pre>
+     0.003466991 </code></pre>
 </div>
 </div>
 <ul>
@@ -621,7 +620,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <h2><em>Your Turn 3</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_a179b724" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_543c613b" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -649,7 +648,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <pre><code># A tibble: 1 × 2
   initial targeted
     &lt;dbl&gt;    &lt;dbl&gt;
-1    2.75     3.15</code></pre>
+1    2.69     3.16</code></pre>
 </div>
 </div>
 </section>
@@ -663,7 +662,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb20-5"><a href=""></a>)</span>
 <span id="cb20-6"><a href=""></a></span>
 <span id="cb20-7"><a href=""></a><span class="co"># IC uses bounded outcomes and predictions</span></span>
-<span id="cb20-8"><a href=""></a>ic <span class="ot">&lt;-</span> clever_covariate <span class="sc">*</span> (y_bounded <span class="sc">-</span> targeted_pred_observed) <span class="sc">+</span> </span>
+<span id="cb20-8"><a href=""></a>ic <span class="ot">&lt;-</span> clever_covariate <span class="sc">*</span> (y_bounded <span class="sc">-</span> targeted_pred_observed) <span class="sc">+</span></span>
 <span id="cb20-9"><a href=""></a>      targeted_pred_quit <span class="sc">-</span> targeted_pred_no_quit <span class="sc">-</span> targeted_ate <span class="sc">/</span> (max_y <span class="sc">-</span> min_y)</span>
 <span id="cb20-10"><a href=""></a></span>
 <span id="cb20-11"><a href=""></a><span class="co"># Standard error on original scale</span></span>
@@ -673,7 +672,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb20-15"><a href=""></a><span class="fu">tibble</span>(</span>
 <span id="cb20-16"><a href=""></a>  <span class="at">ate =</span> targeted_ate,</span>
 <span id="cb20-17"><a href=""></a>  <span class="at">se =</span> se_tmle,</span>
-<span id="cb20-18"><a href=""></a>  <span class="at">lower_ci =</span> targeted_ate <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_tmle, </span>
+<span id="cb20-18"><a href=""></a>  <span class="at">lower_ci =</span> targeted_ate <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_tmle,</span>
 <span id="cb20-19"><a href=""></a>  <span class="at">upper_ci =</span> targeted_ate <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_tmle</span>
 <span id="cb20-20"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -684,7 +683,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <pre><code># A tibble: 1 × 4
     ate    se lower_ci upper_ci
   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-1  3.15 0.447     2.27     4.02</code></pre>
+1  3.16 0.444     2.29     4.03</code></pre>
 </div>
 </div></section><section id="using-the-tmle-package" class="slide level2">
 <h2>Using the tmle Package</h2>
@@ -694,16 +693,16 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <span id="cb22-3"><a href=""></a>tmle_result <span class="ot">&lt;-</span> <span class="fu">tmle</span>(</span>
 <span id="cb22-4"><a href=""></a>  <span class="at">Y =</span> nhefs_complete_uc<span class="sc">$</span>wt82_71,</span>
 <span id="cb22-5"><a href=""></a>  <span class="at">A =</span> <span class="fu">as.integer</span>(nhefs_complete_uc<span class="sc">$</span>qsmk <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
-<span id="cb22-6"><a href=""></a>  <span class="at">W =</span> nhefs_complete_uc <span class="sc">|&gt;</span> </span>
-<span id="cb22-7"><a href=""></a>    <span class="fu">select</span>(sex, race, age, education, smokeintensity, </span>
-<span id="cb22-8"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span> </span>
+<span id="cb22-6"><a href=""></a>  <span class="at">W =</span> nhefs_complete_uc <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a href=""></a>    <span class="fu">select</span>(sex, race, age, education, smokeintensity,</span>
+<span id="cb22-8"><a href=""></a>           smokeyrs, exercise, active, wt71) <span class="sc">|&gt;</span></span>
 <span id="cb22-9"><a href=""></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)),</span>
 <span id="cb22-10"><a href=""></a>  <span class="at">Q.SL.library =</span> sl_library,</span>
 <span id="cb22-11"><a href=""></a>  <span class="at">g.SL.library =</span> sl_library</span>
 <span id="cb22-12"><a href=""></a>)</span>
 <span id="cb22-13"><a href=""></a></span>
 <span id="cb22-14"><a href=""></a><span class="fu">tibble</span>(</span>
-<span id="cb22-15"><a href=""></a>  <span class="at">ate =</span> tmle_result<span class="sc">$</span>estimates<span class="sc">$</span>ATE<span class="sc">$</span>psi, </span>
+<span id="cb22-15"><a href=""></a>  <span class="at">ate =</span> tmle_result<span class="sc">$</span>estimates<span class="sc">$</span>ATE<span class="sc">$</span>psi,</span>
 <span id="cb22-16"><a href=""></a>  <span class="at">lower_ci =</span> tmle_result<span class="sc">$</span>estimates<span class="sc">$</span>ATE<span class="sc">$</span>CI[[<span class="dv">1</span>]],</span>
 <span id="cb22-17"><a href=""></a>  <span class="at">upper_ci =</span> tmle_result<span class="sc">$</span>estimates<span class="sc">$</span>ATE<span class="sc">$</span>CI[[<span class="dv">2</span>]]</span>
 <span id="cb22-18"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -711,7 +710,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <pre><code># A tibble: 1 × 3
     ate lower_ci upper_ci
   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-1  3.44     2.56     4.31</code></pre>
+1  3.48     2.55     4.41</code></pre>
 </div>
 </div>
 </section>
@@ -719,7 +718,7 @@ SL.gam_All     54.53583 0.84954963</code></pre>
 <h2><em>Your Turn 4</em></h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="countdown" id="timer_9edbcc6b" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_bbb86be3" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>

@@ -9,7 +9,7 @@ format: "kakashi-revealjs"
 #| label: setup
 #| include: false
 options(
-  tibble.max_extra_cols = 6, 
+  tibble.max_extra_cols = 6,
   tibble.width = 60
 )
 
@@ -128,22 +128,22 @@ dag_base +
 
 ## Inverse Probability Weighting (IPW) {background-color="#23373B"}
 
-1. Fit a model for `x ~ z` where z is all confounders 
+1. Fit a model for `x ~ z` where z is all confounders
 2. Calculate the propensity score for each observation
 3. Calculate the weights
-4. Fit a weighted regression model for `y ~ x` using the weights 
+4. Fit a weighted regression model for `y ~ x` using the weights
 
 ## Inverse Probability Weighting (IPW)
 
 ```{r}
 #| echo: false
 propensity_model <- glm(
-  qsmk ~ sex + 
-    race + age + I(age^2) + education + 
-    smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
-    wt71 + I(wt71^2), 
-  family = binomial(), 
+  qsmk ~ sex +
+    race + age + I(age^2) + education +
+    smokeintensity + I(smokeintensity^2) +
+    smokeyrs + I(smokeyrs^2) + exercise + active +
+    wt71 + I(wt71^2),
+  family = binomial(),
   data = nhefs_complete_uc
 )
 
@@ -156,9 +156,9 @@ nhefs_complete_uc <- propensity_model |>
 
 halfmoon::plot_mirror_distributions(
   nhefs_complete_uc |>
-    mutate(weighted = wts), 
-  .fitted, 
-  .group = qsmk, 
+    mutate(weighted = wts),
+  .fitted,
+  .group = qsmk,
   .wts = weighted
 ) +
   theme_minimal(base_size = 12) +
@@ -187,10 +187,10 @@ halfmoon::plot_mirror_distributions(
 ```{r}
 #| echo: false
 outcome_model <- lm(
-  wt82_71 ~ qsmk + sex + 
-    race + age + I(age^2) + education + 
-    smokeintensity + I(smokeintensity^2) + 
-    smokeyrs + I(smokeyrs^2) + exercise + active + 
+  wt82_71 ~ qsmk + sex +
+    race + age + I(age^2) + education +
+    smokeintensity + I(smokeintensity^2) +
+    smokeyrs + I(smokeyrs^2) + exercise + active +
     wt71 + I(wt71^2),
   data = nhefs_complete_uc
 )
@@ -263,11 +263,11 @@ dag_base +
 #| echo: false
 #| fig-width: 10
 smk_wt_dag <- dagify(
-  qsmk ~ sex + race + age + education + 
+  qsmk ~ sex + race + age + education +
     smokeintensity + smokeyrs + exercise + active + wt71,
-  wt82_71 ~ qsmk + sex + race + age + education + 
+  wt82_71 ~ qsmk + sex + race + age + education +
     smokeintensity + smokeyrs + exercise + active + wt71,
-  exposure = "qsmk", 
+  exposure = "qsmk",
   outcome = "wt82_71",
   coords = time_ordered_coords(),
   labels = c(
@@ -310,7 +310,7 @@ Photo by Anna [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed
 ::: {.column width="50%"}
 Historically, guests who stayed in a Walt Disney World resort hotel were able to access the park during "Extra Magic Hours" during which the park was closed to all other guests.
 
-These extra hours could be in the morning or evening.  
+These extra hours could be in the morning or evening.
 
 The Seven Dwarfs Mine Train is a ride at Walt Disney World's Magic Kingdom. Typically, each day Magic Kingdom may or may not be selected to have these "Extra Magic Hours".
 :::
@@ -335,16 +335,16 @@ library(ggokabeito)
 geom_dag_label_repel <- function(..., seed = 10) {
   ggdag::geom_dag_label_repel(
     aes(x, y, label = label),
-    box.padding = 3.5, 
+    box.padding = 3.5,
     inherit.aes = FALSE,
-    max.overlaps = Inf, 
+    max.overlaps = Inf,
     family = "sans",
     seed = seed,
-    label.size = NA, 
+    label.size = NA,
     label.padding = 0.1,
     size = 14 / 3,
     ...
-  ) 
+  )
 }
 
 coord_dag <- list(
@@ -428,9 +428,9 @@ sl_library <- c("SL.glm", "SL.ranger", "SL.gam")
 
 propensity_sl <- SuperLearner(
   Y = as.integer(nhefs_complete_uc$qsmk == "Yes"),
-  X = nhefs_complete_uc |> 
-    select(sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  X = nhefs_complete_uc |>
+    select(sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
     mutate(across(everything(), as.numeric)),
   family = binomial(),
   SL.library = sl_library,
@@ -452,9 +452,9 @@ propensity_sl
 #| cache: true
 outcome_sl <- SuperLearner(
   Y = nhefs_complete_uc$wt82_71,
-  X = nhefs_complete_uc |> 
-    select(qsmk, sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  X = nhefs_complete_uc |>
+    select(qsmk, sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
     mutate(across(everything(), as.numeric)),
   family = gaussian(),
   SL.library = sl_library,
@@ -476,7 +476,7 @@ outcome_sl
 countdown::countdown(minutes = 8)
 ```
 
-### First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.xgboost", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
+### First, create a character vector `sl_library` that specifies the following algorithms: "SL.glm", "SL.ranger", "SL.gam". Then, Fit a SuperLearner for the exposure model using the `SuperLearner` package. The predictors for this model should be the confounders identified in the DAG: `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `park_extra_magic_morning`.
 ### Fit a SuperLearner for the outcome model using the `SuperLearner` package. The predictors for this model should be the confounders plus the exposure: `park_extra_magic_morning`, `park_ticket_season`, `park_close`, and `park_temperature_high`. The outcome is `wait_minutes_posted_avg`.
 ### Inspect the fitted SuperLearner objects.
 
@@ -507,14 +507,14 @@ tidy(ipw_model)
 ```{r}
 #| code-line-numbers: "|1,5,7,11|13-14|16"
 data_all_quit <- nhefs_complete_uc |>
-  select(qsmk, sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  select(qsmk, sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
   mutate(across(everything(), as.numeric)) |>
   mutate(qsmk = 1)
 
 data_all_no_quit <- nhefs_complete_uc |>
-  select(qsmk, sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  select(qsmk, sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
   mutate(across(everything(), as.numeric)) |>
   mutate(qsmk = 0)
 
@@ -543,7 +543,7 @@ countdown::countdown(minutes = 8)
 
 ## Targeted Learning: doubly robustness
 
-- In **IPW** and **G-computation**, we estimate the propensity score and outcome model separately. If either model is misspecified, the estimate will be biased. 
+- In **IPW** and **G-computation**, we estimate the propensity score and outcome model separately. If either model is misspecified, the estimate will be biased.
 - In **TMLE**, we combine the two models in a way that is doubly robust: if either the propensity score or outcome model is correctly specified, the estimate will be consistent.
 
 ## Targeted Learning: targeted estimation
@@ -581,9 +581,9 @@ y_bounded <- (nhefs_complete_uc$wt82_71 - min_y) / (max_y - min_y)
 # Fit new SuperLearner on bounded outcome
 outcome_sl_bounded <- SuperLearner(
   Y = y_bounded,
-  X = nhefs_complete_uc |> 
-    select(qsmk, sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  X = nhefs_complete_uc |>
+    select(qsmk, sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
     mutate(across(everything(), as.numeric)),
   family = quasibinomial(),
   SL.library = sl_library,
@@ -631,7 +631,7 @@ clever_covariate <- ifelse(
 # Use binomial family and work on logit scale
 fluctuation_model <- glm(
   y_bounded ~
-     -1 + 
+     -1 +
      offset(qlogis(initial_pred_observed)) +
      clever_covariate,
   family = quasibinomial()
@@ -659,7 +659,7 @@ targeted_pred_quit <- plogis(logit_pred_quit)
 targeted_pred_no_quit <- plogis(logit_pred_no_quit)
 ```
 
-## 
+##
 
 ```{r}
 #| echo: false
@@ -680,7 +680,7 @@ p_quit <- ggplot(targeting_data, aes(x = initial_quit, y = targeted_quit)) +
   labs(
     x = "Initial Predictions (Quit Smoking)",
     y = "Targeted Predictions (Quit Smoking)"
-  ) + 
+  ) +
   theme_minimal(base_size = 14) +
   coord_fixed()
 
@@ -690,7 +690,7 @@ p_no_quit <- ggplot(targeting_data, aes(x = initial_no_quit, y = targeted_no_qui
   labs(
     x = "Initial Predictions (No Quit)",
     y = "Targeted Predictions (No Quit)"
-  ) + 
+  ) +
   theme_minimal(base_size = 14) +
   coord_fixed()
 
@@ -736,7 +736,7 @@ targeted_pred_observed <- ifelse(
 )
 
 # IC uses bounded outcomes and predictions
-ic <- clever_covariate * (y_bounded - targeted_pred_observed) + 
+ic <- clever_covariate * (y_bounded - targeted_pred_observed) +
       targeted_pred_quit - targeted_pred_no_quit - targeted_ate / (max_y - min_y)
 
 # Standard error on original scale
@@ -746,7 +746,7 @@ se_tmle <- sqrt(var(ic) / nrow(nhefs_complete_uc)) * (max_y - min_y)
 tibble(
   ate = targeted_ate,
   se = se_tmle,
-  lower_ci = targeted_ate - 1.96 * se_tmle, 
+  lower_ci = targeted_ate - 1.96 * se_tmle,
   upper_ci = targeted_ate + 1.96 * se_tmle
 )
 ```
@@ -761,16 +761,16 @@ library(tmle)
 tmle_result <- tmle(
   Y = nhefs_complete_uc$wt82_71,
   A = as.integer(nhefs_complete_uc$qsmk == "Yes"),
-  W = nhefs_complete_uc |> 
-    select(sex, race, age, education, smokeintensity, 
-           smokeyrs, exercise, active, wt71) |> 
+  W = nhefs_complete_uc |>
+    select(sex, race, age, education, smokeintensity,
+           smokeyrs, exercise, active, wt71) |>
     mutate(across(everything(), as.numeric)),
   Q.SL.library = sl_library,
   g.SL.library = sl_library
 )
 
 tibble(
-  ate = tmle_result$estimates$ATE$psi, 
+  ate = tmle_result$estimates$ATE$psi,
   lower_ci = tmle_result$estimates$ATE$CI[[1]],
   upper_ci = tmle_result$estimates$ATE$CI[[2]]
 )
@@ -792,7 +792,7 @@ countdown::countdown(minutes = 5)
 
 - ML improves flexibility for confounding functional form, not identification
 - Still need DAGs and causal assumptions
-- TMLE is statistically efficient, updates predictions to target the causal effect 
+- TMLE is statistically efficient, updates predictions to target the causal effect
 - Valid inference even with complex ML
 
 ## Resources {background-color="#23373B"}

@@ -27,22 +27,22 @@ suppress <- function(code) {
 }
 
 slides <- c(
-  "00-intro.qmd",
-  "01-causal_modeling_whole_game.qmd",
-  "02-when-standard-methods-succeed.qmd",
-  "03-causal-inference-with-group-by-and-summarise.qmd",
-  "04-dags.qmd",
-  "05-quartets.qmd",
-  "06-pscores.qmd",
-  "07-using-pscores.qmd",
-  "08-pscore-diagnostics.qmd",
-  "09-outcome-model.qmd",
-  "10-continuous-g-comp.qmd",
-  "11-tipr.qmd",
-  "12-whole_game-2.qmd",
-  "13-bonus-selection-bias.qmd",
-  "14-bonus-continuous-pscores.qmd",
-  "15-bonus-ml-for-causal.qmd"
+  "slides/raw/01-causal_modeling_whole_game.qmd",
+  "slides/raw/00-intro.qmd",
+  "slides/raw/02-when-standard-methods-succeed.qmd",
+  "slides/raw/03-causal-inference-with-group-by-and-summarise.qmd",
+  "slides/raw/04-dags.qmd",
+  "slides/raw/05-quartets.qmd",
+  "slides/raw/06-pscores.qmd",
+  "slides/raw/07-using-pscores.qmd",
+  "slides/raw/08-pscore-diagnostics.qmd",
+  "slides/raw/09-outcome-model.qmd",
+  "slides/raw/10-continuous-g-comp.qmd",
+  "slides/raw/11-tipr.qmd",
+  "slides/raw/12-whole_game-2.qmd",
+  "slides/raw/13-bonus-selection-bias.qmd",
+  "slides/raw/14-bonus-continuous-pscores.qmd",
+  "slides/raw/15-bonus-ml-for-causal.qmd"
 )
 
 purrr::walk(slides, render_slides)
