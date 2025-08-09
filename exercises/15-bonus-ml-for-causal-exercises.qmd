@@ -61,12 +61,12 @@ dagify(
   geom_dag_point() +
   geom_dag_label_repel(
     aes(x, y, label = label),
-    box.padding = 3.5, 
+    box.padding = 3.5,
     inherit.aes = FALSE,
-    max.overlaps = Inf, 
+    max.overlaps = Inf,
     family = "sans",
     seed = 1630,
-    label.size = NA, 
+    label.size = NA,
     label.padding = 0.1,
     size = 14 / 3
   ) +
@@ -122,7 +122,7 @@ propensity_scores <- predict(propensity_model, type = "response")
 # Step 2: Calculate ATE weights
 # For treated: 1/PS, for control: 1/(1-PS)
 ate_weights <- wt_ate(
-  propensity_scores, 
+  propensity_scores,
   seven_dwarfs$park_extra_magic_morning
 )
 
@@ -133,7 +133,7 @@ ipw_model <- lm(
   weights = ate_weights
 )
 
-# For proper inference, we need bootstrapping. 
+# For proper inference, we need bootstrapping.
 # See the appendix at the bottom of this document.
 tidy(ipw_model)
 ```
@@ -151,7 +151,7 @@ The algorithm is:
 ```{r}
 # Step 1: Fit outcome model with exposure and all confounders
 outcome_model <- lm(
-  wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season + 
+  wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season +
     park_close + park_temperature_high,
   data = seven_dwarfs
 )
@@ -171,7 +171,7 @@ pred_treated <- predict(outcome_model, newdata = data_all_treated)
 pred_control <- predict(outcome_model, newdata = data_all_control)
 
 # Step 4: Calculate average treatment effect
-# For proper inference, we need bootstrapping. 
+# For proper inference, we need bootstrapping.
 # See the appendix at the bottom of this document.
 ate_gcomp <- mean(pred_treated - pred_control)
 ate_gcomp
@@ -193,7 +193,7 @@ sl_library <- c(________, ________, ________, ________)
 
 exposure_sl <- __________(
   Y = seven_dwarfs$__________,
-  X = seven_dwarfs |> 
+  X = seven_dwarfs |>
     select(__________, __________, __________) |>
     mutate(park_close = as.numeric(park_close)),
   family = binomial(),
@@ -205,7 +205,7 @@ exposure_sl
 
 outcome_sl <- __________(
   Y = seven_dwarfs$__________,
-  X = seven_dwarfs |> 
+  X = seven_dwarfs |>
     select(__________, __________, __________, __________) |>
     mutate(park_close = as.numeric(park_close)),
   family = gaussian(),
@@ -232,7 +232,7 @@ exposure_results <- tibble(
   predicted = ______
 )
 
-# Need event_level = "second" because yardstick treats first level ("0") 
+# Need event_level = "second" because yardstick treats first level ("0")
 # as event by default
 exposure_auc <- roc_auc(exposure_results, truth, predicted, event_level = "second")
 exposure_auc
@@ -249,12 +249,12 @@ outcome_rmse
 
 ```{r}
 sl_library_extended <- c(
-  "SL.glm", 
-  "SL.ranger", 
+  "SL.glm",
+  "SL.ranger",
   "SL.earth",
   "SL.gam",
   "SL.glm.interaction",
-  "SL.mean", 
+  "SL.mean",
   "SL.glmnet"
 )
 
@@ -312,7 +312,7 @@ tidy(ipw_model) |>
 # For SuperLearner prediction, we need only the columns used in the model
 
 # Dataset where everyone is treated, `park_extra_magic_morning` = 1
-data_all_treated <- seven_dwarfs |> 
+data_all_treated <- seven_dwarfs |>
   select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
   mutate(
     park_close = as.numeric(park_close),
@@ -320,7 +320,7 @@ data_all_treated <- seven_dwarfs |>
   )
 
 # Dataset where everyone is control, `park_extra_magic_morning` = 0
-data_all_control <- seven_dwarfs |> 
+data_all_control <- seven_dwarfs |>
   select(park_extra_magic_morning, park_ticket_season, park_close, park_temperature_high) |>
   mutate(
     park_close = as.numeric(park_close),
@@ -353,7 +353,7 @@ y_bounded <- (seven_dwarfs$__________ - min_y) / (max_y - min_y)
 # For TMLE with continuous outcomes, we need to fit on the bounded Y
 outcome_sl_bounded <- SuperLearner(
   Y = __________,
-  X = seven_dwarfs |> 
+  X = seven_dwarfs |>
     select(__________, park_ticket_season, park_close, park_temperature_high) |>
     mutate(park_close = as.numeric(park_close)),
   family = quasibinomial(),
@@ -368,8 +368,8 @@ initial_pred_control <- predict(__________, newdata = ______)$pred[, 1]
 # each observation gets the counterfactual prediction based on their actual treatment
 # this is the same as predicting on the original dataset, but since we already calculated these, we'll just put it together ourselves
 initial_pred_observed <- ifelse(
-  seven_dwarfs$park_extra_magic_morning == 1, 
-  initial_pred_treated, 
+  seven_dwarfs$park_extra_magic_morning == 1,
+  initial_pred_treated,
   initial_pred_control
 )
 ```
@@ -379,8 +379,8 @@ initial_pred_observed <- ifelse(
 ```{r}
 # Step 2: Create the "clever covariate": this is the key to TMLE
 # It weights observations based on their propensity scores to achieve balance
-# For treated units: 1 / propensity_scores 
-# For control units: -1 / (1 - propensity_scores) 
+# For treated units: 1 / propensity_scores
+# For control units: -1 / (1 - propensity_scores)
 # This is NOT the ATE weights; it's a component of the efficient influence function
 # But it IS related, as it is also a consequence of targeting the ATE
 clever_covariate <- ifelse(
@@ -391,7 +391,7 @@ clever_covariate <- ifelse(
 ```
 
 6. Fit a fluctuation model with the bounded outcome, using `qlogis(initial_pred_observed)` as an offset and the clever covariate as a predictor (with no intercept). Use binomial family for the model.
-7. Get the fluctuation parameter `epsilon` from the model coefficients; this is the coefficient for the clever covariate. 
+7. Get the fluctuation parameter `epsilon` from the model coefficients; this is the coefficient for the clever covariate.
 
 ```{r}
 # Step 3: The targeting step - a small parametric fluctuation of initial estimates
@@ -412,7 +412,7 @@ epsilon <- __________
 epsilon
 ```
 
-8. Now that we've calculated the fluctuation parameter, we can update our predictions to obtain targeted predictions that are minimize the bias-variance tradeoff for the average treatment effect. 
+8. Now that we've calculated the fluctuation parameter, we can update our predictions to obtain targeted predictions that are minimize the bias-variance tradeoff for the average treatment effect.
    - For treated units, we add `epsilon * (1 / propensity_scores)`.
    - For control units, we add `epsilon * (-1 / (1 - propensity_scores)`.
 
@@ -432,13 +432,13 @@ targeted_pred_control <- plogis(__________)
 
 # we'll need this later for calculating the variance and confidence intervals
 targeted_pred_observed <- ifelse(
-  seven_dwarfs$park_extra_magic_morning == 1, 
-  targeted_pred_treated, 
+  seven_dwarfs$park_extra_magic_morning == 1,
+  targeted_pred_treated,
   targeted_pred_control
 )
 ```
 
-9. Let's visualize the initial vs targeted individual-level predictions for treated and control units. Set the x-axis to the initial predictions and the y-axis to the targeted predictions. For the first plot, use `initial_pred_treated` and `targeted_pred_treated`, and for the second plot, use `initial_pred_control` and `targeted_pred_control`. 
+9. Let's visualize the initial vs targeted individual-level predictions for treated and control units. Set the x-axis to the initial predictions and the y-axis to the targeted predictions. For the first plot, use `initial_pred_treated` and `targeted_pred_treated`, and for the second plot, use `initial_pred_control` and `targeted_pred_control`.
 
 ```{r}
 # plot the initial vs targeted individual-level predictions for treated units
@@ -449,7 +449,7 @@ ggplot(seven_dwarfs, aes(x = __________, y = __________)) +
   labs(
     x = "Initial Predictions (Treated)",
     y = "Targeted Predictions (Treated)"
-  ) + 
+  ) +
   theme_minimal()
 
 # plot the initial vs targeted individual-level predictions for control units
@@ -460,7 +460,7 @@ ggplot(seven_dwarfs, aes(x = __________, y = __________)) +
   labs(
     x = "Initial Predictions (Control)",
     y = "Targeted Predictions (Control)"
-  ) + 
+  ) +
   theme_minimal()
 ```
 
@@ -491,7 +491,7 @@ targeted_ate
 # 2. (targeted_pred_treated - targeted_pred_control - tmle_ate): captures uncertainty in the treatment effect
 # Each observation's IC value represents its contribution to the overall uncertainty
 # Note: IC uses bounded outcomes and predictions
-ic <- clever_covariate * (y_bounded - targeted_pred_observed) + 
+ic <- clever_covariate * (y_bounded - targeted_pred_observed) +
   targeted_pred_treated - targeted_pred_control - targeted_ate / (max_y - min_y)
 
 # Standard error is the standard deviation of IC values divided by sqrt(n)
@@ -518,7 +518,7 @@ tibble(
 R has several packages for TMLE: tmle, ltmle, and tmle3, all with slightly different designs and capabilities. We'll use the `tmle` package here, which is quite simple and works with SuperLearner.
 
 ```{r}
-confounders <- seven_dwarfs |> 
+confounders <- seven_dwarfs |>
   select(park_ticket_season, park_close, park_temperature_high) |>
   mutate(park_close = as.numeric(park_close))
 
@@ -559,21 +559,21 @@ set.seed(1234)
 
 fit_ipw <- function(split, ...) {
   .df <- as.data.frame(split)
-  
+
   # Fit propensity score model
   ps_model <- glm(
     park_extra_magic_morning ~ park_ticket_season + park_close + park_temperature_high,
     data = .df,
     family = binomial()
   )
-  
+
   # Calculate weights
   ps <- augment(ps_model, type.predict = "response", data = .df)$.fitted
   weights <- wt_ate(ps, .df$park_extra_magic_morning, exposure_type = "binary")
-  
+
   # Fit weighted outcome model
-  lm(wait_minutes_posted_avg ~ park_extra_magic_morning, 
-     data = .df, 
+  lm(wait_minutes_posted_avg ~ park_extra_magic_morning,
+     data = .df,
      weights = weights) |>
     tidy()
 }
@@ -591,21 +591,21 @@ int_bca(ipw_boot, results, .fn = fit_ipw) |>
 ```{r}
 fit_gcomp <- function(split, ...) {
   .df <- as.data.frame(split)
-  
+
   # Fit outcome model
   mod <- lm(
-    wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season + 
+    wait_minutes_posted_avg ~ park_extra_magic_morning + park_ticket_season +
       park_close + park_temperature_high,
     data = .df
   )
-  
+
   # Clone and predict
   df_treat <- .df |> mutate(park_extra_magic_morning = 1)
   df_control <- .df |> mutate(park_extra_magic_morning = 0)
-  
+
   pred_treat <- augment(mod, newdata = df_treat)$.fitted
   pred_control <- augment(mod, newdata = df_control)$.fitted
-  
+
   # Return results
   tibble(
     term = "ate",
@@ -618,4 +618,3 @@ gcomp_boot <- bootstraps(seven_dwarfs, 1000, apparent = TRUE) |>
 
 int_bca(gcomp_boot, results, .fn = fit_gcomp)
 ```
-
