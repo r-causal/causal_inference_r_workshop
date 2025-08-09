@@ -1,0 +1,21 @@
+{
+  "hash": "36043834285ac97d2aca9d33247b064e",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Causal Inference in R: Introduction\"\nformat: \"kakashi-revealjs\"\n---\n\n## `> who_are_we(c(\"lucy\", \"malcolm\", \"travis\"))`\n\n\n\n\n::: {.cell layout-align=\"center\"}\n<style type=\"text/css\">\nimg {\n  height: 250px;\n  width: 250px;\n  border-radius: 50%;\n}\n</style>\n:::\n\n\n:::: {.columns}\n\n::: {.column width=\"33.3%\"}\n<br />\n<br />\n\n<img src=\"img/ldm.jpg\" class=\"rounded-circle\" />\n\n::: {.small}\n<br />\n<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://www.lucymcgowan.com/](https://www.lucymcgowan.com/)\n:::\n:::\n\n::: {.column width=\"33.3%\"}\n<br />\n<br />\n\n::: {.small}\n<img src=\"img/mb.jpg\" class=\"rounded-circle\" />\n<br />\n&nbsp;&nbsp;&nbsp; [https://www.malco.io/](https://www.malco.io/)\n:::\n:::\n\n\n::: {.column width=\"33.3%\"}\n<br />\n<br />\n<img src=\"img/tg.jpg\" class=\"rounded-circle\" />\n\n\n\n::: {.small}\n<br />\n<br />\n<br />\n[https://travisgerke.com/](https://travisgerke.com/)\n:::\n:::\n\n::::\n\n\n## The three practices of analysis {background-color=\"#23373B\"}\n\n1. Describe\n2. Predict\n3. Explain\n\n## {background-color=\"#23373B\" .center}\n### Normal regression estimates associations. But we want *counterfactual, causal* estimates: \n<br />\n\n### What would happen if *everyone* in the study were exposed to x vs if *no one* was exposed.\n\n\n## {background-color=\"#23373B\" .center}\n### For causal inference, we need to make sometimes unverifiable assumptions. \n\n<br />\n\n### Today, we'll focus on the assumption of *no confounding*.\n\n## Tools for causal inference {background-color=\"#23373B\"}\n\n- Causal diagrams\n- Propensity score weighting\n- Propensity score matching\n- G-methods & friends\n\n## Other tools for causal inference {background-color=\"#23373B\"}\n\n- Randomized trials\n- Instrumental variables & friends\n- TMLE and other ML for causal inference\n\n## Resources {background-color=\"#23373B\"}\n### [Causal Inference in R](https://www.r-causal.org/): Our book! Free online.\n### [Causal Inference](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/): Comprehensive text on causal inference. Free online.\n### [The Book of Why](http://bayes.cs.ucla.edu/WHY/): Detailed, friendly intro to DAGs and causal inference. \n### [Mastering 'Metrics](http://www.masteringmetrics.com/): Friendly introduction to IV-based methods\n",
+    "supporting": [
+      "00-intro_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

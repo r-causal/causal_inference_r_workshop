@@ -1,0 +1,21 @@
+{
+  "hash": "eaa3261182fb5baeb9c0d5f94c4491d6",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Causal Inference in R Slides\"\ndate: \"2025-08-09\"\nformat: \"kakashi-revealjs\"\n---\n\n\n\n## {background-color=\"#23373B\" .small}\n\n#### [00 Intro](https://causal-inference-r-workshop.netlify.app/00-intro.html)\n#### [01 Whole Game](https://causal-inference-r-workshop.netlify.app/01-causal_modeling_whole_game.html)\n#### [02 When Standard Methods Succeed](https://causal-inference-r-workshop.netlify.app/02-when-standard-methods-succeed.html)\n#### [03 Causal Inference with `group_by` and `summarise`](https://causal-inference-r-workshop.netlify.app/03-causal-inference-with-group-by-and-summarise.html)\n#### [04 Causal Diagrams](https://causal-inference-r-workshop.netlify.app/04-dags.html)\n#### [05 Causal Inference is Not Just a Statistics Problem](https://causal-inference-r-workshop.netlify.app/05-quartets.html)\n#### [06 Introduction to Propensity Scores](https://causal-inference-r-workshop.netlify.app/06-pscores.html)\n#### [07 Using Propensity Scores](https://causal-inference-r-workshop.netlify.app/07-using-pscores.html)\n#### [08 Checking Propensity Scores](https://causal-inference-r-workshop.netlify.app/08-pscore-diagnostics.html)\n#### [09 Fitting the outcome model](https://causal-inference-r-workshop.netlify.app/09-outcome-model.html)\n#### [10 Continuous Exposures and G-Computation](https://causal-inference-r-workshop.netlify.app/10-continuous-g-comp.html)\n#### [11 Tipping Point Sensitivity Analyses](https://causal-inference-r-workshop.netlify.app/11-tipr.html)\n#### [12 Whole Game (Your Turn)](https://causal-inference-r-workshop.netlify.app/12-whole_game-2.html)\n#### [13 Bonus: Selection Bias](https://causal-inference-r-workshop.netlify.app/13-bonus-selection-bias.html)\n#### [14 Bonus: Continous Exposures with Propensity Scores](https://causal-inference-r-workshop.netlify.app/14-bonus-continuous-pscores.html)\n#### [15 Bonus: Machine Learning for Causal Inference](https://causal-inference-r-workshop.netlify.app/15-bonus-ml-for-causal.html)\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
