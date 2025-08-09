@@ -1,0 +1,21 @@
+{
+  "hash": "124bf96db22f42b19b34256ff5642fc3",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Whole Game 2: Malaria and Mosquito Nets\"\nauthor: \"Malcolm Barrett\"\ninstitute: \"Stanford University\"\nformat: \"kakashi-revealjs\"\n---\n\n\n\n## {background-color=\"#23373B\"}\n\n1. Specify causal question (e.g. target trial)\n2. Draw assumptions (causal diagram)\n3. Model assumptions (e.g., propensity)\n4. Diagnose model (e.g., balance)\n5. Estimate causal effects (e.g., IPW) \n6. Sensitivity analysis\n\n## {background-color=\"#23373B\" .center .huge}\n\n### **Does mosquito bed net use reduce malaria risk?**\n\n## The Data\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlibrary(causalworkshop)\nnet_data\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 1,752 × 10\n      id net   net_num malaria_risk income health household\n   <int> <lgl>   <int>        <dbl>  <dbl>  <dbl>     <dbl>\n 1     1 FALSE       0           38    779     35         1\n 2     2 FALSE       0           48    700     35         3\n 3     3 FALSE       0           32   1083     58         3\n 4     4 FALSE       0           55    753     68         3\n 5     5 FALSE       0           36    919     46         5\n 6     6 FALSE       0           30    969     37         3\n 7     7 FALSE       0           29   1012     58         1\n 8     8 FALSE       0           45    708     30         2\n 9     9 FALSE       0           51    733     18         3\n10    10 FALSE       0           42    862     64         3\n# ℹ 1,742 more rows\n# ℹ 3 more variables: eligible <lgl>, temperature <dbl>,\n#   insecticide_resistance <dbl>\n```\n\n\n:::\n:::\n\n\n## Proposed DAG\n\n\n::: {.cell layout-align=\"center\"}\n::: {.cell-output-display}\n![](12-whole_game-2_files/figure-revealjs/unnamed-chunk-2-1.png){fig-align='center' width=80%}\n:::\n:::\n\n\n## {background-color=\"#23373B\" .center .huge}\n\n### **Your Turn!**\n",
+    "supporting": [
+      "12-whole_game-2_files/figure-revealjs"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,5 +1,16 @@
 project:
+  type: default
   title: "causal_inference_r_workshop"
+  render:
+    - "slides/raw/*.qmd"
+  
+profile:
+  default: dev
+  group:
+    - [dev, prod]
+
+execute:
+  echo: true
 
 
 

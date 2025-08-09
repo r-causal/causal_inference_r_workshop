@@ -1,0 +1,12 @@
+# Development profile configuration
+# Optimized for fast iteration during slide development
+
+execute:
+  # Only re-render when source files change
+  freeze: auto
+
+# Development-specific format options
+format:
+  kakashi-revealjs:
+    # Keep existing format options from slides
+    echo: true

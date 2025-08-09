@@ -1,0 +1,19 @@
+# Production profile configuration
+# Clean builds from scratch with PDF generation
+
+execute:
+  # Disable caching for clean builds
+  cache: false
+  # Always re-render everything
+  freeze: false
+
+# Production-specific format options
+format:
+  kakashi-revealjs:
+    # Keep existing format options from slides
+    echo: true
+
+# Run render_slides.R after rendering to generate PDFs
+project:
+  post-render:
+    - slides/render_slides.R
