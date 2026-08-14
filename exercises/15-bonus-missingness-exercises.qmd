@@ -17,7 +17,7 @@ seven_dwarfs <- seven_dwarfs_train_2018 |>
   filter(wait_hour == 9)
 ```
 
-We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9 AM and 10 AM in 2018 (the **outcome**). This time the outcome is the *actual* wait time, `wait_minutes_actual_avg`, rather than the posted wait time we have used so far. In earlier exercises we dropped its unobserved values; now we face them directly.
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9 AM and 10 AM in 2018 (the **outcome**). This time the outcome is the *actual* wait time, `wait_minutes_actual_avg`, rather than the posted wait time we have used so far. In earlier exercises we dropped its unobserved values; here we address them.
 
 ## Your Turn 1
 
@@ -158,7 +158,7 @@ pool_ipw(___) |>
 
 With `m = 60`, you should get a pooled estimate of about 1.48 minutes, with a standard error of about 7.60 and a confidence interval from about -13.7 to 16.6.
 
-The interval is wide, includes zero, and includes the complete-case answer. With 207 of the 354 outcome values missing, that is the answer multiple imputation gives, and it is more honest than the single deterministic number from Your Turn 2: most of what we would need to know about actual wait times is simply not there.
+The interval is wide, includes zero, and includes the complete-case answer. With 207 of the 354 outcome values missing, that is the answer multiple imputation gives, and it reflects the uncertainty that the single deterministic estimate from Your Turn 2 hides.
 
 **Stretch goal**: Check the convergence of the imputation algorithm with `plot_trace()`, naming the imputed variable.
 
@@ -184,4 +184,4 @@ estimates |>
 
 - Complete-case analysis is a causal claim about the structure of the missingness, and a DAG of the missingness mechanism makes that claim inspectable
 - Imputation models carry the same obligations as analysis models: the same variables, including the outcome, and the same functional forms
-- Fit the entire pipeline inside each imputation, pool the results, and read a wide pooled interval as information about how much the missingness costs, not as a failure of the method
+- Fit the entire pipeline inside each imputation, pool the results, and read a wide pooled interval as a measure of what the missingness cost you, not as a failure of the method

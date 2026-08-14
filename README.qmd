@@ -31,6 +31,7 @@ knitr::opts_chunk$set(
 - [12 Continuous Exposures and G-Computation](https://causal-inference-r-workshop.netlify.app/12-continuous-g-comp.html)
 - [13 Tipping Point Sensitivity Analyses](https://causal-inference-r-workshop.netlify.app/13-tipr.html)
 - [14 Interaction and Heterogeneous Treatment Effects](https://causal-inference-r-workshop.netlify.app/14-interaction.html)
+- [15 Bonus: Missing Data](https://causal-inference-r-workshop.netlify.app/15-bonus-missingness.html)
 - [16 Bonus: Selection Bias](https://causal-inference-r-workshop.netlify.app/16-bonus-selection-bias.html)
 - [17 Bonus: Continuous Exposures with Propensity Scores](https://causal-inference-r-workshop.netlify.app/17-bonus-continuous-pscores.html)
 - [18 Bonus: Machine Learning for Causal Inference](https://causal-inference-r-workshop.netlify.app/18-bonus-ml-for-causal.html)

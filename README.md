@@ -34,6 +34,8 @@
   Analyses](https://causal-inference-r-workshop.netlify.app/13-tipr.html)
 - [14 Interaction and Heterogeneous Treatment
   Effects](https://causal-inference-r-workshop.netlify.app/14-interaction.html)
+- [15 Bonus: Missing
+  Data](https://causal-inference-r-workshop.netlify.app/15-bonus-missingness.html)
 - [16 Bonus: Selection
   Bias](https://causal-inference-r-workshop.netlify.app/16-bonus-selection-bias.html)
 - [17 Bonus: Continuous Exposures with Propensity
