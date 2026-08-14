@@ -1,0 +1,544 @@
+---
+title: "Bonus: Missing Data"
+author: "Malcolm Barrett"
+institute: "Stanford University"
+format: "kakashi-revealjs"
+---
+
+## {background-color="#23373B"}
+
+```{r}
+#| label: setup
+#| include: false
+
+options(
+  tibble.max_extra_cols = 6,
+  tibble.width = 60
+)
+library(tidyverse)
+library(broom)
+library(propensity)
+library(causalworkshop)
+library(touringplans)
+# mice masks tidyr::complete(), so tidyr::complete() calls must be namespaced
+library(mice)
+library(ggmice)
+library(ggdag)
+library(patchwork)
+
+theme_set(
+  theme_minimal(base_size = 14) +
+    theme(
+      panel.grid.minor = element_blank(),
+      legend.position = "bottom"
+    )
+)
+```
+
+- `lm()` and `glm()` drop rows with missing values silently
+- Every model we have fit in this course has been a complete-case analysis,
+  whether we said so or not
+
+## We have said this before
+
+- Our own exercises say: "We also have a lot of missingness for
+  `wait_minutes_actual_avg`, so we'll drop unobserved values for now"
+- We dropped the unobserved values, and we postponed the problem
+
+. . .
+
+This module is where we come back for it
+
+## How much is missing?
+
+```{r}
+#| output-location: fragment
+
+seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9) |>
+  summarize(
+    days = n(),
+    missing_actual = sum(is.na(wait_minutes_actual_avg)),
+    prop_missing = mean(is.na(wait_minutes_actual_avg))
+  )
+```
+
+. . .
+
+At the 9 AM hour, 207 of 354 days are missing the actual wait time; across the
+full data, 88.7% of actual wait times are missing
+
+## The plan for this module
+
+- The malaria data has no missing values, so we will remove some on purpose
+- Then we judge every fix against the answer we already know
+
+. . .
+
+The benchmark: the full-data IPW estimate of the effect of net use on malaria
+risk, -12.5 (from the outcome model module)
+
+## {.center background-color="#23373B"}
+
+### **The missingness indicator**
+
+## Two nodes for one variable
+
+- We draw two nodes for a given variable: one represents the true values, and
+  the other represents a *missingness indicator*, whether we observed the value
+  or not
+- We are always conditioning on the data we actually have
+
+. . .
+
+With missingness, that usually means conditioning on *complete* observations:
+the subset where every variable we need is observed
+
+## Missingness has its own causes
+
+```{r}
+#| echo: false
+
+malaria_labels <- c(
+  malaria_risk = "Risk of malaria",
+  malaria_missing = "Missingness\nin malaria risk",
+  net = "Mosquito net",
+  unknown = "Unknown\nmechanism"
+)
+
+missing_malaria <- dagify(
+  malaria_risk ~ net,
+  malaria_missing ~ net + unknown,
+  coords = list(
+    x = c(net = 0, unknown = 0, malaria_risk = 2, malaria_missing = 2),
+    y = c(net = 1, unknown = -1, malaria_risk = 1, malaria_missing = -1)
+  ),
+  labels = malaria_labels,
+  exposure = "net",
+  outcome = "malaria_risk"
+)
+
+missing_malaria |>
+  ggdag(use_text = FALSE) +
+  geom_dag_text_repel(
+    aes(label = label),
+    color = "black",
+    point.padding = 25,
+    box.padding = 0.5,
+    seed = 1
+  ) +
+  theme_dag() +
+  expand_plot(expansion(0.2), expansion(0.2))
+```
+
+## Reading this DAG
+
+- The missingness of malaria risk is related to net use and to an unknown
+  mechanism
+- The unknown mechanism is random, but the mechanism related to net use is not,
+  since net use is the exposure
+
+## {.center background-color="#23373B"}
+
+### **When complete cases are enough**
+
+## Conditioning on the indicator
+
+```{r}
+#| echo: false
+
+missing_malaria |>
+  ggdag_adjust("malaria_missing", use_text = FALSE, collider_lines = FALSE) +
+  geom_dag_text_repel(
+    aes(label = label),
+    color = "black",
+    point.padding = 25,
+    box.padding = 0.5,
+    seed = 1
+  ) +
+  theme_dag() +
+  theme(legend.position = "none") +
+  expand_plot(expansion(0.2), expansion(0.2)) +
+  ggokabeito::scale_color_okabe_ito()
+```
+
+## A collider that opens no backdoor
+
+- The missingness indicator is a collider, and conditioning on it is exactly
+  what complete-case analysis does
+- In this DAG, though, conditioning on it does not open a backdoor path between
+  net use and malaria risk
+- It does bias the relationship between the unknown mechanism and net use, but
+  we do not care about that relationship
+
+## What we keep and what we lose
+
+- The causal effect is *recoverable*: we can still estimate it without bias
+  with complete-case analysis
+- Because we only use complete observations, we have a smaller sample size and
+  thus reduced precision
+
+. . .
+
+We are unable to correctly estimate the *mean* of malaria risk because values
+are systematically missing by net use
+
+## {.center background-color="#23373B"}
+
+### **When complete cases are not enough**
+
+## Missingness from the value itself
+
+- Is it feasible that the missingness of malaria risk is related to its own
+  values?
+- It could be that a person's malaria risk is so severe that the measurement
+  never happens
+
+. . .
+
+The values of malaria risk themselves influence whether we managed to measure
+them
+
+## An arrow from the outcome
+
+```{r}
+#| echo: false
+
+missing_malaria_own <- dagify(
+  malaria_risk ~ net,
+  malaria_missing ~ net + unknown + malaria_risk,
+  coords = list(
+    x = c(net = 0, unknown = 0, malaria_risk = 2, malaria_missing = 2),
+    y = c(net = 1, unknown = -1, malaria_risk = 1, malaria_missing = -1)
+  ),
+  labels = malaria_labels,
+  exposure = "net",
+  outcome = "malaria_risk"
+)
+
+missing_malaria_own |>
+  ggdag(use_text = FALSE) +
+  geom_dag_text_repel(
+    aes(label = label),
+    color = "black",
+    point.padding = 25,
+    box.padding = 0.5,
+    seed = 1
+  ) +
+  theme_dag() +
+  expand_plot(expansion(0.2), expansion(0.2))
+```
+
+## Conditioning now opens a backdoor
+
+```{r}
+#| echo: false
+
+missing_malaria_own |>
+  ggdag_adjust("malaria_missing", use_text = FALSE, collider_lines = FALSE) +
+  geom_dag_text_repel(
+    aes(label = label),
+    color = "black",
+    point.padding = 25,
+    box.padding = 0.5,
+    seed = 1
+  ) +
+  theme_dag() +
+  theme(legend.position = "none") +
+  expand_plot(expansion(0.2), expansion(0.2)) +
+  ggokabeito::scale_color_okabe_ito()
+```
+
+## No way to close it
+
+- Whether malaria risk was measured is now a descendant of both the exposure
+  and the outcome
+- Conditioning on the indicator opens a backdoor path, creating
+  nonexchangeability
+
+. . .
+
+There is no way to close the backdoor path opened by conditioning on
+missingness
+
+## More than backdoor paths
+
+- What effects we can recover is more complicated than determining backdoor
+  paths alone
+- When there are no backdoor paths, we can calculate the causal effect, but we
+  may not be able to calculate other statistics, like the mean of the exposure
+  or outcome
+- When conditioning on missingness opens a backdoor path, sometimes we can
+  close it, and sometimes we cannot
+
+## {.center background-color="#23373B"}
+
+### **Five structures of missingness**
+
+## Five DAGs, four letters
+
+- Consider five DAGs, where `a` is malaria risk, `n` is net use, `u` is
+  unknown, and `m` is missing
+- Each represents a simple but differing structure of missingness
+
+. . .
+
+In DAGs 1-3, malaria risk has missingness; in DAGs 4-5, net use does
+
+## Five structures
+
+```{r}
+#| echo: false
+
+define_dag <- function(..., tag, title) {
+  dagify(
+    ...,
+    coords = time_ordered_coords(),
+    exposure = "n",
+    outcome = "a"
+  ) |>
+    ggdag(size = 0.7) +
+    labs(title = paste0(tag, ": ", title)) +
+    theme_dag() +
+    theme(plot.title = element_text(size = 12)) +
+    expand_plot(expansion(c(0.4, 0.4)), expansion(c(0.4, 0.4)))
+}
+
+dag_1 <- define_dag(
+  a ~ n,
+  m ~ u,
+  tag = "1",
+  title = "malaria risk is missing"
+)
+
+dag_2 <- define_dag(
+  a ~ n,
+  m ~ u + n,
+  tag = "2",
+  title = "malaria risk is missing"
+)
+
+dag_3 <- define_dag(
+  a ~ n,
+  m ~ u + a,
+  tag = "3",
+  title = "malaria risk is missing"
+)
+
+dag_4 <- define_dag(
+  a ~ n,
+  m ~ u + n,
+  tag = "4",
+  title = "net use is missing"
+)
+
+dag_5 <- define_dag(
+  a ~ n,
+  m ~ u + a,
+  tag = "5",
+  title = "net use is missing"
+)
+
+(dag_1 + dag_2 + dag_3) / (plot_spacer() + dag_4 + dag_5)
+```
+
+## Impose the five structures on the data
+
+```{r}
+set.seed(123)
+n <- nrow(net_data)
+m1 <- as.logical(rbinom(n, 1, 0.35))
+m2 <- as.logical(
+  if_else(net_data$net, rbinom(n, 1, 0.9), rbinom(n, 1, 0.15))
+)
+# the threshold 38 sits near the median of malaria risk
+m3 <- as.logical(
+  if_else(net_data$malaria_risk > 38, rbinom(n, 1, 0.9), rbinom(n, 1, 0.05))
+)
+# the same structures, but net use gets the resulting missingness
+m4 <- m2
+m5 <- m3
+```
+
+. . .
+
+For each structure, we blank out the chosen column, then estimate the
+proportion using nets, the mean of malaria risk, and the IPW effect
+
+## What each structure leaves standing
+
+```{r}
+#| echo: false
+
+fit_ipw_net <- function(.data) {
+  propensity_model <- glm(
+    net ~ income + health + temperature,
+    family = binomial(),
+    data = .data
+  )
+  weighted_data <- propensity_model |>
+    augment(type.predict = "response", data = .data) |>
+    mutate(wts = wt_ate(.fitted, net, exposure_type = "binary"))
+  ipw_model <- lm(malaria_risk ~ net, data = weighted_data, weights = wts)
+  ipw(propensity_model, ipw_model)
+}
+
+fit_stats <- function(dag, miss, missing_for) {
+  d <- net_data
+  if (missing_for == "outcome") {
+    d$malaria_risk[miss] <- NA
+  } else {
+    d$net[miss] <- NA
+  }
+
+  t_risk <- t.test(d$malaria_risk)
+  p_net <- prop.test(sum(d$net, na.rm = TRUE), sum(!is.na(d$net)))
+  # ipw() requires both models to see the same rows, so filter to complete
+  # cases before fitting instead of letting lm() drop rows
+  complete_cases <- d |> filter(!is.na(malaria_risk), !is.na(net))
+  effect <- tidy(fit_ipw_net(complete_cases), conf.int = TRUE)
+
+  tibble(
+    dag = dag,
+    prop_net_estimate = unname(p_net$estimate),
+    prop_net_lower = p_net$conf.int[[1]],
+    prop_net_upper = p_net$conf.int[[2]],
+    mean_risk_estimate = unname(t_risk$estimate),
+    mean_risk_lower = t_risk$conf.int[[1]],
+    mean_risk_upper = t_risk$conf.int[[2]],
+    effect_estimate = effect$estimate,
+    effect_lower = effect$conf.low,
+    effect_upper = effect$conf.high
+  ) |>
+    pivot_longer(
+      cols = -dag,
+      names_to = c("stat", ".value"),
+      names_pattern = "^(.*)_(estimate|lower|upper)$"
+    )
+}
+
+dag_stats <- bind_rows(
+  fit_stats("No missingness", rep(FALSE, n), "outcome"),
+  fit_stats("DAG 1", m1, "outcome"),
+  fit_stats("DAG 2", m2, "outcome"),
+  fit_stats("DAG 3", m3, "outcome"),
+  fit_stats("DAG 4", m4, "exposure"),
+  fit_stats("DAG 5", m5, "exposure")
+)
+
+dag_stats |>
+  mutate(
+    true_value = if_else(
+      dag == "No missingness",
+      "True value",
+      "Observed value"
+    ),
+    dag = factor(dag, levels = c(paste("DAG", 5:1), "No missingness")),
+    stat = factor(
+      stat,
+      levels = c("prop_net", "mean_risk", "effect"),
+      labels = c(
+        "Proportion using nets",
+        "Mean of malaria risk",
+        "Causal effect"
+      )
+    )
+  ) |>
+  ggplot(aes(color = true_value)) +
+  geom_point(aes(estimate, dag)) +
+  geom_segment(aes(
+    x = lower,
+    xend = upper,
+    y = dag,
+    yend = dag,
+    group = stat
+  )) +
+  facet_wrap(~stat, scales = "free_x") +
+  labs(y = NULL, color = NULL) +
+  ggokabeito::scale_color_okabe_ito()
+```
+
+## What each structure costs
+
+- With no missingness, we can estimate all three quantities
+- DAG 1 loses only precision
+- DAG 2 loses the mean of malaria risk
+- DAG 3 loses the mean of malaria risk and the causal effect
+- DAG 4 loses the proportion using nets
+- DAG 5 loses everything but the mean of malaria risk
+
+. . .
+
+The causal effect is recoverable in structures 1, 2, and 4, and lost in 3 and 5
+
+## A comprehensive map
+
+See Moreno-Betancur et al. (2018) for a comprehensive overview of what effects
+are recoverable from different structures of missingness
+
+::: tiny
+Moreno-Betancur M, Lee KJ, Leacy FP, White IR, Simpson JA, Carlin JB (2018).
+Canonical causal diagrams to guide the treatment of missing data in
+epidemiologic studies. American Journal of Epidemiology.
+doi:10.1093/aje/kwy173
+:::
+
+## {.center background-color="#23373B"}
+
+### **MCAR, MAR, and MNAR**
+
+## Three terms you will see
+
+In the grand tradition of statisticians being bad at naming things, you will
+also commonly see missingness discussed in terms of *missing completely at
+random*, *missing at random*, and *missing not at random*
+
+. . .
+
+We can explain these ideas by the causal structure of missingness and the
+availability of variables and values related to that structure in your data
+
+## Missing completely at random
+
+- **MCAR**: there are missing values, but the causes of missingness are such
+  that the missingness process is unrelated to the causal structure of your
+  question
+- In other words, the only problem with missingness is a reduction in sample
+  size
+
+. . .
+
+This is structure 1, where the only cause of missingness is the unknown
+mechanism
+
+## Missing at random
+
+- **MAR**: the causes of missingness are related to the causal structure of
+  the research problem, but missingness only depends on the variables and
+  values in the data that we have actually observed
+
+. . .
+
+This is structure 2, where the missingness of malaria risk depends on net use,
+which we always observe
+
+## Missing not at random
+
+- **MNAR**: the causes of missingness are related to the causal structure of
+  the research problem, but the process is related to values we are missing
+- A classic example is when a variable's missingness is impacted by itself:
+  higher values of `x` are more likely to be missing in `x`, as in structure 3
+
+. . .
+
+We do not have that information because, by definition, it is missing
+
+## Names are not instructions
+
+- These terms do not always tell you what to do next
+- We will avoid them in favor of explicitly describing the missingness
+  generation process
+
+. . .
+
+Next: impose one realistic mechanism on the malaria data and try to repair it
