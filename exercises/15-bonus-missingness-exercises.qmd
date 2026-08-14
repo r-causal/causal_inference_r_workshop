@@ -1,0 +1,187 @@
+---
+title: "Missing Data"
+format: html
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(broom)
+library(touringplans)
+library(propensity)
+library(mice)
+library(ggmice)
+
+seven_dwarfs <- seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9)
+```
+
+We are interested in examining the relationship between whether there were "Extra Magic Hours" in the morning (the **exposure**) and the average wait time for the Seven Dwarfs Mine Train the same day between 9 AM and 10 AM in 2018 (the **outcome**). This time the outcome is the *actual* wait time, `wait_minutes_actual_avg`, rather than the posted wait time we have used so far. In earlier exercises we dropped its unobserved values; now we face them directly.
+
+## Your Turn 1
+
+1. Count the days, the days missing the actual wait time, and the proportion missing.
+
+```{r}
+seven_dwarfs |>
+  summarize(
+    days = n(),
+    missing_actual = sum(is.na(___)),
+    prop_missing = mean(is.na(___))
+  )
+```
+
+2. Visualize the missingness pattern with `plot_pattern()`.
+
+```{r}
+seven_dwarfs |>
+  select(
+    wait_minutes_actual_avg,
+    wait_minutes_posted_avg,
+    park_extra_magic_morning,
+    park_ticket_season,
+    park_close,
+    park_temperature_high
+  ) |>
+  ___()
+```
+
+You should find that 207 of the 354 days are missing the actual wait time, and that it is the only variable with missingness.
+
+Which DAG from the slides do you think describes this missingness? What does your answer imply about the effect of Extra Magic Mornings on actual wait times, and about the mean of the actual wait times? If the missingness depends only on variables we observe, the effect is recoverable from the complete cases (at a cost in precision) even though the mean may not be; if it depends on the actual wait times themselves, neither is. The data cannot settle which structure holds.
+
+## Your Turn 2
+
+Impute the missing actual wait times with a single regression model, then estimate the effect of an Extra Magic Morning on the *actual* wait time. Fit the imputation model on the full `seven_dwarfs_train_2018` data, not just hour 9: the posted wait time at every hour helps predict the actual wait time. The model keeps the exposure and the confounders in the same forms as the analysis models; the posted wait time and its interaction with the hour are auxiliary structure for prediction, not part of the analysis model.
+
+1. Fit the imputation model, predicting the actual wait time from the posted wait time interacted with the hour, plus the exposure and the confounders.
+2. Use `augment()` with `newdata` and `coalesce()` to keep the observed value where it exists and fill in the prediction where it does not, then filter to hour 9.
+
+```{r}
+imputation_model <- lm(
+  wait_minutes_actual_avg ~ ___ ___ wait_hour +
+    park_extra_magic_morning +
+    park_temperature_high +
+    park_close +
+    park_ticket_season,
+  data = seven_dwarfs_train_2018
+)
+
+seven_dwarfs_imputed <- imputation_model |>
+  augment(newdata = seven_dwarfs_train_2018) |>
+  mutate(wait_minutes_actual_avg = ___(wait_minutes_actual_avg, .fitted)) |>
+  filter(wait_hour == 9)
+```
+
+3. Estimate the effect on the imputed actual wait time with the IPW pipeline from the previous exercises.
+
+```{r}
+propensity_model <- glm(
+  ___ ~ park_ticket_season + park_close + park_temperature_high,
+  data = seven_dwarfs_imputed,
+  family = binomial()
+)
+
+seven_dwarfs_wts <- propensity_model |>
+  augment(type.predict = "response", data = seven_dwarfs_imputed) |>
+  mutate(wts = wt_ate(.fitted, ___, exposure_type = "binary"))
+
+ipw_model <- lm(___ ~ ___, data = seven_dwarfs_wts, weights = ___)
+
+ipw(___, ___) |>
+  tidy(conf.int = TRUE)
+```
+
+You should get an estimate of about 6.49 minutes.
+
+**Stretch goal**: The complete-case estimate for the actual wait time is about 5.11 minutes, with a much wider confidence interval. Why does the imputed version sit closer to the 6.20 minutes you found for the *posted* wait time in the outcome model exercises? Look at where the imputed values come from: 207 of the 354 outcome values are predictions, so consider which variable in the imputation model does most of the predicting.
+
+## Your Turn 3
+
+Now use multiple imputation, fitting the whole IPW pipeline within each imputation and pooling the results with `pool_ipw()`.
+
+First, build the frame to impute from the hour 9 data: the analysis variables plus the posted wait time, with `park_ticket_season` as a factor so `mice()` models it correctly. (**no need to change this code**)
+
+```{r}
+seven_dwarfs_to_impute <- seven_dwarfs |>
+  mutate(park_ticket_season = as.factor(park_ticket_season)) |>
+  select(
+    wait_minutes_actual_avg,
+    wait_minutes_posted_avg,
+    park_temperature_high,
+    park_close,
+    park_ticket_season,
+    park_extra_magic_morning
+  )
+```
+
+1. Impute with `mice()` using predictive mean matching. 58.5% of the hour 9 cases are incomplete; use the rule of thumb from the slides to choose `m` (round up to `m = 60`).
+
+```{r}
+imp <- mice(
+  seven_dwarfs_to_impute,
+  m = ___,
+  method = "pmm",
+  seed = 1,
+  print = FALSE
+)
+```
+
+2. Compare the imputed values (red) to the observed ones (blue). (**no need to change this code**)
+
+```{r}
+ggmice(imp, aes(x = wait_minutes_posted_avg, y = wait_minutes_actual_avg)) +
+  geom_point(alpha = 0.2)
+```
+
+3. Fit the propensity score model, the ATE weights, the weighted outcome model, and `ipw()` within each imputation.
+
+```{r}
+fits <- with(imp, {
+  ps <- glm(
+    ___ ~ park_ticket_season + park_close + park_temperature_high,
+    family = binomial()
+  )
+  w <- ___(fitted(ps), park_extra_magic_morning, exposure_type = "binary")
+  om <- lm(___ ~ ___, weights = w)
+  ipw(___, ___)
+})
+```
+
+4. Pool the results.
+
+```{r}
+pool_ipw(___) |>
+  tidy(conf.int = TRUE)
+```
+
+With `m = 60`, you should get a pooled estimate of about 1.48 minutes, with a standard error of about 7.60 and a confidence interval from about -13.7 to 16.6.
+
+The interval is wide, includes zero, and includes the complete-case answer. With 207 of the 354 outcome values missing, that is the answer multiple imputation gives, and it is more honest than the single deterministic number from Your Turn 2: most of what we would need to know about actual wait times is simply not there.
+
+**Stretch goal**: Check the convergence of the imputation algorithm with `plot_trace()`, naming the imputed variable.
+
+```{r}
+plot_trace(imp, ___)
+```
+
+**Stretch goal**: Apply Rubin's rules by hand and confirm that the estimate and standard error match `pool_ipw()`'s.
+
+```{r}
+estimates <- map_dfr(fits$analyses, tidy)
+
+estimates |>
+  summarize(
+    pooled = mean(___),
+    within_var = mean(std.error^2),
+    between_var = var(___),
+    pooled_se = sqrt(within_var + (1 + 1 / n()) * between_var)
+  )
+```
+
+# Take aways
+
+- Complete-case analysis is a causal claim about the structure of the missingness, and a DAG of the missingness mechanism makes that claim inspectable
+- Imputation models carry the same obligations as analysis models: the same variables, including the outcome, and the same functional forms
+- Fit the entire pipeline inside each imputation, pool the results, and read a wide pooled interval as information about how much the missingness costs, not as a failure of the method

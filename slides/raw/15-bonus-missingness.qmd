@@ -370,6 +370,8 @@ proportion using nets, the mean of malaria risk, and the IPW effect
 ```{r}
 #| echo: false
 
+# fit_ipw_net() is defined again on the visible pipeline slide below; keep
+# the two definitions in sync
 fit_ipw_net <- function(.data) {
   propensity_model <- glm(
     net ~ income + health + temperature,
@@ -542,3 +544,684 @@ We do not have that information because, by definition, it is missing
 . . .
 
 Next: impose one realistic mechanism on the malaria data and try to repair it
+
+## {.center background-color="#23373B"}
+
+### **Regression imputation**
+
+## One realistic mechanism
+
+```{r}
+p_missing <- plogis(
+  -0.8 + 1.4 * net_data$net + 0.3 * as.numeric(scale(net_data$income))
+)
+set.seed(88)
+missing_mar <- rbinom(n, 1, p_missing) == 1
+
+net_data_mar <- net_data |>
+  select(net, income, health, temperature, malaria_risk) |>
+  mutate(malaria_risk = if_else(missing_mar, NA_real_, malaria_risk))
+```
+
+. . .
+
+Malaria risk now goes missing more often for net users and for higher-income
+households: about 40% of the values are gone, but only for reasons we can see
+in the data
+
+## The pipeline, wrapped in a function
+
+```{r}
+fit_ipw_net <- function(.data) {
+  propensity_model <- glm(
+    net ~ income + health + temperature,
+    family = binomial(),
+    data = .data
+  )
+  weighted_data <- propensity_model |>
+    augment(type.predict = "response", data = .data) |>
+    mutate(wts = wt_ate(.fitted, net, exposure_type = "binary"))
+  ipw_model <- lm(malaria_risk ~ net, data = weighted_data, weights = wts)
+  ipw(propensity_model, ipw_model)
+}
+```
+
+. . .
+
+The pipeline from the outcome model module: propensity score model, ATE
+weights, weighted outcome model, `ipw()`
+
+## Complete cases first
+
+```{r}
+#| output-location: fragment
+
+net_data_complete <- net_data_mar |> drop_na()
+
+mar_complete_case <- fit_ipw_net(net_data_complete) |>
+  tidy(conf.int = TRUE)
+
+mar_complete_case
+```
+
+. . .
+
+-12.8 (95% CI -14.3, -11.2): the effect survives with a wider interval, just
+as the missingness indicator DAG promised
+
+## Say the choice out loud
+
+- We filtered to the complete cases ourselves before fitting either model
+- Had we let `lm()` drop the missing rows silently, `ipw()` would error: the
+  propensity score model would see all 1752 rows and the outcome model only
+  the 1047 complete ones
+- Complete-case analysis is an analytic choice, and the tooling makes us state
+  it explicitly
+
+. . .
+
+The effect is recoverable here, but the mean of malaria risk is not: the
+complete cases average 42.6 against the full-data 39.7
+
+## Predict what is missing
+
+- The analysis variables predict malaria risk well, so we can use them to fill
+  in the values we failed to measure
+- Fit a model for malaria risk on the complete cases, then plug its prediction
+  in wherever the value is missing
+- When fitting imputation models, include every variable that appears in your
+  later models, in the same form it takes there
+
+## Regression imputation
+
+```{r}
+imputation_model <- lm(
+  malaria_risk ~ net + income + health + temperature,
+  data = net_data_mar
+)
+
+net_data_imputed <- imputation_model |>
+  augment(newdata = net_data_mar) |>
+  mutate(malaria_risk = coalesce(malaria_risk, .fitted))
+```
+
+. . .
+
+`coalesce()` keeps the observed value where we have one and uses the model's
+prediction where we do not
+
+## The point estimate is fine
+
+```{r}
+#| output-location: fragment
+
+mar_regression <- fit_ipw_net(net_data_imputed) |>
+  tidy(conf.int = TRUE)
+
+mar_regression
+```
+
+. . .
+
+-12.5 (95% CI -13.1, -11.8): right on the benchmark
+
+## One guess, treated as truth
+
+- Each of the 705 missing values got a single predicted value, and the outcome
+  model then treated it like real data
+- The standard error is 0.34, *narrower* than the 0.44 we had with no missing
+  data at all
+- Plugging in guesses cannot make us more certain than measuring everyone
+- If you use this approach, include the fitting of the imputation model in
+  your bootstrap so the standard errors reflect its uncertainty
+
+. . .
+
+Deterministic imputation understates uncertainty
+
+## {.center background-color="#23373B"}
+
+### **Multiple imputation**
+
+## One guess is not enough
+
+- Regression imputation relies on a single imputed value for each missing
+  observation
+- Done honestly, with the imputation model inside the bootstrap, this plug-in
+  approach is generally inefficient: wide intervals that reflect how much
+  rests on a single guess
+
+. . .
+
+Multiple imputation instead draws predicted values from a distribution,
+capturing the uncertainty inherent in the missing data
+
+## Many completed datasets
+
+- We generate several completed datasets whose imputed values differ from draw
+  to draw
+- The values we observed are identical in every dataset; the values we imputed
+  vary
+- That variation between datasets is the imputation uncertainty, made visible
+
+## Two rules for causal imputation models
+
+1. The imputation model must include *every variable* in the outcome model and
+   the propensity score model: the confounders, the exposure, and the outcome
+   itself
+2. Mirror the same functional forms you will use downstream: if a variable
+   gets a spline or an interaction later, it needs one in the imputation model
+   too
+
+## The recipe
+
+1. Impute multiple completed datasets with a model that includes the outcome
+   and all covariates
+2. Estimate the treatment effect within each dataset: propensity score model,
+   weights, weighted outcome model
+3. Pool the estimates with Rubin's rules to get one effect and valid standard
+   errors
+
+. . .
+
+Rule of thumb: the number of imputations should roughly match the percentage
+of incomplete cases
+
+## Look at the pattern first
+
+`plot_pattern()` shows which variables are missing and in what combinations:
+here, one block of 705 rows missing malaria risk
+
+```{r}
+#| output-location: slide
+
+plot_pattern(net_data_mar)
+```
+
+## The imputation model needs the interactions
+
+- In the malaria data, the effect of net use on malaria risk varies with
+  income
+- An imputation model with only main effects would fill in values from an
+  effect that is too weak, and the pooled estimate would inherit that bias
+- This is rule 2 in action: the marginal effect we estimate averages over that
+  heterogeneity, so the imputation model has to represent it
+
+## Build the imputation frame
+
+```{r}
+net_data_to_impute <- net_data_mar |>
+  mutate(
+    net_income = as.numeric(net) * income,
+    net_health = as.numeric(net) * health,
+    net_temperature = as.numeric(net) * temperature
+  )
+```
+
+. . .
+
+The product columns are complete, so `mice()` never imputes them; they serve
+as predictors in the imputation model for malaria risk
+
+## Impute with mice()
+
+```{r}
+imp <- mice(
+  net_data_to_impute,
+  m = 40,
+  method = "pmm",
+  seed = 20260814,
+  print = FALSE
+)
+```
+
+. . .
+
+- Predictive mean matching fills each missing value with an observed value
+  borrowed from a case whose prediction is close
+- About 40% of the cases are incomplete, so the rule of thumb says about 40
+  imputations; we use `m = 40`
+
+## Observed versus imputed
+
+The imputed values should look like data, and their distribution should make
+sense given the mechanism
+
+```{r}
+#| output-location: slide
+
+ggmice(imp, aes(x = malaria_risk, group = .imp)) +
+  geom_density()
+```
+
+## Reading the densities
+
+- The observed values (blue) center higher than the imputed values (red)
+- That is what the mechanism implies: net users are missing malaria risk more
+  often, and net users have lower risk
+- The imputation model can see this because net use is one of its predictors
+
+## Did the algorithm converge?
+
+- `mice()` imputes each variable with missingness iteratively, conditional on
+  the others
+- The trace plot shows the mean and spread of the imputed values across
+  iterations; look for well-mixed lines with no trend
+
+```{r}
+#| output-location: slide
+
+plot_trace(imp, "malaria_risk")
+```
+
+## Fit within each imputation
+
+```{r}
+fits <- with(imp, {
+  ps <- glm(net ~ income + health + temperature, family = binomial())
+  w <- wt_ate(fitted(ps), net, exposure_type = "binary")
+  om <- lm(malaria_risk ~ net, weights = w)
+  ipw(ps, om)
+})
+```
+
+. . .
+
+`with()` runs the block once per completed dataset: forty propensity score
+models, forty sets of weights, forty outcome models, forty `ipw()` results
+
+## Refit the propensity model every time
+
+- The whole analysis is rebuilt inside each imputation, including the
+  propensity score model
+- Averaging the propensity scores across imputations and weighting with one
+  averaged set hides the propensity model's estimation uncertainty from the
+  pooling step
+- Here only the outcome is imputed, so each refit returns the same model; when
+  confounders or the exposure have missingness, the refits differ, and that
+  variation belongs in the pooled standard error
+
+. . .
+
+The propensity score model is part of the analysis, so it belongs inside the
+imputation loop
+
+## What pooling means
+
+```{r}
+#| output-location: fragment
+
+estimates <- map_dfr(fits$analyses, tidy)
+
+estimates |>
+  summarize(
+    pooled = mean(estimate),
+    within_var = mean(std.error^2),
+    between_var = var(estimate),
+    pooled_se = sqrt(within_var + (1 + 1 / n()) * between_var)
+  )
+```
+
+. . .
+
+The pooled estimate is the average across imputations; its variance is the
+average within-imputation variance plus the between-imputation variance,
+inflated by `1 + 1/m`
+
+## pool_ipw() does it correctly
+
+```{r}
+#| output-location: fragment
+
+mar_mi <- pool_ipw(fits) |>
+  tidy(conf.int = TRUE)
+
+mar_mi
+```
+
+. . .
+
+-12.1 (95% CI -13.0, -11.1): the interval covers the benchmark, and the
+standard error pays for the imputation instead of hiding it
+
+## What the verb adds
+
+- The effect labels survive: the pooled result still knows it is a marginal
+  difference
+- The complete-data degrees of freedom are read from the outcome models, with
+  a small-sample adjustment
+- `mice::pool()` also works with these results
+- Results from balancing weights pool with the same verb
+
+## {.center background-color="#23373B"}
+
+### **What imputation cannot fix**
+
+## Missingness from the value itself, again
+
+```{r}
+p_missing <- plogis(-0.5 + 3 * as.numeric(scale(net_data$malaria_risk)))
+set.seed(789)
+missing_mnar <- rbinom(n, 1, p_missing) == 1
+
+net_data_mnar <- net_data |>
+  select(net, income, health, temperature, malaria_risk) |>
+  mutate(malaria_risk = if_else(missing_mnar, NA_real_, malaria_risk))
+```
+
+. . .
+
+This is structure 3: the worse the malaria risk, the less likely we measured
+it, and about 41% of the values are gone
+
+## Complete cases cannot recover it
+
+```{r}
+#| output-location: fragment
+
+mnar_complete_case <- fit_ipw_net(drop_na(net_data_mnar)) |>
+  tidy(conf.int = TRUE)
+
+mnar_complete_case
+```
+
+. . .
+
+-9.4 (95% CI -9.9, -8.9): far from the benchmark, with an interval that
+excludes it entirely
+
+## The identical imputation
+
+```{r}
+imp_mnar <- net_data_mnar |>
+  mutate(
+    net_income = as.numeric(net) * income,
+    net_health = as.numeric(net) * health,
+    net_temperature = as.numeric(net) * temperature
+  ) |>
+  mice(m = 40, method = "pmm", seed = 20260814, print = FALSE)
+```
+
+. . .
+
+Same frame, same method, same number of imputations, same seed
+
+## The identical pipeline
+
+```{r}
+fits_mnar <- with(imp_mnar, {
+  ps <- glm(net ~ income + health + temperature, family = binomial())
+  w <- wt_ate(fitted(ps), net, exposure_type = "binary")
+  om <- lm(malaria_risk ~ net, weights = w)
+  ipw(ps, om)
+})
+```
+
+## The identical pooling
+
+```{r}
+#| output-location: fragment
+
+mnar_mi <- pool_ipw(fits_mnar) |>
+  tidy(conf.int = TRUE)
+
+mnar_mi
+```
+
+. . .
+
+-10.7 (95% CI -11.3, -10.0): closer to the benchmark than the complete cases,
+but the interval still excludes it
+
+## No amount of modeling can rescue it
+
+- When missingness depends on the missing values themselves, conditioning on
+  the indicator opens a backdoor path that nothing observed can close
+- The imputation model only sees the observed values, and under this mechanism
+  they are a truncated sample
+- Multiple imputation moves the estimate toward the benchmark, but it cannot
+  reach it
+
+. . .
+
+Exactly what the DAG told us: there is no way to close the path
+
+## When you suspect this structure
+
+- Sensitivity analysis is how you probe what you cannot verify: the tipping
+  point module's tools apply to missingness too
+- When missingness is designed into a study as censoring, weight for it
+  directly with inverse probability of censoring weights, covered in the
+  selection bias module
+
+## Every analysis in one picture
+
+```{r}
+#| echo: false
+
+benchmark_result <- fit_ipw_net(net_data) |>
+  tidy(conf.int = TRUE)
+
+mar_label <- "Missing from net use and income (observed)"
+mnar_label <- "Missing from malaria risk itself (unobserved)"
+
+remedy_results <- bind_rows(
+  benchmark_result |>
+    mutate(analysis = "Full data", mechanism = "No missingness"),
+  mar_complete_case |>
+    mutate(analysis = "Complete case", mechanism = mar_label),
+  mar_regression |>
+    mutate(analysis = "Regression imputation", mechanism = mar_label),
+  mar_mi |>
+    mutate(analysis = "Multiple imputation", mechanism = mar_label),
+  mnar_complete_case |>
+    mutate(analysis = "Complete case", mechanism = mnar_label),
+  mnar_mi |>
+    mutate(analysis = "Multiple imputation", mechanism = mnar_label)
+)
+
+remedy_results |>
+  mutate(
+    analysis = fct_rev(fct_inorder(analysis)),
+    mechanism = fct_inorder(mechanism)
+  ) |>
+  ggplot(aes(estimate, analysis, color = mechanism)) +
+  geom_vline(
+    xintercept = benchmark_result$estimate,
+    linetype = "dashed",
+    color = "grey60"
+  ) +
+  geom_point() +
+  geom_segment(aes(x = conf.low, xend = conf.high, yend = analysis)) +
+  facet_wrap(~mechanism, ncol = 1, scales = "free_y") +
+  labs(x = "IPW effect of net use on malaria risk", y = NULL) +
+  theme(legend.position = "none") +
+  ggokabeito::scale_color_okabe_ito()
+```
+
+## What the picture says
+
+- Under a recoverable structure, every remedy sits near the benchmark, and
+  multiple imputation prices the uncertainty honestly
+- Under missingness driven by the values themselves, nothing in that panel is
+  trustworthy: both estimates miss, and their intervals are confidently wrong
+- The data alone look similar in both worlds; the structure is what told us
+  which world we were in
+
+## {.center background-color="#23373B"}
+
+### **The real thing is worse**
+
+## Back to the real missingness
+
+- In the malaria data we knew the answer; in the Disney data we never will
+- The question: the effect of Extra Magic Mornings on the *actual* wait time
+  at 9 AM
+- The 6.2 minutes from the outcome model exercises was the effect on *posted*
+  wait times, a different outcome
+
+. . .
+
+207 of 354 days are missing the actual wait time, and no benchmark is coming
+to save us
+
+## The pipeline for actual wait times {.small}
+
+```{r}
+fit_ipw_actual <- function(.data) {
+  propensity_model <- glm(
+    park_extra_magic_morning ~
+      park_ticket_season + park_close + park_temperature_high,
+    family = binomial(),
+    data = .data
+  )
+  weighted_data <- propensity_model |>
+    augment(type.predict = "response", data = .data) |>
+    mutate(
+      wts = wt_ate(.fitted, park_extra_magic_morning, exposure_type = "binary")
+    )
+  ipw_model <- lm(
+    wait_minutes_actual_avg ~ park_extra_magic_morning,
+    data = weighted_data,
+    weights = wts
+  )
+  ipw(propensity_model, ipw_model)
+}
+```
+
+## Complete case: 147 days
+
+```{r}
+#| output-location: fragment
+
+seven_dwarfs_complete <- seven_dwarfs_train_2018 |>
+  filter(wait_hour == 9, !is.na(wait_minutes_actual_avg))
+
+fit_ipw_actual(seven_dwarfs_complete) |>
+  tidy(conf.int = TRUE)
+```
+
+. . .
+
+5.1 minutes (95% CI -10.8, 21.0): an interval four times wider than the
+posted-wait analysis's, and it says almost nothing
+
+## Impute the full data
+
+```{r}
+seven_dwarfs_to_impute <- seven_dwarfs_train_2018 |>
+  mutate(park_ticket_season = as.factor(park_ticket_season)) |>
+  select(
+    park_date,
+    wait_minutes_actual_avg,
+    wait_minutes_posted_avg,
+    wait_hour,
+    park_temperature_high,
+    park_close,
+    park_ticket_season,
+    park_extra_magic_morning
+  )
+```
+
+. . .
+
+- Every variable in the propensity score and outcome models, the outcome
+  itself, and one strong auxiliary predictor: the posted wait time
+- The frame also carries `wait_hour`, a structural auxiliary that lets the
+  imputation borrow across hours, and `park_date`, which the predictor matrix
+  will exclude
+
+## Ten imputations, to start
+
+```{r}
+predictor_matrix <- make.predictorMatrix(seven_dwarfs_to_impute)
+# park_date identifies rows, so it must not predict imputed values
+predictor_matrix[, 1] <- 0
+
+imp_disney <- mice(
+  seven_dwarfs_to_impute,
+  m = 10,
+  predictorMatrix = predictor_matrix,
+  method = "pmm",
+  seed = 1,
+  print = FALSE
+)
+```
+
+. . .
+
+Ten imputations against 88.7% missing: far below the rule of thumb
+
+## Fit the pipeline in each completed dataset
+
+```{r}
+#| output-location: fragment
+
+# mice masks tidyr::complete(), so name the package explicitly
+disney_fits <- mice::complete(imp_disney, action = "all") |>
+  map(\(.df) fit_ipw_actual(filter(.df, wait_hour == 9)))
+
+disney_estimates <- map_dfr(disney_fits, tidy)
+
+round(disney_estimates$estimate, 2)
+```
+
+. . .
+
+Ten completed datasets, ten answers: from -2.3 to 11.5 minutes
+
+## Pool the ten
+
+```{r}
+#| output-location: fragment
+
+pool_ipw(disney_fits) |>
+  tidy(conf.int = TRUE)
+```
+
+. . .
+
+4.2 minutes (95% CI -10.6, 19.0): pooling worked, and the interval is still
+almost as wide as the complete-case one
+
+## The honest lessons
+
+- Ten imputations against 88.7% incompleteness violates the rule of thumb;
+  with more imputations, the pooled estimate varies far less from run to run
+- No number of imputations makes the interval informative: 207 of the 354
+  outcome values are simply gone
+- Multiple imputation prices that honestly, where deterministic imputation
+  would have hidden it
+
+. . .
+
+In the exercises, you will impute the analysis subset directly, with `m`
+matched to the rule of thumb
+
+## *Your Turn 1*
+
+### Open **`15-bonus-missingness-exercises.qmd`**
+
+### Count the days missing the actual wait time and visualize the missingness pattern
+
+### Decide which missingness DAG you believe, and what it implies
+
+`r countdown::countdown(minutes = 5)`
+
+## *Your Turn 2*
+
+### Impute the missing actual wait times with a regression model that keeps the exposure and confounders in their analysis forms
+
+### Estimate the effect of an Extra Magic Morning on the actual wait time with the IPW pipeline
+
+`r countdown::countdown(minutes = 8)`
+
+## *Your Turn 3*
+
+### Multiply impute the hour 9 data with `mice()`, choosing `m` by the rule of thumb
+
+### Fit the full IPW pipeline within each imputation and pool with `pool_ipw()`
+
+### Finish early? Try the *stretch goals*
+
+`r countdown::countdown(minutes = 10)`
