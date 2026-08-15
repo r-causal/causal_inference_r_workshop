@@ -707,24 +707,40 @@ Type: response</code></pre>
 </section>
 <section id="section-7" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
-<h3 id="two-jobs-for-interaction-terms"><strong>Two jobs for interaction terms</strong></h3>
+<h3 id="three-jobs-for-interaction-terms"><strong>Three jobs for interaction terms</strong></h3>
 </section>
-<section id="interaction-in-the-exposure-model" class="slide level2">
-<h2>Interaction in the exposure model</h2>
+<section id="the-same-syntax-three-jobs" class="slide level2">
+<h2>The same syntax, three jobs</h2>
+<ul>
+<li class="fragment"><strong>Functional form</strong>: an interaction between two covariates, in either model</li>
+<li class="fragment"><strong>Effect modification</strong>: an interaction between the exposure and a covariate</li>
+<li class="fragment"><strong>Causal interaction</strong>: an interaction between two exposures</li>
+</ul>
+</section>
+<section id="the-same-syntax-three-jobs-1" class="slide level2">
+<h2>The same syntax, three jobs</h2>
+<p>The more exposures the term involves, the more causal the claim it makes</p>
+</section>
+<section id="covariate-by-covariate" class="slide level2">
+<h2>Covariate by covariate</h2>
 <ul>
 <li class="fragment">In the diagnostics module we added <code>income * health</code> to the propensity score model because that product term was imbalanced</li>
-<li class="fragment">That interaction serves balance, and through balance exchangeability</li>
+<li class="fragment">Outcome models need the same care: g-computation averages predictions from the model we fit, so a term the conditional mean needs but the model lacks biases that average</li>
+</ul>
+</section>
+<section id="covariate-by-covariate-1" class="slide level2">
+<h2>Covariate by covariate</h2>
+<p>Neither term involves the exposure, so neither says anything about the effect</p>
+</section>
+<section id="exposure-by-covariate" class="slide level2">
+<h2>Exposure by covariate</h2>
+<ul>
+<li class="fragment">The interaction in this module’s outcome model is between the exposure and <code>z</code>, so it says the effect itself differs across levels of <code>z</code></li>
+<li class="fragment"><code>z</code> is a covariate we condition on rather than something we set</li>
 </ul>
 <div class="fragment">
-<p>It makes no claim about whether the effect varies</p>
+<p>The third job needs a second exposure rather than a covariate</p>
 </div>
-</section>
-<section id="interaction-in-the-outcome-model" class="slide level2">
-<h2>Interaction in the outcome model</h2>
-<ul>
-<li class="fragment">The interaction in this module’s outcome model encodes how the effect itself varies across levels of the modifier</li>
-<li class="fragment">Same syntax, different jobs: which one you need depends on which model the term goes in</li>
-</ul>
 </section>
 <section id="section-8" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -755,16 +771,6 @@ Type: response</code></pre>
 </ul>
 <div class="fragment">
 <p>The effect of one exposure under two settings of the other</p>
-</div>
-</section>
-<section id="which-variable-can-you-set" class="slide level2">
-<h2>Which variable can you set?</h2>
-<ul>
-<li class="fragment">In effect modification, the second variable is a subgroup-defining characteristic</li>
-<li class="fragment">In causal interaction, it is itself something we conceptually intervene on</li>
-</ul>
-<div class="fragment">
-<p>Some variables are natural subgroup indicators but not plausible intervention targets</p>
 </div>
 </section>
 <section id="extra-magic-mornings-by-quarter" class="slide level2">
@@ -972,27 +978,27 @@ Type: response</code></pre>
 <h2><em>Your Turn 1</em> (<strong><code>14-interaction-exercises.qmd</code></strong>)</h2>
 <h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
 <h3 id="read-the-conditional-effects-off-the-coefficients">Read the conditional effects off the coefficients</h3>
-<p><countdown-timer class="countdown" id="timer_a87322f3" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_d8d3d825" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
 <h3 id="compare-the-three-estimates-and-explain-why-they-differ">Compare the three estimates and explain why they differ</h3>
 <h3 id="stretch-refit-without-the-interaction-and-watch-the-three-collapse"><em>Stretch</em>: refit without the interaction and watch the three collapse</h3>
-<p><countdown-timer class="countdown" id="timer_3b8b1a8c" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_54b86070" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
 <h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
-<p><countdown-timer class="countdown" id="timer_13f5ae1b" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_8b8c8f6c" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-4" class="slide level2 small">
 <h2><em>Your Turn 4</em></h2>
 <h3 id="ask-the-joint-question-what-if-the-park-set-both-the-extra-magic-morning-policy-and-the-ticket-season">Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?</h3>
 <h3 id="cross-the-two-with-joint_exposure-fit-one-propensity-model-over-the-cells-and-read-the-cell-means-simple-effects-and-interaction">Cross the two with <code>joint_exposure()</code>, fit one propensity model over the cells, and read the cell means, simple effects, and interaction</h3>
 <h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_d1677e18" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_c9d174a7" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>

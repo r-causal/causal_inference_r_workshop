@@ -492,24 +492,39 @@ ipw(propensity_model, outcome_model_stab, .by = z) |>
 
 ## {.center background-color="#23373B"}
 
-### **Two jobs for interaction terms**
+### **Three jobs for interaction terms**
 
-## Interaction in the exposure model
+## The same syntax, three jobs
+
+- **Functional form**: an interaction between two covariates, in either model
+- **Effect modification**: an interaction between the exposure and a covariate
+- **Causal interaction**: an interaction between two exposures
+
+## The same syntax, three jobs
+
+The more exposures the term involves, the more causal the claim it makes
+
+## Covariate by covariate
 
 - In the diagnostics module we added `income * health` to the propensity score
   model because that product term was imbalanced
-- That interaction serves balance, and through balance exchangeability
+- Outcome models need the same care: g-computation averages predictions from
+  the model we fit, so a term the conditional mean needs but the model lacks
+  biases that average
+
+## Covariate by covariate
+
+Neither term involves the exposure, so neither says anything about the effect
+
+## Exposure by covariate
+
+- The interaction in this module's outcome model is between the exposure and
+  `z`, so it says the effect itself differs across levels of `z`
+- `z` is a covariate we condition on rather than something we set
 
 . . .
 
-It makes no claim about whether the effect varies
-
-## Interaction in the outcome model
-
-- The interaction in this module's outcome model encodes how the effect itself
-  varies across levels of the modifier
-- Same syntax, different jobs: which one you need depends on which model the
-  term goes in
+The third job needs a second exposure rather than a covariate
 
 ## {.center background-color="#23373B"}
 
@@ -542,17 +557,6 @@ These are often used interchangeably, but they answer different questions
 . . .
 
 The effect of one exposure under two settings of the other
-
-## Which variable can you set?
-
-- In effect modification, the second variable is a subgroup-defining
-  characteristic
-- In causal interaction, it is itself something we conceptually intervene on
-
-. . .
-
-Some variables are natural subgroup indicators but not plausible intervention
-targets
 
 ## Extra Magic Mornings by quarter
 
