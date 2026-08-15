@@ -416,49 +416,6 @@ ipw(propensity_model, outcome_model_int, .by = z) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
-## One system, one covariance
-
-- The result reports the overall effect, one effect per level of `z`, and each
-  level contrasted against the first
-- Every row is a parameter of one jointly estimated system, so the stratum
-  contrast has a standard error and is testable
-
-. . .
-
-Fitting each stratum on its own subset would report the same effects with no
-covariance between them, leaving the difference untestable
-
-## What `.by` requires
-
-- The modifier must be a factor or a character vector with no missing values
-- Every level must hold both exposure levels, since a stratum in which nobody
-  took one of them identifies no contrast against it
-
-. . .
-
-The remedy for an empty cell is a coarser modifier rather than a refit
-
-## The model decides what varies
-
-If the outcome model has no term reading the exposure and the modifier together,
-the stratum effects are forced equal up to the covariate distribution of each
-stratum, and the fit warns
-
-. . .
-
-The modification you report is then a property of the model rather than of the
-data
-
-## No odds ratios in the strata
-
-The stratum rows report differences, and for a binary outcome risk differences
-and log risk ratios, but never odds ratios
-
-. . .
-
-An odds ratio is noncollapsible, so a difference of two of them moves with the
-outcome distribution whether or not the effect does
-
 ## {.center background-color="#23373B"}
 
 ### **Stabilizing the weights**
@@ -495,13 +452,14 @@ the probability of the exposure an unexposed unit took
 
 ## The rule for the numerator
 
-- Conditioning on anything the outcome model reads does not change the estimand
-- Conditioning on a variable the model does not read changes the estimand: the
-  pseudo-population is one where that variable still predicts exposure
+- Conditioning the numerator on a variable that is also in the outcome model
+  does not change the estimand
+- Conditioning on a variable that is not in the outcome model does change it:
+  the pseudo-population is one where that variable still predicts exposure
 
 . . .
 
-Condition the numerator on the modifier and on nothing the model does not hold
+Only condition the numerator on variables that are already in the outcome model
 
 ## The weights tighten
 
@@ -563,8 +521,8 @@ It makes no claim about whether the effect varies
 
 - The interaction in this module's outcome model encodes how the effect itself
   varies across levels of the modifier
-- Same syntax, different jobs: which one you need depends on which model reads
-  the term
+- Same syntax, different jobs: which one you need depends on which model the
+  term goes in
 
 ## {.center background-color="#23373B"}
 

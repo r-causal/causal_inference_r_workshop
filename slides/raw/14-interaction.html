@@ -622,40 +622,6 @@ Type: response</code></pre>
 </div>
 </div>
 </section>
-<section id="one-system-one-covariance" class="slide level2">
-<h2>One system, one covariance</h2>
-<ul>
-<li class="fragment">The result reports the overall effect, one effect per level of <code>z</code>, and each level contrasted against the first</li>
-<li class="fragment">Every row is a parameter of one jointly estimated system, so the stratum contrast has a standard error and is testable</li>
-</ul>
-<div class="fragment">
-<p>Fitting each stratum on its own subset would report the same effects with no covariance between them, leaving the difference untestable</p>
-</div>
-</section>
-<section id="what-.by-requires" class="slide level2">
-<h2>What <code>.by</code> requires</h2>
-<ul>
-<li class="fragment">The modifier must be a factor or a character vector with no missing values</li>
-<li class="fragment">Every level must hold both exposure levels, since a stratum in which nobody took one of them identifies no contrast against it</li>
-</ul>
-<div class="fragment">
-<p>The remedy for an empty cell is a coarser modifier rather than a refit</p>
-</div>
-</section>
-<section id="the-model-decides-what-varies" class="slide level2">
-<h2>The model decides what varies</h2>
-<p>If the outcome model has no term reading the exposure and the modifier together, the stratum effects are forced equal up to the covariate distribution of each stratum, and the fit warns</p>
-<div class="fragment">
-<p>The modification you report is then a property of the model rather than of the data</p>
-</div>
-</section>
-<section id="no-odds-ratios-in-the-strata" class="slide level2">
-<h2>No odds ratios in the strata</h2>
-<p>The stratum rows report differences, and for a binary outcome risk differences and log risk ratios, but never odds ratios</p>
-<div class="fragment">
-<p>An odds ratio is noncollapsible, so a difference of two of them moves with the outcome distribution whether or not the effect does</p>
-</div>
-</section>
 <section id="section-6" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="stabilizing-the-weights"><strong>Stabilizing the weights</strong></h3>
@@ -689,11 +655,11 @@ Type: response</code></pre>
 <section id="the-rule-for-the-numerator" class="slide level2">
 <h2>The rule for the numerator</h2>
 <ul>
-<li class="fragment">Conditioning on anything the outcome model reads does not change the estimand</li>
-<li class="fragment">Conditioning on a variable the model does not read changes the estimand: the pseudo-population is one where that variable still predicts exposure</li>
+<li class="fragment">Conditioning the numerator on a variable that is also in the outcome model does not change the estimand</li>
+<li class="fragment">Conditioning on a variable that is not in the outcome model does change it: the pseudo-population is one where that variable still predicts exposure</li>
 </ul>
 <div class="fragment">
-<p>Condition the numerator on the modifier and on nothing the model does not hold</p>
+<p>Only condition the numerator on variables that are already in the outcome model</p>
 </div>
 </section>
 <section id="the-weights-tighten" class="slide level2">
@@ -770,7 +736,7 @@ Type: response</code></pre>
 <h2>Interaction in the outcome model</h2>
 <ul>
 <li class="fragment">The interaction in this module’s outcome model encodes how the effect itself varies across levels of the modifier</li>
-<li class="fragment">Same syntax, different jobs: which one you need depends on which model reads the term</li>
+<li class="fragment">Same syntax, different jobs: which one you need depends on which model the term goes in</li>
 </ul>
 </section>
 <section id="section-8" class="slide level2 center" data-background-color="#23373B">
@@ -1019,27 +985,27 @@ Type: response</code></pre>
 <h2><em>Your Turn 1</em> (<strong><code>14-interaction-exercises.qmd</code></strong>)</h2>
 <h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
 <h3 id="read-the-conditional-effects-off-the-coefficients">Read the conditional effects off the coefficients</h3>
-<p><countdown-timer class="countdown" id="timer_03f95832" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_c8b82c4d" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
 <h3 id="compare-the-three-estimates-and-explain-why-they-differ">Compare the three estimates and explain why they differ</h3>
 <h3 id="stretch-refit-without-the-interaction-and-watch-the-three-collapse"><em>Stretch</em>: refit without the interaction and watch the three collapse</h3>
-<p><countdown-timer class="countdown" id="timer_95e7cc4f" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_c1b8dfe9" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
 <h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
-<p><countdown-timer class="countdown" id="timer_d6df2909" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_3e8b407a" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-4" class="slide level2 small">
 <h2><em>Your Turn 4</em></h2>
 <h3 id="ask-the-joint-question-what-if-the-park-set-both-the-extra-magic-morning-policy-and-the-ticket-season">Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?</h3>
 <h3 id="cross-the-two-with-joint_exposure-fit-one-propensity-model-over-the-cells-and-read-the-cell-means-simple-effects-and-interaction">Cross the two with <code>joint_exposure()</code>, fit one propensity model over the cells, and read the cell means, simple effects, and interaction</h3>
 <h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_43b0dcd3" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_664fb903" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>

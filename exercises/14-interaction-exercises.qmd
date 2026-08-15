@@ -234,7 +234,7 @@ dagify(
 
 ### Stretch goal: stabilize the weights on the modifier
 
-In Your Turn 3, the numerator of the weights conditioned on nothing. It may condition on any variable the outcome model already reads, and `quarter` is one. Fit a model of the exposure on the modifier, evaluate it at the exposure each day actually had, and pass it as `stabilization_score`.
+In Your Turn 3, the numerator of the weights conditioned on nothing. It may condition on any variable that is already in the outcome model, and `quarter` is one. Fit a model of the exposure on the modifier, evaluate it at the exposure each day actually had, and pass it as `stabilization_score`.
 
 ```{r}
 numerator_model <- glm(
