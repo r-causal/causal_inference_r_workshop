@@ -830,7 +830,9 @@ imputation loop
 ```{r}
 #| output-location: fragment
 
-estimates <- map_dfr(fits, tidy)
+estimates <- fits |>
+  map(tidy) |>
+  list_rbind()
 
 estimates |>
   summarize(
@@ -1024,30 +1026,8 @@ remedy_results |>
 - The data look much the same under both mechanisms; only the structure tells
   them apart
 
-## *Your Turn 1*
+## *Your Turn*
 
-### Open **`15-bonus-missingness-exercises.qmd`**
+### Work through Your Turns 1-3 in `15-bonus-missingness-exercises.qmd`
 
-### Count the days missing the actual wait time and visualize the missingness pattern
-
-### Decide which missingness DAG you believe, and what it implies
-
-`r countdown::countdown(minutes = 5)`
-
-## *Your Turn 2*
-
-### Impute the missing actual wait times with a regression model that keeps the exposure and confounders in their analysis forms
-
-### Estimate the effect of an Extra Magic Morning on the actual wait time with the IPW pipeline
-
-`r countdown::countdown(minutes = 8)`
-
-## *Your Turn 3*
-
-### Multiply impute the hour 9 data with `mice()`, choosing `m` by the rule of thumb
-
-### Fit the full IPW pipeline within each imputation and pool with `pool_ipw()`
-
-### Finish early? Try the *stretch goals*
-
-`r countdown::countdown(minutes = 10)`
+`r countdown::countdown(minutes = 20)`

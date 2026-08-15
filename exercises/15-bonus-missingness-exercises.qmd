@@ -93,10 +93,6 @@ ipw(___, ___) |>
   tidy(conf.int = TRUE)
 ```
 
-You should get an estimate of about 6.49 minutes.
-
-**Stretch goal**: The complete-case estimate for the actual wait time is about 5.11 minutes, with a much wider confidence interval. Why does the imputed version sit closer to the 6.20 minutes you found for the *posted* wait time in the outcome model exercises? Look at where the imputed values come from: 207 of the 354 outcome values are predictions, so consider which variable in the imputation model does most of the predicting.
-
 ## Your Turn 3
 
 Now use multiple imputation, fitting the whole IPW pipeline within each imputation and pooling the results with `pool_ipw()`.
@@ -159,20 +155,12 @@ pool_ipw(___) |>
   tidy(conf.int = TRUE)
 ```
 
-With `m = 60`, you should get a pooled estimate of about 1.48 minutes, with a standard error of about 7.60 and a confidence interval from about -13.7 to 16.6.
-
-The interval is wide, includes zero, and includes the complete-case answer. With 207 of the 354 outcome values missing, that is the answer multiple imputation gives, and it reflects the uncertainty that the single deterministic estimate from Your Turn 2 hides.
-
-**Stretch goal**: Check the convergence of the imputation algorithm with `plot_trace()`, naming the imputed variable.
-
-```{r}
-plot_trace(imp, ___)
-```
-
 **Stretch goal**: Apply Rubin's rules by hand and confirm that the estimate and standard error match `pool_ipw()`'s.
 
 ```{r}
-estimates <- map_dfr(fits, tidy)
+estimates <- fits |>
+  map(tidy) |>
+  list_rbind()
 
 estimates |>
   summarize(

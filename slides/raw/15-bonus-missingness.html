@@ -753,15 +753,17 @@ Malcolm Barrett
 <section id="rubins-rules" class="slide level2">
 <h2>Rubin’s rules</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>estimates <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(fits, tidy)</span>
-<span id="cb17-2"><a href=""></a></span>
-<span id="cb17-3"><a href=""></a>estimates <span class="sc">|&gt;</span></span>
-<span id="cb17-4"><a href=""></a>  <span class="fu">summarize</span>(</span>
-<span id="cb17-5"><a href=""></a>    <span class="at">pooled =</span> <span class="fu">mean</span>(estimate),</span>
-<span id="cb17-6"><a href=""></a>    <span class="at">within_var =</span> <span class="fu">mean</span>(std.error<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb17-7"><a href=""></a>    <span class="at">between_var =</span> <span class="fu">var</span>(estimate),</span>
-<span id="cb17-8"><a href=""></a>    <span class="at">pooled_se =</span> <span class="fu">sqrt</span>(within_var <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">*</span> between_var)</span>
-<span id="cb17-9"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>estimates <span class="ot">&lt;-</span> fits <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href=""></a>  <span class="fu">map</span>(tidy) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href=""></a>  <span class="fu">list_rbind</span>()</span>
+<span id="cb17-4"><a href=""></a></span>
+<span id="cb17-5"><a href=""></a>estimates <span class="sc">|&gt;</span></span>
+<span id="cb17-6"><a href=""></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-7"><a href=""></a>    <span class="at">pooled =</span> <span class="fu">mean</span>(estimate),</span>
+<span id="cb17-8"><a href=""></a>    <span class="at">within_var =</span> <span class="fu">mean</span>(std.error<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb17-9"><a href=""></a>    <span class="at">between_var =</span> <span class="fu">var</span>(estimate),</span>
+<span id="cb17-10"><a href=""></a>    <span class="at">pooled_se =</span> <span class="fu">sqrt</span>(within_var <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">*</span> between_var)</span>
+<span id="cb17-11"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -923,25 +925,10 @@ Malcolm Barrett
 <li class="fragment">The data look much the same under both mechanisms; only the structure tells them apart</li>
 </ul>
 </section>
-<section id="your-turn-1" class="slide level2">
-<h2><em>Your Turn 1</em></h2>
-<h3 id="open-15-bonus-missingness-exercises.qmd">Open <strong><code>15-bonus-missingness-exercises.qmd</code></strong></h3>
-<h3 id="count-the-days-missing-the-actual-wait-time-and-visualize-the-missingness-pattern">Count the days missing the actual wait time and visualize the missingness pattern</h3>
-<h3 id="decide-which-missingness-dag-you-believe-and-what-it-implies">Decide which missingness DAG you believe, and what it implies</h3>
-<p><countdown-timer class="countdown" id="timer_f5e8b1e2" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
-</section>
-<section id="your-turn-2" class="slide level2">
-<h2><em>Your Turn 2</em></h2>
-<h3 id="impute-the-missing-actual-wait-times-with-a-regression-model-that-keeps-the-exposure-and-confounders-in-their-analysis-forms">Impute the missing actual wait times with a regression model that keeps the exposure and confounders in their analysis forms</h3>
-<h3 id="estimate-the-effect-of-an-extra-magic-morning-on-the-actual-wait-time-with-the-ipw-pipeline">Estimate the effect of an Extra Magic Morning on the actual wait time with the IPW pipeline</h3>
-<p><countdown-timer class="countdown" id="timer_77a00643" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
-</section>
-<section id="your-turn-3" class="slide level2">
-<h2><em>Your Turn 3</em></h2>
-<h3 id="multiply-impute-the-hour-9-data-with-mice-choosing-m-by-the-rule-of-thumb">Multiply impute the hour 9 data with <code>mice()</code>, choosing <code>m</code> by the rule of thumb</h3>
-<h3 id="fit-the-full-ipw-pipeline-within-each-imputation-and-pool-with-pool_ipw">Fit the full IPW pipeline within each imputation and pool with <code>pool_ipw()</code></h3>
-<h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_0a452d09" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<section id="your-turn" class="slide level2">
+<h2><em>Your Turn</em></h2>
+<h3 id="work-through-your-turns-1-3-in-15-bonus-missingness-exercises.qmd">Work through Your Turns 1-3 in <code>15-bonus-missingness-exercises.qmd</code></h3>
+<p><countdown-timer class="countdown" id="timer_ee095eda" minutes="20" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>
