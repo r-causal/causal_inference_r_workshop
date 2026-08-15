@@ -38,16 +38,6 @@ theme_set(
 - `lm()` and `glm()` drop rows with missing values silently
 - Every model we have fit in this course has been a complete-case analysis
 
-## Dropping the missing values
-
-- Our own exercises say: "We also have a lot of missingness for
-  `wait_minutes_actual_avg`, so we'll drop unobserved values for now"
-- We dropped the unobserved values, and we postponed the problem
-
-. . .
-
-We come back to it here
-
 ## How much is missing?
 
 ```{r}
@@ -130,13 +120,6 @@ missing_malaria |>
   expand_plot(expansion(0.2), expansion(0.2))
 ```
 
-## Reading this DAG
-
-- The missingness of malaria risk is related to net use and to an unknown
-  mechanism
-- The unknown mechanism is random, but the mechanism related to net use is not,
-  since net use is the exposure
-
 ## {.center background-color="#23373B"}
 
 ### **When complete cases are enough**
@@ -161,18 +144,6 @@ missing_malaria |>
   ggokabeito::scale_color_okabe_ito()
 ```
 
-## A collider that opens no backdoor
-
-- The missingness indicator is a collider, and conditioning on it is exactly
-  what complete-case analysis does
-- In this DAG, though, conditioning on it does not open a backdoor path between
-  net use and malaria risk
-
-## A collider that opens no backdoor
-
-- It does bias the relationship between the unknown mechanism and net use, but
-  we do not care about that relationship
-
 ## Recoverable effects
 
 - The causal effect is *recoverable*: we can still estimate it without bias
@@ -195,11 +166,6 @@ are systematically missing by net use
   values?
 - It could be that a person's malaria risk is so severe that the measurement
   never happens
-
-. . .
-
-The values of malaria risk themselves influence whether we managed to measure
-them
 
 ## An arrow from the outcome
 
@@ -347,9 +313,9 @@ dag_5 <- define_dag(
 (dag_1 + dag_2 + dag_3) / (plot_spacer() + dag_4 + dag_5)
 ```
 
-## Impose the five structures on the data
-
 ```{r}
+#| echo: false
+
 set.seed(123)
 n <- nrow(net_data)
 m1 <- as.logical(rbinom(n, 1, 0.35))
@@ -364,11 +330,6 @@ m3 <- as.logical(
 m4 <- m2
 m5 <- m3
 ```
-
-. . .
-
-For each structure, we set the chosen column to missing, then estimate the
-proportion using nets, the mean of malaria risk, and the IPW effect
 
 ## What we can estimate
 
@@ -465,22 +426,6 @@ dag_stats |>
   ggokabeito::scale_color_okabe_ito()
 ```
 
-## What we can estimate
-
-- With no missingness, we can estimate all three quantities
-- DAG 1 loses only precision
-- DAG 2 loses the mean of malaria risk
-
-## What we can estimate
-
-- DAG 3 loses the mean of malaria risk and the causal effect
-- DAG 4 loses the proportion using nets
-- DAG 5 loses everything but the mean of malaria risk
-
-## What we can estimate
-
-The causal effect is recoverable in structures 1, 2, and 4, and lost in 3 and 5
-
 ## Further reading
 
 See Moreno-Betancur et al. (2018) for a comprehensive overview of what effects
@@ -542,16 +487,6 @@ which we always observe
 . . .
 
 We do not have that information because, by definition, it is missing
-
-## Why we avoid these terms
-
-- These terms do not always tell you what to do next
-- We will avoid them in favor of explicitly describing the missingness
-  generation process
-
-. . .
-
-Next, we impose a mechanism on the malaria data and try to repair it
 
 ## {.center background-color="#23373B"}
 
@@ -761,6 +696,7 @@ here, one block of 705 rows missing malaria risk
 ```{r}
 #| output-location: slide
 
+library(ggmice)
 plot_pattern(net_data_mar)
 ```
 
@@ -795,6 +731,7 @@ as predictors in the imputation model for malaria risk
 ## Impute with mice()
 
 ```{r}
+library(mice)
 imp <- mice(
   net_data_to_impute,
   m = 40,
@@ -833,33 +770,40 @@ ggmice(imp, aes(x = malaria_risk, group = .imp)) +
 
 - The imputation model can see this because net use is one of its predictors
 
-## Did the algorithm converge?
-
-- `mice()` imputes each variable with missingness iteratively, conditional on
-  the others
-- The trace plot shows the mean and spread of the imputed values across
-  iterations; look for well-mixed lines with no trend
+## Forty completed datasets
 
 ```{r}
-#| output-location: slide
+#| output-location: fragment
 
-plot_trace(imp, "malaria_risk")
-```
+# mice masks tidyr::complete(), so name the package explicitly
+completed <- mice::complete(imp, action = "all")
 
-## Fit within each imputation
-
-```{r}
-fits <- with(imp, {
-  ps <- glm(net ~ income + health + temperature, family = binomial())
-  w <- wt_ate(fitted(ps), net, exposure_type = "binary")
-  om <- lm(malaria_risk ~ net, weights = w)
-  ipw(ps, om)
-})
+length(completed)
 ```
 
 . . .
 
-`with()` runs the block once per completed dataset: forty propensity score
+Each element is the whole dataset with the missing malaria risk values filled in
+
+## Fit within each imputation
+
+```{r}
+fits <- completed |>
+  map(\(.df) {
+    ps <- glm(
+      net ~ income + health + temperature,
+      family = binomial(),
+      data = .df
+    )
+    w <- wt_ate(fitted(ps), .df$net, exposure_type = "binary")
+    om <- lm(malaria_risk ~ net, data = .df, weights = w)
+    ipw(ps, om)
+  })
+```
+
+## Fit within each imputation
+
+`map()` runs the pipeline once per completed dataset: forty propensity score
 models, forty sets of weights, forty outcome models, forty `ipw()` results
 
 ## Refit the propensity model every time
@@ -886,7 +830,7 @@ imputation loop
 ```{r}
 #| output-location: fragment
 
-estimates <- map_dfr(fits$analyses, tidy)
+estimates <- map_dfr(fits, tidy)
 
 estimates |>
   summarize(
@@ -903,7 +847,7 @@ The pooled estimate is the average across imputations; its variance is the
 average within-imputation variance plus the between-imputation variance,
 inflated by `1 + 1/m`
 
-## Pooling with pool_ipw()
+## Pooling with `pool_ipw()`
 
 ```{r}
 #| output-location: fragment
@@ -918,18 +862,6 @@ mar_mi
 
 -12.1 (95% CI -13.0, -11.1): the interval covers the benchmark, and the
 standard error accounts for the imputation
-
-## Pooling with pool_ipw()
-
-- The effect labels survive: the pooled result still knows it is a marginal
-  difference
-- The complete-data degrees of freedom are read from the outcome models, with
-  a small-sample adjustment
-
-## Pooling with pool_ipw()
-
-- `mice::pool()` also works with these results
-- Results from balancing weights pool with the same verb
 
 ## {.center background-color="#23373B"}
 

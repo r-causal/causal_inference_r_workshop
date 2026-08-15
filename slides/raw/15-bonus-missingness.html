@@ -219,16 +219,6 @@ Malcolm Barrett
 <li class="fragment">Every model we have fit in this course has been a complete-case analysis</li>
 </ul>
 </section>
-<section id="dropping-the-missing-values" class="slide level2">
-<h2>Dropping the missing values</h2>
-<ul>
-<li class="fragment">Our own exercises say: “We also have a lot of missingness for <code>wait_minutes_actual_avg</code>, so we’ll drop unobserved values for now”</li>
-<li class="fragment">We dropped the unobserved values, and we postponed the problem</li>
-</ul>
-<div class="fragment">
-<p>We come back to it here</p>
-</div>
-</section>
 <section id="how-much-is-missing" class="slide level2">
 <h2>How much is missing?</h2>
 <div class="cell" data-layout-align="center">
@@ -281,13 +271,6 @@ Malcolm Barrett
 <h2>A DAG with missingness</h2>
 
 <img data-src="15-bonus-missingness_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
-<section id="reading-this-dag" class="slide level2">
-<h2>Reading this DAG</h2>
-<ul>
-<li class="fragment">The missingness of malaria risk is related to net use and to an unknown mechanism</li>
-<li class="fragment">The unknown mechanism is random, but the mechanism related to net use is not, since net use is the exposure</li>
-</ul>
-</section>
 <section id="section-2" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="when-complete-cases-are-enough"><strong>When complete cases are enough</strong></h3>
@@ -296,19 +279,6 @@ Malcolm Barrett
 <h2>Conditioning on the indicator</h2>
 
 <img data-src="15-bonus-missingness_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
-<section id="a-collider-that-opens-no-backdoor" class="slide level2">
-<h2>A collider that opens no backdoor</h2>
-<ul>
-<li class="fragment">The missingness indicator is a collider, and conditioning on it is exactly what complete-case analysis does</li>
-<li class="fragment">In this DAG, though, conditioning on it does not open a backdoor path between net use and malaria risk</li>
-</ul>
-</section>
-<section id="a-collider-that-opens-no-backdoor-1" class="slide level2">
-<h2>A collider that opens no backdoor</h2>
-<ul>
-<li class="fragment">It does bias the relationship between the unknown mechanism and net use, but we do not care about that relationship</li>
-</ul>
-</section>
 <section id="recoverable-effects" class="slide level2">
 <h2>Recoverable effects</h2>
 <ul>
@@ -329,9 +299,6 @@ Malcolm Barrett
 <li class="fragment">Is it feasible that the missingness of malaria risk is related to its own values?</li>
 <li class="fragment">It could be that a person’s malaria risk is so severe that the measurement never happens</li>
 </ul>
-<div class="fragment">
-<p>The values of malaria risk themselves influence whether we managed to measure them</p>
-</div>
 </section>
 <section id="an-arrow-from-the-outcome" class="slide level2">
 <h2>An arrow from the outcome</h2>
@@ -382,51 +349,10 @@ Malcolm Barrett
 <h2>Five structures</h2>
 
 <img data-src="15-bonus-missingness_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
-<section id="impose-the-five-structures-on-the-data" class="slide level2">
-<h2>Impose the five structures on the data</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb3-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(net_data)</span>
-<span id="cb3-3"><a href=""></a>m1 <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(<span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.35</span>))</span>
-<span id="cb3-4"><a href=""></a>m2 <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(</span>
-<span id="cb3-5"><a href=""></a>  <span class="fu">if_else</span>(net_data<span class="sc">$</span>net, <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.9</span>), <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.15</span>))</span>
-<span id="cb3-6"><a href=""></a>)</span>
-<span id="cb3-7"><a href=""></a><span class="co"># the threshold 38 sits near the median of malaria risk</span></span>
-<span id="cb3-8"><a href=""></a>m3 <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(</span>
-<span id="cb3-9"><a href=""></a>  <span class="fu">if_else</span>(net_data<span class="sc">$</span>malaria_risk <span class="sc">&gt;</span> <span class="dv">38</span>, <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.9</span>), <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.05</span>))</span>
-<span id="cb3-10"><a href=""></a>)</span>
-<span id="cb3-11"><a href=""></a><span class="co"># the same structures, but net use gets the resulting missingness</span></span>
-<span id="cb3-12"><a href=""></a>m4 <span class="ot">&lt;-</span> m2</span>
-<span id="cb3-13"><a href=""></a>m5 <span class="ot">&lt;-</span> m3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<p>For each structure, we set the chosen column to missing, then estimate the proportion using nets, the mean of malaria risk, and the IPW effect</p>
-</div>
-</section>
 <section id="what-we-can-estimate" class="slide level2">
 <h2>What we can estimate</h2>
 
 <img data-src="15-bonus-missingness_files/figure-revealjs/unnamed-chunk-8-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
-<section id="what-we-can-estimate-1" class="slide level2">
-<h2>What we can estimate</h2>
-<ul>
-<li class="fragment">With no missingness, we can estimate all three quantities</li>
-<li class="fragment">DAG 1 loses only precision</li>
-<li class="fragment">DAG 2 loses the mean of malaria risk</li>
-</ul>
-</section>
-<section id="what-we-can-estimate-2" class="slide level2">
-<h2>What we can estimate</h2>
-<ul>
-<li class="fragment">DAG 3 loses the mean of malaria risk and the causal effect</li>
-<li class="fragment">DAG 4 loses the proportion using nets</li>
-<li class="fragment">DAG 5 loses everything but the mean of malaria risk</li>
-</ul>
-</section>
-<section id="what-we-can-estimate-3" class="slide level2">
-<h2>What we can estimate</h2>
-<p>The causal effect is recoverable in structures 1, 2, and 4, and lost in 3 and 5</p>
-</section>
 <section id="further-reading" class="slide level2">
 <h2>Further reading</h2>
 <p>See Moreno-Betancur et al.&nbsp;(2018) for a comprehensive overview of what effects are recoverable from different structures of missingness</p>
@@ -474,16 +400,6 @@ Malcolm Barrett
 <p>We do not have that information because, by definition, it is missing</p>
 </div>
 </section>
-<section id="why-we-avoid-these-terms" class="slide level2">
-<h2>Why we avoid these terms</h2>
-<ul>
-<li class="fragment">These terms do not always tell you what to do next</li>
-<li class="fragment">We will avoid them in favor of explicitly describing the missingness generation process</li>
-</ul>
-<div class="fragment">
-<p>Next, we impose a mechanism on the malaria data and try to repair it</p>
-</div>
-</section>
 <section id="section-6" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="regression-imputation"><strong>Regression imputation</strong></h3>
@@ -491,15 +407,15 @@ Malcolm Barrett
 <section id="a-missingness-mechanism" class="slide level2">
 <h2>A missingness mechanism</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>p_missing <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
-<span id="cb4-2"><a href=""></a>  <span class="sc">-</span><span class="fl">0.8</span> <span class="sc">+</span> <span class="fl">1.4</span> <span class="sc">*</span> net_data<span class="sc">$</span>net <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(net_data<span class="sc">$</span>income))</span>
-<span id="cb4-3"><a href=""></a>)</span>
-<span id="cb4-4"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">88</span>)</span>
-<span id="cb4-5"><a href=""></a>missing_mar <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p_missing) <span class="sc">==</span> <span class="dv">1</span></span>
-<span id="cb4-6"><a href=""></a></span>
-<span id="cb4-7"><a href=""></a>net_data_mar <span class="ot">&lt;-</span> net_data <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href=""></a>  <span class="fu">select</span>(net, income, health, temperature, malaria_risk) <span class="sc">|&gt;</span></span>
-<span id="cb4-9"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">malaria_risk =</span> <span class="fu">if_else</span>(missing_mar, <span class="cn">NA_real_</span>, malaria_risk))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>p_missing <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb3-2"><a href=""></a>  <span class="sc">-</span><span class="fl">0.8</span> <span class="sc">+</span> <span class="fl">1.4</span> <span class="sc">*</span> net_data<span class="sc">$</span>net <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(net_data<span class="sc">$</span>income))</span>
+<span id="cb3-3"><a href=""></a>)</span>
+<span id="cb3-4"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">88</span>)</span>
+<span id="cb3-5"><a href=""></a>missing_mar <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p_missing) <span class="sc">==</span> <span class="dv">1</span></span>
+<span id="cb3-6"><a href=""></a></span>
+<span id="cb3-7"><a href=""></a>net_data_mar <span class="ot">&lt;-</span> net_data <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href=""></a>  <span class="fu">select</span>(net, income, health, temperature, malaria_risk) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">malaria_risk =</span> <span class="fu">if_else</span>(missing_mar, <span class="cn">NA_real_</span>, malaria_risk))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p>Malaria risk now goes missing more often for net users and for higher-income households: about 40% of the values are missing, for reasons we can see in the data</p>
@@ -508,18 +424,18 @@ Malcolm Barrett
 <section id="the-ipw-pipeline" class="slide level2">
 <h2>The IPW pipeline</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>fit_ipw_net <span class="ot">&lt;-</span> <span class="cf">function</span>(.data) {</span>
-<span id="cb5-2"><a href=""></a>  propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb5-3"><a href=""></a>    net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
-<span id="cb5-4"><a href=""></a>    <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
-<span id="cb5-5"><a href=""></a>    <span class="at">data =</span> .data</span>
-<span id="cb5-6"><a href=""></a>  )</span>
-<span id="cb5-7"><a href=""></a>  weighted_data <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
-<span id="cb5-8"><a href=""></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .data) <span class="sc">|&gt;</span></span>
-<span id="cb5-9"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, net, <span class="at">exposure_type =</span> <span class="st">"binary"</span>))</span>
-<span id="cb5-10"><a href=""></a>  ipw_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> weighted_data, <span class="at">weights =</span> wts)</span>
-<span id="cb5-11"><a href=""></a>  <span class="fu">ipw</span>(propensity_model, ipw_model)</span>
-<span id="cb5-12"><a href=""></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>fit_ipw_net <span class="ot">&lt;-</span> <span class="cf">function</span>(.data) {</span>
+<span id="cb4-2"><a href=""></a>  propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb4-3"><a href=""></a>    net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
+<span id="cb4-4"><a href=""></a>    <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb4-5"><a href=""></a>    <span class="at">data =</span> .data</span>
+<span id="cb4-6"><a href=""></a>  )</span>
+<span id="cb4-7"><a href=""></a>  weighted_data <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href=""></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .data) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, net, <span class="at">exposure_type =</span> <span class="st">"binary"</span>))</span>
+<span id="cb4-10"><a href=""></a>  ipw_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> weighted_data, <span class="at">weights =</span> wts)</span>
+<span id="cb4-11"><a href=""></a>  <span class="fu">ipw</span>(propensity_model, ipw_model)</span>
+<span id="cb4-12"><a href=""></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p>The pipeline from the outcome model module: propensity score model, ATE weights, weighted outcome model, <code>ipw()</code></p>
@@ -528,12 +444,12 @@ Malcolm Barrett
 <section id="complete-case-analysis" class="slide level2">
 <h2>Complete-case analysis</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>net_data_complete <span class="ot">&lt;-</span> net_data_mar <span class="sc">|&gt;</span> <span class="fu">drop_na</span>()</span>
-<span id="cb6-2"><a href=""></a></span>
-<span id="cb6-3"><a href=""></a>mar_complete_case <span class="ot">&lt;-</span> <span class="fu">fit_ipw_net</span>(net_data_complete) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-5"><a href=""></a></span>
-<span id="cb6-6"><a href=""></a>mar_complete_case</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>net_data_complete <span class="ot">&lt;-</span> net_data_mar <span class="sc">|&gt;</span> <span class="fu">drop_na</span>()</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a>mar_complete_case <span class="ot">&lt;-</span> <span class="fu">fit_ipw_net</span>(net_data_complete) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-5"><a href=""></a></span>
+<span id="cb5-6"><a href=""></a>mar_complete_case</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -580,14 +496,14 @@ Malcolm Barrett
 <section id="regression-imputation-3" class="slide level2">
 <h2>Regression imputation</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-2"><a href=""></a>  malaria_risk <span class="sc">~</span> net <span class="sc">+</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
-<span id="cb8-3"><a href=""></a>  <span class="at">data =</span> net_data_mar</span>
-<span id="cb8-4"><a href=""></a>)</span>
-<span id="cb8-5"><a href=""></a></span>
-<span id="cb8-6"><a href=""></a>net_data_imputed <span class="ot">&lt;-</span> imputation_model <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href=""></a>  <span class="fu">augment</span>(<span class="at">newdata =</span> net_data_mar) <span class="sc">|&gt;</span></span>
-<span id="cb8-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">malaria_risk =</span> <span class="fu">coalesce</span>(malaria_risk, .fitted))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb7-2"><a href=""></a>  malaria_risk <span class="sc">~</span> net <span class="sc">+</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
+<span id="cb7-3"><a href=""></a>  <span class="at">data =</span> net_data_mar</span>
+<span id="cb7-4"><a href=""></a>)</span>
+<span id="cb7-5"><a href=""></a></span>
+<span id="cb7-6"><a href=""></a>net_data_imputed <span class="ot">&lt;-</span> imputation_model <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href=""></a>  <span class="fu">augment</span>(<span class="at">newdata =</span> net_data_mar) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">malaria_risk =</span> <span class="fu">coalesce</span>(malaria_risk, .fitted))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p><code>coalesce()</code> keeps the observed value where we have one and uses the model’s prediction where we do not</p>
@@ -596,10 +512,10 @@ Malcolm Barrett
 <section id="the-imputed-estimate" class="slide level2">
 <h2>The imputed estimate</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>mar_regression <span class="ot">&lt;-</span> <span class="fu">fit_ipw_net</span>(net_data_imputed) <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-3"><a href=""></a></span>
-<span id="cb9-4"><a href=""></a>mar_regression</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>mar_regression <span class="ot">&lt;-</span> <span class="fu">fit_ipw_net</span>(net_data_imputed) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-3"><a href=""></a></span>
+<span id="cb8-4"><a href=""></a>mar_regression</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -691,7 +607,8 @@ Malcolm Barrett
 <h2>The missingness pattern</h2>
 <p><code>plot_pattern()</code> shows which variables are missing and in what combinations: here, one block of 705 rows missing malaria risk</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">plot_pattern</span>(net_data_mar)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">library</span>(ggmice)</span>
+<span id="cb10-2"><a href=""></a><span class="fu">plot_pattern</span>(net_data_mar)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -719,12 +636,12 @@ Malcolm Barrett
 <section id="build-the-imputation-frame" class="slide level2">
 <h2>Build the imputation frame</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>net_data_to_impute <span class="ot">&lt;-</span> net_data_mar <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb12-3"><a href=""></a>    <span class="at">net_income =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> income,</span>
-<span id="cb12-4"><a href=""></a>    <span class="at">net_health =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> health,</span>
-<span id="cb12-5"><a href=""></a>    <span class="at">net_temperature =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> temperature</span>
-<span id="cb12-6"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>net_data_to_impute <span class="ot">&lt;-</span> net_data_mar <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href=""></a>    <span class="at">net_income =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> income,</span>
+<span id="cb11-4"><a href=""></a>    <span class="at">net_health =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> health,</span>
+<span id="cb11-5"><a href=""></a>    <span class="at">net_temperature =</span> <span class="fu">as.numeric</span>(net) <span class="sc">*</span> temperature</span>
+<span id="cb11-6"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p>The product columns are complete, so <code>mice()</code> never imputes them; they serve as predictors in the imputation model for malaria risk</p>
@@ -733,13 +650,14 @@ Malcolm Barrett
 <section id="impute-with-mice" class="slide level2">
 <h2>Impute with mice()</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>imp <span class="ot">&lt;-</span> <span class="fu">mice</span>(</span>
-<span id="cb13-2"><a href=""></a>  net_data_to_impute,</span>
-<span id="cb13-3"><a href=""></a>  <span class="at">m =</span> <span class="dv">40</span>,</span>
-<span id="cb13-4"><a href=""></a>  <span class="at">method =</span> <span class="st">"pmm"</span>,</span>
-<span id="cb13-5"><a href=""></a>  <span class="at">seed =</span> <span class="dv">20260814</span>,</span>
-<span id="cb13-6"><a href=""></a>  <span class="at">print =</span> <span class="cn">FALSE</span></span>
-<span id="cb13-7"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">library</span>(mice)</span>
+<span id="cb12-2"><a href=""></a>imp <span class="ot">&lt;-</span> <span class="fu">mice</span>(</span>
+<span id="cb12-3"><a href=""></a>  net_data_to_impute,</span>
+<span id="cb12-4"><a href=""></a>  <span class="at">m =</span> <span class="dv">40</span>,</span>
+<span id="cb12-5"><a href=""></a>  <span class="at">method =</span> <span class="st">"pmm"</span>,</span>
+<span id="cb12-6"><a href=""></a>  <span class="at">seed =</span> <span class="dv">20260814</span>,</span>
+<span id="cb12-7"><a href=""></a>  <span class="at">print =</span> <span class="cn">FALSE</span></span>
+<span id="cb12-8"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="impute-with-mice-1" class="slide level2">
@@ -753,8 +671,8 @@ Malcolm Barrett
 <h2>Observed versus imputed</h2>
 <p>The imputed values should be plausible, and their distribution should reflect the mechanism</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="fu">ggmice</span>(imp, <span class="fu">aes</span>(<span class="at">x =</span> malaria_risk, <span class="at">group =</span> .imp)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href=""></a>  <span class="fu">geom_density</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">ggmice</span>(imp, <span class="fu">aes</span>(<span class="at">x =</span> malaria_risk, <span class="at">group =</span> .imp)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href=""></a>  <span class="fu">geom_density</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -779,38 +697,42 @@ Malcolm Barrett
 <li class="fragment">The imputation model can see this because net use is one of its predictors</li>
 </ul>
 </section>
-<section id="did-the-algorithm-converge" class="slide level2">
-<h2>Did the algorithm converge?</h2>
-<ul>
-<li class="fragment"><code>mice()</code> imputes each variable with missingness iteratively, conditional on the others</li>
-<li class="fragment">The trace plot shows the mean and spread of the imputed values across iterations; look for well-mixed lines with no trend</li>
-</ul>
+<section id="forty-completed-datasets" class="slide level2">
+<h2>Forty completed datasets</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">plot_trace</span>(imp, <span class="st">"malaria_risk"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="co"># mice masks tidyr::complete(), so name the package explicitly</span></span>
+<span id="cb14-2"><a href=""></a>completed <span class="ot">&lt;-</span> mice<span class="sc">::</span><span class="fu">complete</span>(imp, <span class="at">action =</span> <span class="st">"all"</span>)</span>
+<span id="cb14-3"><a href=""></a></span>
+<span id="cb14-4"><a href=""></a><span class="fu">length</span>(completed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-
-</section>
-<section id="did-the-algorithm-converge-output" class="slide level2 output-location-slide"><h2>Did the algorithm converge?</h2><div class="cell output-location-slide" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="15-bonus-missingness_files/figure-revealjs/unnamed-chunk-18-1.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
-</figure>
+<div class="cell fragment" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 40</code></pre>
 </div>
-</div>
-</div></section><section id="fit-within-each-imputation" class="slide level2">
-<h2>Fit within each imputation</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>fits <span class="ot">&lt;-</span> <span class="fu">with</span>(imp, {</span>
-<span id="cb16-2"><a href=""></a>  ps <span class="ot">&lt;-</span> <span class="fu">glm</span>(net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
-<span id="cb16-3"><a href=""></a>  w <span class="ot">&lt;-</span> <span class="fu">wt_ate</span>(<span class="fu">fitted</span>(ps), net, <span class="at">exposure_type =</span> <span class="st">"binary"</span>)</span>
-<span id="cb16-4"><a href=""></a>  om <span class="ot">&lt;-</span> <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">weights =</span> w)</span>
-<span id="cb16-5"><a href=""></a>  <span class="fu">ipw</span>(ps, om)</span>
-<span id="cb16-6"><a href=""></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
-<p><code>with()</code> runs the block once per completed dataset: forty propensity score models, forty sets of weights, forty outcome models, forty <code>ipw()</code> results</p>
+<p>Each element is the whole dataset with the missing malaria risk values filled in</p>
 </div>
+</section>
+<section id="fit-within-each-imputation" class="slide level2">
+<h2>Fit within each imputation</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>fits <span class="ot">&lt;-</span> completed <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href=""></a>  <span class="fu">map</span>(\(.df) {</span>
+<span id="cb16-3"><a href=""></a>    ps <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb16-4"><a href=""></a>      net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
+<span id="cb16-5"><a href=""></a>      <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb16-6"><a href=""></a>      <span class="at">data =</span> .df</span>
+<span id="cb16-7"><a href=""></a>    )</span>
+<span id="cb16-8"><a href=""></a>    w <span class="ot">&lt;-</span> <span class="fu">wt_ate</span>(<span class="fu">fitted</span>(ps), .df<span class="sc">$</span>net, <span class="at">exposure_type =</span> <span class="st">"binary"</span>)</span>
+<span id="cb16-9"><a href=""></a>    om <span class="ot">&lt;-</span> <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> .df, <span class="at">weights =</span> w)</span>
+<span id="cb16-10"><a href=""></a>    <span class="fu">ipw</span>(ps, om)</span>
+<span id="cb16-11"><a href=""></a>  })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="fit-within-each-imputation-1" class="slide level2">
+<h2>Fit within each imputation</h2>
+<p><code>map()</code> runs the pipeline once per completed dataset: forty propensity score models, forty sets of weights, forty outcome models, forty <code>ipw()</code> results</p>
 </section>
 <section id="refit-the-propensity-model-every-time" class="slide level2">
 <h2>Refit the propensity model every time</h2>
@@ -831,7 +753,7 @@ Malcolm Barrett
 <section id="rubins-rules" class="slide level2">
 <h2>Rubin’s rules</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>estimates <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(fits<span class="sc">$</span>analyses, tidy)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>estimates <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(fits, tidy)</span>
 <span id="cb17-2"><a href=""></a></span>
 <span id="cb17-3"><a href=""></a>estimates <span class="sc">|&gt;</span></span>
 <span id="cb17-4"><a href=""></a>  <span class="fu">summarize</span>(</span>
@@ -854,7 +776,7 @@ Malcolm Barrett
 </div>
 </section>
 <section id="pooling-with-pool_ipw" class="slide level2">
-<h2>Pooling with pool_ipw()</h2>
+<h2>Pooling with <code>pool_ipw()</code></h2>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>mar_mi <span class="ot">&lt;-</span> <span class="fu">pool_ipw</span>(fits) <span class="sc">|&gt;</span></span>
 <span id="cb19-2"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
@@ -873,20 +795,6 @@ Malcolm Barrett
 <div class="fragment">
 <p>-12.1 (95% CI -13.0, -11.1): the interval covers the benchmark, and the standard error accounts for the imputation</p>
 </div>
-</section>
-<section id="pooling-with-pool_ipw-1" class="slide level2">
-<h2>Pooling with pool_ipw()</h2>
-<ul>
-<li class="fragment">The effect labels survive: the pooled result still knows it is a marginal difference</li>
-<li class="fragment">The complete-data degrees of freedom are read from the outcome models, with a small-sample adjustment</li>
-</ul>
-</section>
-<section id="pooling-with-pool_ipw-2" class="slide level2">
-<h2>Pooling with pool_ipw()</h2>
-<ul>
-<li class="fragment"><code>mice::pool()</code> also works with these results</li>
-<li class="fragment">Results from balancing weights pool with the same verb</li>
-</ul>
 </section>
 <section id="section-8" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -1185,20 +1093,20 @@ Malcolm Barrett
 <h3 id="open-15-bonus-missingness-exercises.qmd">Open <strong><code>15-bonus-missingness-exercises.qmd</code></strong></h3>
 <h3 id="count-the-days-missing-the-actual-wait-time-and-visualize-the-missingness-pattern">Count the days missing the actual wait time and visualize the missingness pattern</h3>
 <h3 id="decide-which-missingness-dag-you-believe-and-what-it-implies">Decide which missingness DAG you believe, and what it implies</h3>
-<p><countdown-timer class="countdown" id="timer_afd58cdd" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_cdc55af1" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="impute-the-missing-actual-wait-times-with-a-regression-model-that-keeps-the-exposure-and-confounders-in-their-analysis-forms">Impute the missing actual wait times with a regression model that keeps the exposure and confounders in their analysis forms</h3>
 <h3 id="estimate-the-effect-of-an-extra-magic-morning-on-the-actual-wait-time-with-the-ipw-pipeline">Estimate the effect of an Extra Magic Morning on the actual wait time with the IPW pipeline</h3>
-<p><countdown-timer class="countdown" id="timer_34bc65a5" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_7d711ae4" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="multiply-impute-the-hour-9-data-with-mice-choosing-m-by-the-rule-of-thumb">Multiply impute the hour 9 data with <code>mice()</code>, choosing <code>m</code> by the rule of thumb</h3>
 <h3 id="fit-the-full-ipw-pipeline-within-each-imputation-and-pool-with-pool_ipw">Fit the full IPW pipeline within each imputation and pool with <code>pool_ipw()</code></h3>
 <h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_d322afee" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_436eeef3" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>
