@@ -519,6 +519,13 @@ Type: response</code></pre>
 </div>
 <p>Without an exposure-covariate interaction, the three coincide: the model assumes a constant effect across covariate values</p>
 </section>
+<section id="your-turn-1-14-interaction-exercises.qmd" class="slide level2 small">
+<h2><em>Your Turn 1</em> (<strong><code>14-interaction-exercises.qmd</code></strong>)</h2>
+<h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
+<h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
+<h3 id="stretch-refit-without-the-interaction-and-watch-the-three-collapse"><em>Stretch</em>: refit without the interaction and watch the three collapse</h3>
+<p><countdown-timer class="countdown" id="timer_f6e326a7" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+</section>
 <section id="section-4" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="the-same-estimands-through-weights"><strong>The same estimands through weights</strong></h3>
@@ -622,6 +629,12 @@ Type: response</code></pre>
 </div>
 </div>
 </section>
+<section id="your-turn-2" class="slide level2">
+<h2><em>Your Turn 2</em></h2>
+<h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
+<h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
+<p><countdown-timer class="countdown" id="timer_369a467b" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+</section>
 <section id="section-6" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="stabilizing-the-weights"><strong>Stabilizing the weights</strong></h3>
@@ -717,31 +730,6 @@ Type: response</code></pre>
 <li class="fragment"><strong>Causal interaction</strong>: an interaction between two exposures</li>
 </ul>
 </section>
-<section id="the-same-syntax-three-jobs-1" class="slide level2">
-<h2>The same syntax, three jobs</h2>
-<p>The more exposures the term involves, the more causal the claim it makes</p>
-</section>
-<section id="covariate-by-covariate" class="slide level2">
-<h2>Covariate by covariate</h2>
-<ul>
-<li class="fragment">In the diagnostics module we added <code>income * health</code> to the propensity score model because that product term was imbalanced</li>
-<li class="fragment">Outcome models need the same care: g-computation averages predictions from the model we fit, so a term the conditional mean needs but the model lacks biases that average</li>
-</ul>
-</section>
-<section id="covariate-by-covariate-1" class="slide level2">
-<h2>Covariate by covariate</h2>
-<p>Neither term involves the exposure, so neither says anything about the effect</p>
-</section>
-<section id="exposure-by-covariate" class="slide level2">
-<h2>Exposure by covariate</h2>
-<ul>
-<li class="fragment">The interaction in this module’s outcome model is between the exposure and <code>z</code>, so it says the effect itself differs across levels of <code>z</code></li>
-<li class="fragment"><code>z</code> is a covariate we condition on rather than something we set</li>
-</ul>
-<div class="fragment">
-<p>The third job needs a second exposure rather than a covariate</p>
-</div>
-</section>
 <section id="section-8" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="effect-modification-versus-causal-interaction"><strong>Effect modification versus causal interaction</strong></h3>
@@ -792,10 +780,6 @@ Type: response</code></pre>
 <div class="fragment">
 <p>That is a causal interaction question</p>
 </div>
-</section>
-<section id="the-model-does-not-decide" class="slide level2">
-<h2>The model does not decide</h2>
-<p>The same algebraic model can serve either purpose, but the interpretation depends on the underlying question</p>
 </section>
 <section id="section-9" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -885,28 +869,6 @@ Type: response</code></pre>
 <li class="fragment">One <strong>interaction</strong>: the difference between the first exposure’s two simple effects</li>
 </ul>
 </section>
-<section id="beyond-the-reference-cell" class="slide level2">
-<h2>Beyond the reference cell</h2>
-<p>The simple effects include comparisons that reporting each cell against the reference cell cannot express at all</p>
-</section>
-<section id="the-interaction-row" class="slide level2">
-<h2>The interaction row</h2>
-<p>The interaction recovers the simulated 2, and on this scale it is the additive interaction</p>
-</section>
-<section id="one-system-again" class="slide level2">
-<h2>One system, again</h2>
-<ul>
-<li class="fragment">Every row is a parameter of the same stacked system, so the interaction covaries with the simple effects</li>
-<li class="fragment">The surface reports the ATE alone, and it does not combine with <code>.by</code>: modification of a joint intervention is a three-way question</li>
-</ul>
-<div class="fragment">
-<p>No odds ratio appears anywhere on this surface, for the same noncollapsibility reason</p>
-</div>
-</section>
-<section id="two-models-instead-of-one" class="slide level2">
-<h2>Two models instead of one</h2>
-<p>A joint intervention can also be weighted through one model per treatment, with the product of their weights, which is what you want when the two treatments call for different adjustment sets</p>
-</section>
 <section id="section-10" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="interaction-in-a-dag"><strong>Interaction in a DAG</strong></h3>
@@ -974,31 +936,12 @@ Type: response</code></pre>
 <p>Attia J, Holliday E, Oldmeadow C (2022). A proposal for capturing interaction and effect modification using DAGs. International Journal of Epidemiology. doi:10.1093/ije/dyac126</p>
 </div>
 </section>
-<section id="your-turn-1-14-interaction-exercises.qmd" class="slide level2 small">
-<h2><em>Your Turn 1</em> (<strong><code>14-interaction-exercises.qmd</code></strong>)</h2>
-<h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
-<h3 id="read-the-conditional-effects-off-the-coefficients">Read the conditional effects off the coefficients</h3>
-<p><countdown-timer class="countdown" id="timer_d8d3d825" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
-</section>
-<section id="your-turn-2" class="slide level2">
-<h2><em>Your Turn 2</em></h2>
-<h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
-<h3 id="compare-the-three-estimates-and-explain-why-they-differ">Compare the three estimates and explain why they differ</h3>
-<h3 id="stretch-refit-without-the-interaction-and-watch-the-three-collapse"><em>Stretch</em>: refit without the interaction and watch the three collapse</h3>
-<p><countdown-timer class="countdown" id="timer_54b86070" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
-</section>
-<section id="your-turn-3" class="slide level2">
+<section id="your-turn-3" class="slide level2 small">
 <h2><em>Your Turn 3</em></h2>
-<h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
-<h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
-<p><countdown-timer class="countdown" id="timer_8b8c8f6c" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
-</section>
-<section id="your-turn-4" class="slide level2 small">
-<h2><em>Your Turn 4</em></h2>
 <h3 id="ask-the-joint-question-what-if-the-park-set-both-the-extra-magic-morning-policy-and-the-ticket-season">Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?</h3>
 <h3 id="cross-the-two-with-joint_exposure-fit-one-propensity-model-over-the-cells-and-read-the-cell-means-simple-effects-and-interaction">Cross the two with <code>joint_exposure()</code>, fit one propensity model over the cells, and read the cell means, simple effects, and interaction</h3>
-<h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_c9d174a7" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<h3 id="finish-early-try-the-stretch-goal">Finish early? Try the <em>stretch goal</em></h3>
+<p><countdown-timer class="countdown" id="timer_7f53774b" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>

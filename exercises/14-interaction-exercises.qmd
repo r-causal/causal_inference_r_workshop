@@ -43,13 +43,11 @@ ___(emm_model)
 
 The coefficient on `park_extra_magic_morning` is the effect in the reference season, peak: about 18 minutes. Each interaction coefficient says how much the effect changes in the other seasons, and both are large and negative, so the effect looks concentrated in peak season.
 
-## Your Turn 2
-
 The same model gives us all three estimands. `avg_comparisons()` averages the unit-level effects over whichever rows you hand it, and `newdata` chooses those rows.
 
-1. Pass `emm_model` to `avg_comparisons()` with `variables = "park_extra_magic_morning"` for the ATE.
-2. Add a `newdata` argument that filters to the exposed days for the ATT.
-3. Do the same for the unexposed days to get the ATC.
+4. Pass `emm_model` to `avg_comparisons()` with `variables = "park_extra_magic_morning"` for the ATE.
+5. Add a `newdata` argument that filters to the exposed days for the ATT.
+6. Do the same for the unexposed days to get the ATC.
 
 ```{r}
 # ATE: average over every day
@@ -73,8 +71,6 @@ avg_comparisons(
 )
 ```
 
-You should get about 5.05 minutes for the ATE, 6.34 for the ATT, and 4.79 for the ATC. Extra Magic Mornings are more common in peak season, where the effect is largest, so averaging over the exposed days gives a larger number than averaging over the unexposed ones.
-
 You can also ask for the effect within each season directly:
 
 ```{r}
@@ -84,8 +80,6 @@ avg_comparisons(
   by = "park_ticket_season"
 )
 ```
-
-About 18 minutes in peak season, and under 2 minutes in each of the others. The intervals are wide, and only the peak estimate is distinguishable from zero.
 
 ### Stretch goal: drop the interaction
 
@@ -99,9 +93,15 @@ emm_model_add <- lm(
     park_temperature_high,
   data = seven_dwarfs
 )
+
+avg_comparisons(
+  emm_model_add,
+  variables = "park_extra_magic_morning",
+  by = "park_ticket_season"
+)
 ```
 
-## Your Turn 3
+## Your Turn 2
 
 Now ask the same question through weighting, with a modifier we could never assign: the calendar quarter. `ipw()` reports the effect within each level of a modifier when you name it with `.by`.
 
@@ -112,10 +112,8 @@ seven_dwarfs <- seven_dwarfs |>
   mutate(quarter = factor(lubridate::quarter(park_date)))
 
 seven_dwarfs |>
-  count(___, park_extra_magic_morning)
+  count(quarter, park_extra_magic_morning)
 ```
-
-Between 12 and 22 of the 60 Extra Magic Mornings fall in each quarter, so every cell is populated.
 
 1. Fit the propensity score model you used in the previous exercises.
 2. Build ATE weights with `wt_ate()`.
@@ -146,13 +144,9 @@ ipw(propensity_model, outcome_model, .by = ___) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
-Read the results carefully. The overall effect is about 5.4 minutes. The quarterly estimates are about 3.9, -1.5, 2.0, and 16.9 minutes, and only the fourth quarter is distinguishable from zero on its own. The contrast between the fourth quarter and the first is about 13 minutes, but its interval runs from about -0.4 to 26.5, so these data do not establish that the effect differs by quarter, even though the point estimates are far apart. Each quarter carries at most 22 exposed days, and the intervals say so.
+## Your Turn 3
 
-Notice that the last three rows are contrasts against the first quarter, with standard errors that account for the strata having been estimated together. Fitting each quarter on its own subset would give the same four effects with no way to test the difference between any two of them.
-
-## Your Turn 4
-
-The quarter question was effect modification: we never imagined assigning a day to a quarter. Ticket season is different, because the park sets it through pricing. That makes "what if we changed both the morning policy and the season?" a real question about a joint intervention.
+The quarter question was effect modification: can't assign a day to a quarter. Ticket season is different, because the park sets it through pricing. That makes "what if we changed both the morning policy and the season?" a real question about a joint intervention.
 
 A joint intervention needs every cell of the crossing to be populated. Count the days in each combination first.
 
@@ -191,7 +185,7 @@ ps_joint <- ___(
 )
 
 seven_dwarfs_joint <- seven_dwarfs |>
-  mutate(w_joint = wt_ate(___(ps_joint), ___))
+  mutate(w_joint = wt_ate(fitted(ps_joint), ___))
 
 joint_model <- lm(
   wait_minutes_posted_avg ~ ___,
@@ -210,64 +204,27 @@ The next four are the simple effects. An Extra Magic Morning does essentially no
 
 The last row is the interaction: about 20 minutes, with an interval from about 10 to 30. The two policies together do considerably more than the sum of their separate effects.
 
-Notice which covariates the propensity score model uses. Add `park_close` to it and one December day in peak season falls in a cell the model gives a probability of about 0.0004, so its weight climbs above 2,000. With close time in the model, almost no day that closes as early as this one is a peak-season day with an Extra Magic Morning, so this single day must stand in for that entire corner of the covariate space. Positivity is harder to satisfy for a joint intervention than for a single exposure, because every cell of the crossing needs support, and here the problem shows up in the weights rather than in an empty cell. Leaving close time out is a trade rather than a default: the single-exposure model in Your Turn 3 adjusts for it as a confounder, and this one does not adjust for it at all.
+Notice which covariates the propensity score model uses. Add `park_close` to it and one December day in peak season falls in a cell the model gives a probability of about 0.0004, so its weight climbs above 2,000. With close time in the model, almost no day that closes as early as this one is a peak-season day with an Extra Magic Morning, so this single day must stand in for that entire corner of the covariate space. Positivity is harder to satisfy for a joint intervention than for a single exposure, because every cell of the crossing needs support, and here the problem shows up in the weights rather than in an empty cell. Leaving close time out is a trade: we gain positivity at a loss of exchangability.
 
 ### Stretch goal: an interaction node in a DAG
 
-Conventional DAGs do not show interaction: the arrows say which variables affect the outcome, not how they combine. One proposal adds an explicit interaction node. Complete the DAG so that `X` and `Q` both point into `XxQ`, and `XxQ` points into `Y`.
+Conventional DAGs do not show interaction: the arrows say which variables affect the outcome, not how they combine. One proposal adds an explicit interaction node. Draw the joint question you just estimated: `emm` is the Extra Magic Morning, `season` is the ticket season, `temp` is the historic high temperature that confounds both, and `wait` is the posted wait time. Complete the DAG so that `emm` and `season` each point into their interaction node, and that node points into `wait`.
 
 ```{r}
 library(ggdag)
 
 dagify(
-  X ~ Z,
-  Q ~ Z,
-  Y ~ X + Q + Z + ___,
-  ___ ~ X + Q,
+  emm ~ temp,
+  season ~ temp,
+  wait ~ emm + season + temp + ___,
+  ___ ~ emm + season,
   coords = time_ordered_coords(),
-  exposure = "X",
-  outcome = "Y"
+  exposure = "emm",
+  outcome = "wait"
 ) |>
-  ggdag() +
+  ggdag(node_size = 30, text_size = 2.5) +
   theme_dag()
 ```
-
-### Stretch goal: stabilize the weights on the modifier
-
-In Your Turn 3, the numerator of the weights conditioned on nothing. It may condition on any variable that is already in the outcome model, and `quarter` is one. Fit a model of the exposure on the modifier, evaluate it at the exposure each day actually had, and pass it as `stabilization_score`.
-
-```{r}
-numerator_model <- glm(
-  park_extra_magic_morning ~ ___,
-  data = seven_dwarfs_wts,
-  family = binomial()
-)
-
-p_quarter <- fitted(numerator_model)
-
-seven_dwarfs_stab <- seven_dwarfs_wts |>
-  mutate(
-    sw_ate = wt_ate(
-      .fitted,
-      park_extra_magic_morning,
-      stabilize = TRUE,
-      stabilization_score = if_else(
-        park_extra_magic_morning == 1,
-        p_quarter,
-        1 - ___
-      )
-    )
-  )
-
-seven_dwarfs_stab |>
-  select(w_ate, sw_ate) |>
-  # the two weight types stack only as plain numbers
-  mutate(across(everything(), as.numeric)) |>
-  pivot_longer(everything(), names_to = "weights") |>
-  summarize(sd = sd(value), max = max(value), .by = weights)
-```
-
-The standard deviation falls from about 2.2 to about 0.2 and the largest weight from about 20 to about 2.8. Refit the weighted outcome model with `sw_ate` and rerun the `.by` fit: the estimates and their standard errors do not move, because the numerator is constant within each exposure-by-quarter cell and the outcome model is saturated in exactly those cells.
 
 # Take aways
 

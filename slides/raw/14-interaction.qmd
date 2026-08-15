@@ -320,6 +320,16 @@ bind_rows(
 Without an exposure-covariate interaction, the three coincide: the model assumes
 a constant effect across covariate values
 
+## *Your Turn 1* (**`14-interaction-exercises.qmd`**) {.small}
+
+### Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season
+
+### Use `avg_comparisons()` to get the ATE, then the ATT and the ATC with `newdata`
+
+### *Stretch*: refit without the interaction and watch the three collapse
+
+`r countdown::countdown(minutes = 10)`
+
 ## {.center background-color="#23373B"}
 
 ### **The same estimands through weights**
@@ -416,6 +426,14 @@ ipw(propensity_model, outcome_model_int, .by = z) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
+## *Your Turn 2*
+
+### Ask whether the effect of an Extra Magic Morning is modified by calendar quarter
+
+### Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to `ipw()` with `.by`
+
+`r countdown::countdown(minutes = 8)`
+
 ## {.center background-color="#23373B"}
 
 ### **Stabilizing the weights**
@@ -500,32 +518,6 @@ ipw(propensity_model, outcome_model_stab, .by = z) |>
 - **Effect modification**: an interaction between the exposure and a covariate
 - **Causal interaction**: an interaction between two exposures
 
-## The same syntax, three jobs
-
-The more exposures the term involves, the more causal the claim it makes
-
-## Covariate by covariate
-
-- In the diagnostics module we added `income * health` to the propensity score
-  model because that product term was imbalanced
-- Outcome models need the same care: g-computation averages predictions from
-  the model we fit, so a term the conditional mean needs but the model lacks
-  biases that average
-
-## Covariate by covariate
-
-Neither term involves the exposure, so neither says anything about the effect
-
-## Exposure by covariate
-
-- The interaction in this module's outcome model is between the exposure and
-  `z`, so it says the effect itself differs across levels of `z`
-- `z` is a covariate we condition on rather than something we set
-
-. . .
-
-The third job needs a second exposure rather than a covariate
-
 ## {.center background-color="#23373B"}
 
 ### **Effect modification versus causal interaction**
@@ -578,11 +570,6 @@ That is an effect modification question
 . . .
 
 That is a causal interaction question
-
-## The model does not decide
-
-The same algebraic model can serve either purpose, but the interpretation
-depends on the underlying question
 
 ## {.center background-color="#23373B"}
 
@@ -662,34 +649,6 @@ ipw(ps_joint, joint_model) |>
 - One **interaction**: the difference between the first exposure's two simple
   effects
 
-## Beyond the reference cell
-
-The simple effects include comparisons that reporting each cell against the
-reference cell cannot express at all
-
-## The interaction row
-
-The interaction recovers the simulated 2, and on this scale it is the additive
-interaction
-
-## One system, again
-
-- Every row is a parameter of the same stacked system, so the interaction
-  covaries with the simple effects
-- The surface reports the ATE alone, and it does not combine with `.by`:
-  modification of a joint intervention is a three-way question
-
-. . .
-
-No odds ratio appears anywhere on this surface, for the same noncollapsibility
-reason
-
-## Two models instead of one
-
-A joint intervention can also be weighted through one model per treatment, with
-the product of their weights, which is what you want when the two treatments
-call for different adjustment sets
-
 ## {.center background-color="#23373B"}
 
 ### **Interaction in a DAG**
@@ -751,38 +710,12 @@ and effect modification using DAGs. International Journal of Epidemiology.
 doi:10.1093/ije/dyac126
 :::
 
-## *Your Turn 1* (**`14-interaction-exercises.qmd`**) {.small}
-
-### Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season
-
-### Read the conditional effects off the coefficients
-
-`r countdown::countdown(minutes = 5)`
-
-## *Your Turn 2*
-
-### Use `avg_comparisons()` to get the ATE, then the ATT and the ATC with `newdata`
-
-### Compare the three estimates and explain why they differ
-
-### *Stretch*: refit without the interaction and watch the three collapse
-
-`r countdown::countdown(minutes = 6)`
-
-## *Your Turn 3*
-
-### Ask whether the effect of an Extra Magic Morning is modified by calendar quarter
-
-### Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to `ipw()` with `.by`
-
-`r countdown::countdown(minutes = 8)`
-
-## *Your Turn 4* {.small}
+## *Your Turn 3* {.small}
 
 ### Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?
 
 ### Cross the two with `joint_exposure()`, fit one propensity model over the cells, and read the cell means, simple effects, and interaction
 
-### Finish early? Try the *stretch goals*
+### Finish early? Try the *stretch goal*
 
 `r countdown::countdown(minutes = 10)`
