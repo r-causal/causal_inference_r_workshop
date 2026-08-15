@@ -212,22 +212,17 @@ Malcolm Barrett
 </div>
 
 </section>
+<section>
+<section id="treatment-effects-by-exposure-status" class="title-slide slide level1 center">
+<h1>Treatment effects by exposure status</h1>
+
+</section>
 <section id="section" class="slide level2" data-background-color="#23373B">
 <h2></h2>
 <ul>
 <li class="fragment">The ATE, ATT, and ATC are all expectations of the same unit-level contrast, <code>y(1) - y(0)</code>, taken over different covariate distributions</li>
 <li class="fragment">That distinction becomes meaningful only when the individual treatment effect varies across units</li>
 </ul>
-</section>
-<section id="two-claims-from-earlier-modules" class="slide level2">
-<h2>Two claims from earlier modules</h2>
-<ul>
-<li class="fragment">When standard methods succeed: the effect was homogeneous, so marginal and conditional effects agree</li>
-<li class="fragment">In g-computation: without an exposure-covariate interaction, the ATE, ATT, and ATC coincide</li>
-</ul>
-<div class="fragment">
-<p>This module is where both claims stop holding</p>
-</div>
 </section>
 <section id="what-makes-the-estimands-differ" class="slide level2">
 <h2>What makes the estimands differ</h2>
@@ -524,7 +519,7 @@ Type: response</code></pre>
 <h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
 <h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
 <h3 id="stretch-refit-without-the-interaction-and-recalculate-all-three"><em>Stretch</em>: refit without the interaction and recalculate all three</h3>
-<p><countdown-timer class="countdown" id="timer_ab0d1172" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_922b71a5" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="section-4" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -603,8 +598,61 @@ Type: response</code></pre>
 <li class="fragment">The weighted outcome model has no covariates, so the differences among the three estimates flow entirely through the weights</li>
 <li class="fragment">The modifier separates the exposure groups strongly here, so the spread between the ATT and the ATC is visible</li>
 </ul>
+</section></section>
+<section>
+<section id="treatment-effects-by-a-covariate" class="title-slide slide level1 center">
+<h1>Treatment effects by a covariate</h1>
+
 </section>
 <section id="section-5" class="slide level2 center" data-background-color="#23373B">
+<h2></h2>
+<h3 id="three-jobs-for-interaction-terms"><strong>Three jobs for interaction terms</strong></h3>
+</section>
+<section id="the-same-syntax-three-jobs" class="slide level2">
+<h2>The same syntax, three jobs</h2>
+<ul>
+<li class="fragment"><strong>Functional form</strong>: an interaction between two covariates, in either model</li>
+<li class="fragment"><strong>Effect modification</strong>: an interaction between the exposure and a covariate</li>
+<li class="fragment"><strong>Causal interaction</strong>: an interaction between two exposures</li>
+</ul>
+</section>
+<section id="section-6" class="slide level2 center" data-background-color="#23373B">
+<h2></h2>
+<h3 id="effect-modification-versus-causal-interaction"><strong>Effect modification versus causal interaction</strong></h3>
+</section>
+<section id="two-different-causal-questions" class="slide level2">
+<h2>Two different causal questions</h2>
+<ul>
+<li class="fragment"><strong>Effect modification</strong> asks whether the exposure’s effect differs across levels of a pre-treatment variable</li>
+<li class="fragment"><strong>Causal interaction</strong> asks whether the joint effect of changing both variables differs from what their separate effects predict</li>
+</ul>
+<div class="fragment">
+<p>These are often used interchangeably, but they answer different questions</p>
+</div>
+</section>
+<section id="effect-modification" class="slide level2">
+<h2>Effect modification</h2>
+<ul>
+<li class="fragment">The comparison is <code>E[y(1) - y(0) | z = high]</code> against <code>E[y(1) - y(0) | z = low]</code></li>
+<li class="fragment"><code>z</code> is used to define subgroups: we ask how the effect of the exposure changes across observed strata of <code>z</code>, not what would happen if we intervened on it</li>
+</ul>
+</section>
+<section id="causal-interaction" class="slide level2">
+<h2>Causal interaction</h2>
+<ul>
+<li class="fragment">Both variables are exposures of causal interest</li>
+<li class="fragment">The comparison is <code>E[y(a = 1, b = 1) - y(a = 0, b = 1)]</code> against <code>E[y(a = 1, b = 0) - y(a = 0, b = 0)]</code></li>
+</ul>
+<div class="fragment">
+<p>The effect of one exposure under two settings of the other</p>
+</div>
+</section></section>
+<section>
+<section id="effect-modification-1" class="title-slide slide level1 center">
+<h1>Effect Modification</h1>
+
+</section>
+<section id="section-7" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="effect-modification-with-ipw"><strong>Effect modification with <code>ipw()</code></strong></h3>
 </section>
@@ -629,13 +677,23 @@ Type: response</code></pre>
 </div>
 </div>
 </section>
+<section id="extra-magic-mornings-by-quarter" class="slide level2">
+<h2>Extra Magic Mornings by quarter</h2>
+<ul>
+<li class="fragment">Does an Extra Magic Morning change posted wait times differently in the fourth quarter than in the first?</li>
+<li class="fragment">No one can assign a day to a calendar quarter, so the quarter defines subgroups rather than an intervention</li>
+</ul>
+<div class="fragment">
+<p>That is an effect modification question</p>
+</div>
+</section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
-<h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
+<h3 id="examine-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Examine whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
 <h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
-<p><countdown-timer class="countdown" id="timer_281bbcbb" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_7ed9b753" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
-<section id="section-6" class="slide level2 center" data-background-color="#23373B">
+<section id="section-8" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="stabilizing-the-weights"><strong>Stabilizing the weights</strong></h3>
 </section>
@@ -674,37 +732,14 @@ Type: response</code></pre>
 <p>Only condition the numerator on variables that are already in the outcome model</p>
 </div>
 </section>
-<section id="the-weights-tighten" class="slide level2">
-<h2>The weights tighten</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>sim_data_wts <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href=""></a>  <span class="fu">select</span>(w_ate, sw_ate) <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href=""></a>  <span class="co"># the weights stack only as plain numbers</span></span>
-<span id="cb27-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)) <span class="sc">|&gt;</span></span>
-<span id="cb27-5"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"weights"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">sd =</span> <span class="fu">sd</span>(value), <span class="at">max =</span> <span class="fu">max</span>(value), <span class="at">.by =</span> weights)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 3
-  weights    sd   max
-  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
-1 w_ate   1.50  15.0 
-2 sw_ate  0.221  3.53</code></pre>
-</div>
-</div>
-<div class="fragment">
-<p>Conditioning the numerator on <code>z</code> cuts the spread of the weights and pulls in the largest ones</p>
-</div>
-</section>
 <section id="the-same-fit-stabilized" class="slide level2">
 <h2>The same fit, stabilized</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>outcome_model_stab <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> a <span class="sc">*</span> z, <span class="at">data =</span> sim_data_wts, <span class="at">weights =</span> sw_ate)</span>
-<span id="cb29-2"><a href=""></a></span>
-<span id="cb29-3"><a href=""></a><span class="fu">ipw</span>(propensity_model, outcome_model_stab, <span class="at">.by =</span> z) <span class="sc">|&gt;</span></span>
-<span id="cb29-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb29-5"><a href=""></a>  <span class="fu">select</span>(group, estimate, std.error, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>outcome_model_stab <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> a <span class="sc">*</span> z, <span class="at">data =</span> sim_data_wts, <span class="at">weights =</span> sw_ate)</span>
+<span id="cb27-2"><a href=""></a></span>
+<span id="cb27-3"><a href=""></a><span class="fu">ipw</span>(propensity_model, outcome_model_stab, <span class="at">.by =</span> z) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href=""></a>  <span class="fu">select</span>(group, estimate, std.error, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -717,69 +752,11 @@ Type: response</code></pre>
 4 z = high vs z = low     3.84    0.116      3.61      4.06</code></pre>
 </div>
 </div>
-</section>
-<section id="section-7" class="slide level2 center" data-background-color="#23373B">
-<h2></h2>
-<h3 id="three-jobs-for-interaction-terms"><strong>Three jobs for interaction terms</strong></h3>
-</section>
-<section id="the-same-syntax-three-jobs" class="slide level2">
-<h2>The same syntax, three jobs</h2>
-<ul>
-<li class="fragment"><strong>Functional form</strong>: an interaction between two covariates, in either model</li>
-<li class="fragment"><strong>Effect modification</strong>: an interaction between the exposure and a covariate</li>
-<li class="fragment"><strong>Causal interaction</strong>: an interaction between two exposures</li>
-</ul>
-</section>
-<section id="section-8" class="slide level2 center" data-background-color="#23373B">
-<h2></h2>
-<h3 id="effect-modification-versus-causal-interaction"><strong>Effect modification versus causal interaction</strong></h3>
-</section>
-<section id="two-different-causal-questions" class="slide level2">
-<h2>Two different causal questions</h2>
-<ul>
-<li class="fragment"><strong>Effect modification</strong> asks whether the exposure’s effect differs across levels of a pre-treatment variable</li>
-<li class="fragment"><strong>Causal interaction</strong> asks whether the joint effect of changing both variables differs from what their separate effects predict</li>
-</ul>
-<div class="fragment">
-<p>These are often used interchangeably, but they answer different questions</p>
-</div>
-</section>
-<section id="effect-modification" class="slide level2">
-<h2>Effect modification</h2>
-<ul>
-<li class="fragment">The comparison is <code>E[y(1) - y(0) | z = high]</code> against <code>E[y(1) - y(0) | z = low]</code></li>
-<li class="fragment"><code>z</code> is used to define subgroups: we ask how the effect of the exposure changes across observed strata of <code>z</code>, not what would happen if we intervened on it</li>
-</ul>
-</section>
-<section id="causal-interaction" class="slide level2">
-<h2>Causal interaction</h2>
-<ul>
-<li class="fragment">Both variables are exposures of causal interest</li>
-<li class="fragment">The comparison is <code>E[y(a = 1, b = 1) - y(a = 0, b = 1)]</code> against <code>E[y(a = 1, b = 0) - y(a = 0, b = 0)]</code></li>
-</ul>
-<div class="fragment">
-<p>The effect of one exposure under two settings of the other</p>
-</div>
-</section>
-<section id="extra-magic-mornings-by-quarter" class="slide level2">
-<h2>Extra Magic Mornings by quarter</h2>
-<ul>
-<li class="fragment">Does an Extra Magic Morning change posted wait times differently in the fourth quarter than in the first?</li>
-<li class="fragment">No one can assign a day to a calendar quarter, so the quarter defines subgroups rather than an intervention</li>
-</ul>
-<div class="fragment">
-<p>That is an effect modification question</p>
-</div>
-</section>
-<section id="extra-magic-mornings-and-season" class="slide level2">
-<h2>Extra Magic Mornings and season</h2>
-<ul>
-<li class="fragment">Disney sets ticket season through pricing, so both the morning policy and the season are things the park can change</li>
-<li class="fragment">Asking what would happen if we set both at once is a joint intervention</li>
-</ul>
-<div class="fragment">
-<p>That is a causal interaction question</p>
-</div>
+</section></section>
+<section>
+<section id="causal-interaction-1" class="title-slide slide level1 center">
+<h1>Causal Interaction</h1>
+
 </section>
 <section id="section-9" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -788,15 +765,15 @@ Type: response</code></pre>
 <section id="two-exposures-one-confounder" class="slide level2">
 <h2>Two exposures, one confounder</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31" data-code-line-numbers="|5|6-7|8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb31-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb31-3"><a href=""></a></span>
-<span id="cb31-4"><a href=""></a>joint_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb31-5"><a href=""></a>  <span class="at">l =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb31-6"><a href=""></a>  <span class="at">a =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fu">plogis</span>(<span class="sc">-</span><span class="fl">0.5</span> <span class="sc">+</span> <span class="fl">0.8</span> <span class="sc">*</span> l)),</span>
-<span id="cb31-7"><a href=""></a>  <span class="at">b =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fu">plogis</span>(<span class="sc">-</span><span class="fl">0.3</span> <span class="sc">+</span> <span class="fl">0.9</span> <span class="sc">*</span> l)),</span>
-<span id="cb31-8"><a href=""></a>  <span class="at">y =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> l <span class="sc">+</span> <span class="dv">1</span> <span class="sc">*</span> a <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> b <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> a <span class="sc">*</span> b <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb31-9"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29" data-code-line-numbers="|5|6-7|8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb29-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb29-3"><a href=""></a></span>
+<span id="cb29-4"><a href=""></a>joint_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb29-5"><a href=""></a>  <span class="at">l =</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb29-6"><a href=""></a>  <span class="at">a =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fu">plogis</span>(<span class="sc">-</span><span class="fl">0.5</span> <span class="sc">+</span> <span class="fl">0.8</span> <span class="sc">*</span> l)),</span>
+<span id="cb29-7"><a href=""></a>  <span class="at">b =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fu">plogis</span>(<span class="sc">-</span><span class="fl">0.3</span> <span class="sc">+</span> <span class="fl">0.9</span> <span class="sc">*</span> l)),</span>
+<span id="cb29-8"><a href=""></a>  <span class="at">y =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> l <span class="sc">+</span> <span class="dv">1</span> <span class="sc">*</span> a <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> b <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> a <span class="sc">*</span> b <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb29-9"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>l</code> confounds both exposures, which are otherwise independent given <code>l</code></p>
 </section>
@@ -811,10 +788,10 @@ Type: response</code></pre>
 <section id="cross-the-two-exposures" class="slide level2">
 <h2>Cross the two exposures</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>joint_data <span class="ot">&lt;-</span> joint_data <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">joint =</span> <span class="fu">joint_exposure</span>(<span class="at">a =</span> a, <span class="at">b =</span> b))</span>
-<span id="cb32-3"><a href=""></a></span>
-<span id="cb32-4"><a href=""></a><span class="fu">levels</span>(joint_data<span class="sc">$</span>joint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>joint_data <span class="ot">&lt;-</span> joint_data <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">joint =</span> <span class="fu">joint_exposure</span>(<span class="at">a =</span> a, <span class="at">b =</span> b))</span>
+<span id="cb30-3"><a href=""></a></span>
+<span id="cb30-4"><a href=""></a><span class="fu">levels</span>(joint_data<span class="sc">$</span>joint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
@@ -828,21 +805,23 @@ Type: response</code></pre>
 <section id="one-model-over-the-cells" class="slide level2">
 <h2>One model over the cells</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" data-code-line-numbers="|1|3-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>ps_joint <span class="ot">&lt;-</span> <span class="fu">multinom</span>(joint <span class="sc">~</span> l, <span class="at">data =</span> joint_data, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb34-2"><a href=""></a></span>
-<span id="cb34-3"><a href=""></a>joint_data <span class="ot">&lt;-</span> joint_data <span class="sc">|&gt;</span></span>
-<span id="cb34-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">w_joint =</span> <span class="fu">wt_ate</span>(<span class="fu">fitted</span>(ps_joint), joint))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" data-code-line-numbers="|1|3-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>ps_joint <span class="ot">&lt;-</span> <span class="fu">multinom</span>(joint <span class="sc">~</span> l, <span class="at">data =</span> joint_data, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-2"><a href=""></a></span>
+<span id="cb32-3"><a href=""></a>joint_data <span class="ot">&lt;-</span> joint_data <span class="sc">|&gt;</span></span>
+<span id="cb32-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">w_joint =</span> <span class="fu">wt_ate</span>(<span class="fu">fitted</span>(ps_joint), joint))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The categorical route takes the matrix of fitted probabilities, one column per cell</p>
 </section>
 <section id="the-weighted-outcome-model" class="slide level2">
 <h2>The weighted outcome model</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35" data-code-line-numbers="|1|3-5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>joint_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> joint, <span class="at">data =</span> joint_data, <span class="at">weights =</span> w_joint)</span>
-<span id="cb35-2"><a href=""></a></span>
-<span id="cb35-3"><a href=""></a><span class="fu">ipw</span>(ps_joint, joint_model) <span class="sc">|&gt;</span></span>
-<span id="cb35-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb35-5"><a href=""></a>  <span class="fu">select</span>(contrast, group, estimate, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" data-code-line-numbers="|1|3-5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>joint_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> joint, <span class="at">data =</span> joint_data, <span class="at">weights =</span> w_joint)</span>
+<span id="cb33-2"><a href=""></a></span>
+<span id="cb33-3"><a href=""></a>joint_fit <span class="ot">&lt;-</span> <span class="fu">ipw</span>(ps_joint, joint_model)</span>
+<span id="cb33-4"><a href=""></a></span>
+<span id="cb33-5"><a href=""></a>joint_fit <span class="sc">|&gt;</span></span>
+<span id="cb33-6"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-7"><a href=""></a>  <span class="fu">select</span>(contrast, group, estimate, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -869,23 +848,45 @@ Type: response</code></pre>
 <li class="fragment">One <strong>interaction</strong>: the difference between the first exposure’s two simple effects</li>
 </ul>
 </section>
-<section id="section-10" class="slide level2 center" data-background-color="#23373B">
+<section id="the-four-cell-means" class="slide level2">
+<h2>The four cell means</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>joint_fit <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href=""></a>  <span class="fu">filter</span>(group <span class="sc">==</span> <span class="st">"overall"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href=""></a>  <span class="fu">separate_wider_delim</span>(contrast, <span class="st">", "</span>, <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> a, <span class="at">y =</span> estimate, <span class="at">color =</span> b, <span class="at">group =</span> b)) <span class="sc">+</span></span>
+<span id="cb35-6"><a href=""></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb35-7"><a href=""></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb35-8"><a href=""></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"counterfactual mean of y"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="the-four-cell-means-output" class="slide level2 output-location-slide"><h2>The four cell means</h2><div class="cell output-location-slide" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="14-interaction_files/figure-revealjs/unnamed-chunk-24-1.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="section-10" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
 <h3 id="interaction-in-a-dag"><strong>Interaction in a DAG</strong></h3>
 </section>
 <section id="a-conventional-dag" class="slide level2">
 <h2>A conventional DAG</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>conventional_dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb37-2"><a href=""></a>  X <span class="sc">~</span> Z,</span>
-<span id="cb37-3"><a href=""></a>  Q <span class="sc">~</span> Z,</span>
-<span id="cb37-4"><a href=""></a>  Y <span class="sc">~</span> X <span class="sc">+</span> Q <span class="sc">+</span> Z,</span>
-<span id="cb37-5"><a href=""></a>  <span class="at">coords =</span> <span class="fu">time_ordered_coords</span>(),</span>
-<span id="cb37-6"><a href=""></a>  <span class="at">exposure =</span> <span class="st">"X"</span>,</span>
-<span id="cb37-7"><a href=""></a>  <span class="at">outcome =</span> <span class="st">"Y"</span></span>
-<span id="cb37-8"><a href=""></a>)</span>
-<span id="cb37-9"><a href=""></a></span>
-<span id="cb37-10"><a href=""></a><span class="fu">ggdag</span>(conventional_dag) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>conventional_dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb36-2"><a href=""></a>  X <span class="sc">~</span> Z,</span>
+<span id="cb36-3"><a href=""></a>  Q <span class="sc">~</span> Z,</span>
+<span id="cb36-4"><a href=""></a>  Y <span class="sc">~</span> X <span class="sc">+</span> Q <span class="sc">+</span> Z,</span>
+<span id="cb36-5"><a href=""></a>  <span class="at">coords =</span> <span class="fu">time_ordered_coords</span>(),</span>
+<span id="cb36-6"><a href=""></a>  <span class="at">exposure =</span> <span class="st">"X"</span>,</span>
+<span id="cb36-7"><a href=""></a>  <span class="at">outcome =</span> <span class="st">"Y"</span></span>
+<span id="cb36-8"><a href=""></a>)</span>
+<span id="cb36-9"><a href=""></a></span>
+<span id="cb36-10"><a href=""></a><span class="fu">ggdag</span>(conventional_dag) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -907,17 +908,17 @@ Type: response</code></pre>
 <section id="an-explicit-interaction-node" class="slide level2">
 <h2>An explicit interaction node</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38" data-code-line-numbers="|5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>explicit_interaction_dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb38-2"><a href=""></a>  X <span class="sc">~</span> Z,</span>
-<span id="cb38-3"><a href=""></a>  Q <span class="sc">~</span> Z,</span>
-<span id="cb38-4"><a href=""></a>  Y <span class="sc">~</span> X <span class="sc">+</span> Q <span class="sc">+</span> Z <span class="sc">+</span> XxQ,</span>
-<span id="cb38-5"><a href=""></a>  XxQ <span class="sc">~</span> X <span class="sc">+</span> Q,</span>
-<span id="cb38-6"><a href=""></a>  <span class="at">coords =</span> <span class="fu">time_ordered_coords</span>(),</span>
-<span id="cb38-7"><a href=""></a>  <span class="at">exposure =</span> <span class="st">"X"</span>,</span>
-<span id="cb38-8"><a href=""></a>  <span class="at">outcome =</span> <span class="st">"Y"</span></span>
-<span id="cb38-9"><a href=""></a>)</span>
-<span id="cb38-10"><a href=""></a></span>
-<span id="cb38-11"><a href=""></a><span class="fu">ggdag</span>(explicit_interaction_dag) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37" data-code-line-numbers="|5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>explicit_interaction_dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb37-2"><a href=""></a>  X <span class="sc">~</span> Z,</span>
+<span id="cb37-3"><a href=""></a>  Q <span class="sc">~</span> Z,</span>
+<span id="cb37-4"><a href=""></a>  Y <span class="sc">~</span> X <span class="sc">+</span> Q <span class="sc">+</span> Z <span class="sc">+</span> XxQ,</span>
+<span id="cb37-5"><a href=""></a>  XxQ <span class="sc">~</span> X <span class="sc">+</span> Q,</span>
+<span id="cb37-6"><a href=""></a>  <span class="at">coords =</span> <span class="fu">time_ordered_coords</span>(),</span>
+<span id="cb37-7"><a href=""></a>  <span class="at">exposure =</span> <span class="st">"X"</span>,</span>
+<span id="cb37-8"><a href=""></a>  <span class="at">outcome =</span> <span class="st">"Y"</span></span>
+<span id="cb37-9"><a href=""></a>)</span>
+<span id="cb37-10"><a href=""></a></span>
+<span id="cb37-11"><a href=""></a><span class="fu">ggdag</span>(explicit_interaction_dag) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -936,14 +937,24 @@ Type: response</code></pre>
 <p>Attia J, Holliday E, Oldmeadow C (2022). A proposal for capturing interaction and effect modification using DAGs. International Journal of Epidemiology. doi:10.1093/ije/dyac126</p>
 </div>
 </section>
+<section id="extra-magic-mornings-and-season" class="slide level2">
+<h2>Extra Magic Mornings and season</h2>
+<ul>
+<li class="fragment">Disney sets ticket season through pricing, so both the morning policy and the season are things the park can change</li>
+<li class="fragment">Asking what would happen if we set both at once is a joint intervention</li>
+</ul>
+<div class="fragment">
+<p>That is a causal interaction question</p>
+</div>
+</section>
 <section id="your-turn-3" class="slide level2 small">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="ask-the-joint-question-what-if-the-park-set-both-the-extra-magic-morning-policy-and-the-ticket-season">Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?</h3>
 <h3 id="cross-the-two-with-joint_exposure-fit-one-propensity-model-over-the-cells-and-read-the-cell-means-simple-effects-and-interaction">Cross the two with <code>joint_exposure()</code>, fit one propensity model over the cells, and read the cell means, simple effects, and interaction</h3>
 <h3 id="finish-early-try-the-stretch-goal">Finish early? Try the <em>stretch goal</em></h3>
-<p><countdown-timer class="countdown" id="timer_6d58672b" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_1b9414d3" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

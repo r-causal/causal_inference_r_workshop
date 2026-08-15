@@ -11,3 +11,5 @@ r = "jarl"
 [lint.rules]
 missing-chunk-labels = false
 undefined-references = false
+# section dividers are an untitled `##` holding a `###`, so heading levels skip
+heading-hierarchy = false

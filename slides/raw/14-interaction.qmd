@@ -5,6 +5,8 @@ institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
+# Treatment effects by exposure status
+
 ## {background-color="#23373B"}
 
 ```{r}
@@ -36,17 +38,6 @@ theme_set(
   `y(1) - y(0)`, taken over different covariate distributions
 - That distinction becomes meaningful only when the individual treatment effect
   varies across units
-
-## Two claims from earlier modules
-
-- When standard methods succeed: the effect was homogeneous, so marginal and
-  conditional effects agree
-- In g-computation: without an exposure-covariate interaction, the ATE, ATT, and
-  ATC coincide
-
-. . .
-
-This module is where both claims stop holding
 
 ## What makes the estimands differ
 
@@ -409,6 +400,52 @@ The weighted estimates recover the same truths as g-computation
 - The modifier separates the exposure groups strongly here, so the spread
   between the ATT and the ATC is visible
 
+# Treatment effects by a covariate
+
+## {.center background-color="#23373B"}
+
+### **Three jobs for interaction terms**
+
+## The same syntax, three jobs
+
+- **Functional form**: an interaction between two covariates, in either model
+- **Effect modification**: an interaction between the exposure and a covariate
+- **Causal interaction**: an interaction between two exposures
+
+## {.center background-color="#23373B"}
+
+### **Effect modification versus causal interaction**
+
+## Two different causal questions
+
+- **Effect modification** asks whether the exposure's effect differs across
+  levels of a pre-treatment variable
+- **Causal interaction** asks whether the joint effect of changing both variables
+  differs from what their separate effects predict
+
+. . .
+
+These are often used interchangeably, but they answer different questions
+
+## Effect modification
+
+- The comparison is `E[y(1) - y(0) | z = high]` against
+  `E[y(1) - y(0) | z = low]`
+- `z` is used to define subgroups: we ask how the effect of the exposure changes
+  across observed strata of `z`, not what would happen if we intervened on it
+
+## Causal interaction
+
+- Both variables are exposures of causal interest
+- The comparison is `E[y(a = 1, b = 1) - y(a = 0, b = 1)]` against
+  `E[y(a = 1, b = 0) - y(a = 0, b = 0)]`
+
+. . .
+
+The effect of one exposure under two settings of the other
+
+# Effect Modification
+
 ## {.center background-color="#23373B"}
 
 ### **Effect modification with `ipw()`**
@@ -426,9 +463,20 @@ ipw(propensity_model, outcome_model_int, .by = z) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
+## Extra Magic Mornings by quarter
+
+- Does an Extra Magic Morning change posted wait times differently in the fourth
+  quarter than in the first?
+- No one can assign a day to a calendar quarter, so the quarter defines
+  subgroups rather than an intervention
+
+. . .
+
+That is an effect modification question
+
 ## *Your Turn 2*
 
-### Ask whether the effect of an Extra Magic Morning is modified by calendar quarter
+### Examine whether the effect of an Extra Magic Morning is modified by calendar quarter
 
 ### Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to `ipw()` with `.by`
 
@@ -478,24 +526,6 @@ the probability of the exposure an unexposed unit took
 
 Only condition the numerator on variables that are already in the outcome model
 
-## The weights tighten
-
-```{r}
-#| output-location: fragment
-
-sim_data_wts |>
-  select(w_ate, sw_ate) |>
-  # the weights stack only as plain numbers
-  mutate(across(everything(), as.numeric)) |>
-  pivot_longer(everything(), names_to = "weights") |>
-  summarize(sd = sd(value), max = max(value), .by = weights)
-```
-
-. . .
-
-Conditioning the numerator on `z` cuts the spread of the weights and pulls in
-the largest ones
-
 ## The same fit, stabilized
 
 ```{r}
@@ -508,68 +538,7 @@ ipw(propensity_model, outcome_model_stab, .by = z) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
-## {.center background-color="#23373B"}
-
-### **Three jobs for interaction terms**
-
-## The same syntax, three jobs
-
-- **Functional form**: an interaction between two covariates, in either model
-- **Effect modification**: an interaction between the exposure and a covariate
-- **Causal interaction**: an interaction between two exposures
-
-## {.center background-color="#23373B"}
-
-### **Effect modification versus causal interaction**
-
-## Two different causal questions
-
-- **Effect modification** asks whether the exposure's effect differs across
-  levels of a pre-treatment variable
-- **Causal interaction** asks whether the joint effect of changing both variables
-  differs from what their separate effects predict
-
-. . .
-
-These are often used interchangeably, but they answer different questions
-
-## Effect modification
-
-- The comparison is `E[y(1) - y(0) | z = high]` against
-  `E[y(1) - y(0) | z = low]`
-- `z` is used to define subgroups: we ask how the effect of the exposure changes
-  across observed strata of `z`, not what would happen if we intervened on it
-
-## Causal interaction
-
-- Both variables are exposures of causal interest
-- The comparison is `E[y(a = 1, b = 1) - y(a = 0, b = 1)]` against
-  `E[y(a = 1, b = 0) - y(a = 0, b = 0)]`
-
-. . .
-
-The effect of one exposure under two settings of the other
-
-## Extra Magic Mornings by quarter
-
-- Does an Extra Magic Morning change posted wait times differently in the fourth
-  quarter than in the first?
-- No one can assign a day to a calendar quarter, so the quarter defines
-  subgroups rather than an intervention
-
-. . .
-
-That is an effect modification question
-
-## Extra Magic Mornings and season
-
-- Disney sets ticket season through pricing, so both the morning policy and the
-  season are things the park can change
-- Asking what would happen if we set both at once is a joint intervention
-
-. . .
-
-That is a causal interaction question
+# Causal Interaction
 
 ## {.center background-color="#23373B"}
 
@@ -636,7 +605,9 @@ cell
 
 joint_model <- lm(y ~ joint, data = joint_data, weights = w_joint)
 
-ipw(ps_joint, joint_model) |>
+joint_fit <- ipw(ps_joint, joint_model)
+
+joint_fit |>
   tidy(conf.int = TRUE) |>
   select(contrast, group, estimate, conf.low, conf.high)
 ```
@@ -648,6 +619,21 @@ ipw(ps_joint, joint_model) |>
   other
 - One **interaction**: the difference between the first exposure's two simple
   effects
+
+## The four cell means
+
+```{r}
+#| output-location: slide
+
+joint_fit |>
+  tidy(conf.int = TRUE) |>
+  filter(group == "overall") |>
+  separate_wider_delim(contrast, ", ", names = c("a", "b")) |>
+  ggplot(aes(x = a, y = estimate, color = b, group = b)) +
+  geom_line() +
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+  labs(y = "counterfactual mean of y", color = NULL)
+```
 
 ## {.center background-color="#23373B"}
 
@@ -709,6 +695,16 @@ Attia J, Holliday E, Oldmeadow C (2022). A proposal for capturing interaction
 and effect modification using DAGs. International Journal of Epidemiology.
 doi:10.1093/ije/dyac126
 :::
+
+## Extra Magic Mornings and season
+
+- Disney sets ticket season through pricing, so both the morning policy and the
+  season are things the park can change
+- Asking what would happen if we set both at once is a joint intervention
+
+. . .
+
+That is a causal interaction question
 
 ## *Your Turn 3* {.small}
 
