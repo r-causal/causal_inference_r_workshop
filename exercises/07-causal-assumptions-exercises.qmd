@@ -4,14 +4,14 @@ format: html
 ---
 
 This exercise is a discussion, so there is no code to run.
-We'll work through the causal assumptions for a question we'll return to throughout the workshop: does quitting smoking make you gain weight?
+We'll work through the causal assumptions for a question presented in *Causal Inference: What if?*: does quitting smoking make you gain weight?
 
 Causal modeling has a special place in the history of smoking research: the studies that demonstrated that smoking causes lung cancer were observational.
 Thanks to other studies, we also know that, if you're already a smoker, quitting smoking reduces your risk of lung cancer.
 However, some have observed that former smokers tend to gain weight.
 Is this the result of quitting smoking, or does something else explain this effect?
 
-The data usually used to answer this question come from NHEFS, the National Health and Nutrition Examination Survey Epidemiologic Follow-up Study.
+The data that *Causal Inference: What if?* uses to analyze this question come from NHEFS, the National Health and Nutrition Examination Survey Epidemiologic Follow-up Study.
 NHEFS is a longitudinal, observational study.
 Participants were surveyed and examined starting in 1971 and followed up through 1982.
 Some quit smoking between the two visits and some did not, and we can compare how much weight each group gained over that period.
@@ -32,6 +32,87 @@ Exchangeability requires that the two groups have the same potential outcomes on
 - What would make people who quit and people who kept smoking non-exchangeable?
 - Which confounders would you need to measure to make the groups conditionally exchangeable, and which of those are hard to measure well?
 
+This DAG encodes one set of answers to those questions.
+
+```{r}
+#| label: setup
+#| include: false
+
+library(ggplot2)
+library(ggdag)
+library(ggokabeito)
+```
+
+```{r}
+#| echo: false
+#| fig-width: 9
+
+smk_wt_dag <- dagify(
+  qsmk ~ sex +
+    race +
+    age +
+    education +
+    smokeintensity +
+    smokeyrs +
+    exercise +
+    active +
+    wt71,
+  wt82_71 ~ qsmk +
+    sex +
+    race +
+    age +
+    education +
+    smokeintensity +
+    smokeyrs +
+    exercise +
+    active +
+    wt71,
+  exposure = "qsmk",
+  outcome = "wt82_71",
+  coords = time_ordered_coords(),
+  labels = c(
+    "qsmk" = "quit\nsmoking",
+    "wt82_71" = "change in\nweight",
+    "age" = "age",
+    "sex" = "sex",
+    "race" = "race",
+    "education" = "education",
+    "wt71" = "baseline\nweight",
+    "active" = "daily\nactivity\nlevel",
+    "exercise" = "exercise",
+    "smokeintensity" = "smoking\nintensity",
+    "smokeyrs" = "yrs of\nsmoking"
+  )
+) |>
+  tidy_dagitty() |>
+  node_status()
+
+smk_wt_dag |>
+  ggplot(aes(x, y, xend = xend, yend = yend, color = status)) +
+  geom_dag_edges() +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    # the confounders share one column, so their labels need room to the left
+    nudge_x = ifelse(smk_wt_dag$x == 1, -0.6, 0.6),
+    box.padding = 1.25,
+    inherit.aes = FALSE,
+    max.overlaps = Inf,
+    seed = 10,
+    label.size = NA,
+    label.padding = 0.1,
+    size = 14 / 3
+  ) +
+  theme_dag(base_size = 14) +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_color_okabe_ito(na.value = "grey90") +
+  expand_plot(
+    expand_x = expansion(c(0.45, 0.2)),
+    expand_y = expansion(c(0.1, 0.1))
+  )
+```
+
 ### Positivity
 
 Positivity requires that every participant has a non-zero probability of quitting and a non-zero probability of continuing.
@@ -44,13 +125,5 @@ Positivity requires that every participant has a non-zero probability of quittin
 
 Consistency requires that the potential outcome for quitting is the weight change we actually observe among those who quit.
 
-- What precisely counts as quitting smoking? Quitting cold turkey, tapering off, switching to another nicotine product? Does it matter when in the follow-up period someone quit?
-- If those versions of quitting have different effects on weight, what are we estimating when we treat them as one exposure?
+- What exactly does "quitting smoking" mean? Are there different ways of quitting, and do they relate to the potential outcome of weight change?
 - Could one participant quitting affect another participant's weight? Is interference plausible here?
-
-# Take aways
-
-- Causal inference from observational data rests on exchangeability, positivity, and consistency. None of the three can be verified from the data alone.
-- Randomization buys exchangeability in the limit and positivity by design, and it helps with well-defined exposures, but it does not rule out interference. Real trials fall short of the ideal on exchangeability and well-defined exposures.
-- Specifying a target trial, then emulating it with observational data, forces the question to be precise enough that the assumptions can be examined.
-- Data can provide evidence about the assumptions, as the positivity checks on the Seven Dwarfs data did, but never proof.

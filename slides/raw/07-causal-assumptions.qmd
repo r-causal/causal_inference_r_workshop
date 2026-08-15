@@ -5,7 +5,7 @@ institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
-## {background-color="#23373B"}
+##
 
 ```{r}
 #| label: setup
@@ -20,6 +20,7 @@ options(
 library(tidyverse)
 library(broom)
 library(gt)
+library(ggdag)
 library(ggokabeito)
 library(glue)
 library(halfmoon)
@@ -36,12 +37,7 @@ theme_set(
 )
 ```
 
-- In *Split Decision: Life Stories*, Ice-T recounts his journey from a life of
-  crime to fame and success
-- He contrasts it with the fate of his former crime partner, Spike, now serving
-  35 years to life
-- The book describes how "their paths might have very well been reversed if they
-  had made different choices"
+![](img/split_decision.png){fig-align="center"}
 
 ## Are they good proxies for each other?
 
@@ -194,14 +190,6 @@ data_observed |>
 ```
 
 We can't calculate the individual causal effect
-
-## Apples-to-apples
-
-- Most causal assumptions exist to make an apples-to-apples comparison: we want
-  to compare similar individuals who serve as reasonable proxies for each
-  other's counterfactuals
-- Other people say cheese and chalk (UK English), apples and pears (German), or
-  grandmothers and toads (Serbian)
 
 ## The three assumptions
 
@@ -1402,279 +1390,77 @@ A randomized design is sometimes called an A/B test
 
 😄 solved by default, 🤷 solvable but not solved by default
 
-## The elements of a target trial
-
-A clear causal question maps to a protocol
-
-- **Eligibility criteria**: who or what is included?
-- **Exposure definition**: what precise exposure?
-- **Assignment procedures**: how are units assigned?
-- **Follow-up period**: when does it start and end?
-
-## More elements of the protocol
-
-- **Outcome definition**: what precise outcomes will be measured?
-- **Causal contrast of interest**: which causal estimand will be estimated?
-- **Analysis plan**: what procedures will estimate the causal contrast?
-
-## How the protocol helps
-
-- Eligibility criteria prevent positivity violations by excluding those who can
-  never have one of the exposures
-- A precise exposure definition improves consistency and helps control
-  interference
-
-## What randomization adds
-
-- Randomized assignment meets exchangeability and positivity, and can prevent
-  interference
-
-## Emulating target trials
-
-- We often cannot randomize: time, money, ethics
-- You specify a target trial, the randomized trial you would run, and emulate it
-  with observational data
-- The target trial is usually pragmatic: no blinding
-
-. . .
-
-This is step 1 of the whole game: specify your causal question, for example as a
-target trial
-
-## Extra Magic Mornings
-
-- Guests staying at a Walt Disney World resort hotel could enter the park during
-  "Extra Magic Hours"
-- Does an Extra Magic Morning change the average posted wait time for the Seven
-  Dwarfs Mine Train between 9 AM and 10 AM?
-
-## The Seven Dwarfs data
-
-You will work with these data in the propensity score exercises
-
-```{r}
-#| output-location: fragment
-
-seven_dwarfs_9 <- seven_dwarfs_train_2018 |>
-  filter(wait_hour == 9)
-
-seven_dwarfs_9 |>
-  count(park_extra_magic_morning)
-```
-
-. . .
-
-Data can't solve the problem of the unverifiable assumptions, but it can still
-provide valuable information
-
-## Positivity: time of park close
-
-Exchangeability needs better tools, which we'll see later, and we've addressed
-consistency by being specific about Extra Magic Mornings
-
-```{r}
-#| echo: false
-#| fig-asp: 0.45
-
-ggplot(
-  seven_dwarfs_9,
-  aes(
-    x = factor(park_close),
-    group = factor(park_extra_magic_morning),
-    fill = factor(park_extra_magic_morning)
-  )
-) +
-  geom_bar(position = "fill", alpha = 0.8) +
-  labs(
-    fill = "Extra Magic Morning",
-    x = "Time of Park Close"
-  ) +
-  theme(panel.grid.major.x = element_blank())
-```
-
-None of the days that closed at 16:30 or 21:00 had Extra Magic Mornings; ticket
-season, by contrast, shows no violations
-
-## Which days are missing a group?
-
-```{r}
-#| output-location: fragment
-
-seven_dwarfs_9 |>
-  count(park_close, park_extra_magic_morning) |>
-  complete(
-    park_close,
-    park_extra_magic_morning,
-    fill = list(n = 0)
-  ) |>
-  filter(park_close %in% parse_hm(c("16:30", "21:00")))
-```
-
-. . .
-
-Only background knowledge can tell us whether a violation is stochastic or
-structural
-
-## Historic high temperature
-
-```{r}
-#| echo: false
-#| fig-asp: 0.4
-
-ggplot(
-  seven_dwarfs_9,
-  aes(
-    x = park_temperature_high,
-    group = factor(park_extra_magic_morning),
-    fill = factor(park_extra_magic_morning)
-  )
-) +
-  geom_mirror_histogram(bins = 20, alpha = 0.8) +
-  scale_y_continuous(labels = abs) +
-  labs(
-    fill = "Extra Magic Morning",
-    x = "Historic high temperature (F)"
-  )
-```
-
-```{r}
-#| output-location: fragment
-
-seven_dwarfs_9 |>
-  filter(park_temperature_high < 60) |>
-  count(park_extra_magic_morning)
-```
-
-. . .
-
-Restricting to warmer days would change the question and restrict which days the
-conclusions cover
-
-## Checking several variables at once
+## Quitting smoking and weight gain
 
 ```{r}
 #| echo: false
 #| fig-width: 9
-#| fig-asp: 0.5
 
-prop_exposed <- seven_dwarfs_9 |>
-  mutate(
-    park_temperature_high_bin = cut(park_temperature_high, breaks = 3),
-    park_close_bin = case_when(
-      hour(park_close) < 19 & hour(park_close) > 12 ~ "(1) early",
-      hour(park_close) >= 19 & hour(park_close) < 24 ~ "(2) standard",
-      hour(park_close) >= 24 | hour(park_close) < 12 ~ "(3) late"
-    )
-  ) |>
-  group_by(
-    park_close_bin,
-    park_temperature_high_bin,
-    park_ticket_season
-  ) |>
-  summarize(
-    prop_exposed = mean(park_extra_magic_morning),
-    .groups = "drop"
-  ) |>
-  complete(
-    park_close_bin,
-    park_temperature_high_bin,
-    park_ticket_season,
-    fill = list(prop_exposed = 0)
+smk_wt_dag <- dagify(
+  qsmk ~ sex +
+    race +
+    age +
+    education +
+    smokeintensity +
+    smokeyrs +
+    exercise +
+    active +
+    wt71,
+  wt82_71 ~ qsmk +
+    sex +
+    race +
+    age +
+    education +
+    smokeintensity +
+    smokeyrs +
+    exercise +
+    active +
+    wt71,
+  exposure = "qsmk",
+  outcome = "wt82_71",
+  coords = time_ordered_coords(),
+  labels = c(
+    "qsmk" = "quit\nsmoking",
+    "wt82_71" = "change in\nweight",
+    "age" = "age",
+    "sex" = "sex",
+    "race" = "race",
+    "education" = "education",
+    "wt71" = "baseline\nweight",
+    "active" = "daily\nactivity\nlevel",
+    "exercise" = "exercise",
+    "smokeintensity" = "smoking\nintensity",
+    "smokeyrs" = "yrs of\nsmoking"
   )
+) |>
+  tidy_dagitty() |>
+  node_status()
 
-prop_exposed |>
-  ggplot(
-    aes(
-      x = park_close_bin,
-      y = park_temperature_high_bin,
-      fill = prop_exposed
-    )
+smk_wt_dag |>
+  ggplot(aes(x, y, xend = xend, yend = yend, color = status)) +
+  geom_dag_edges() +
+  geom_dag_point() +
+  geom_dag_label_repel(
+    aes(x, y, label = label),
+    # the confounders share one column, so their labels need room to the left
+    nudge_x = ifelse(smk_wt_dag$x == 1, -0.6, 0.6),
+    box.padding = 1.25,
+    inherit.aes = FALSE,
+    max.overlaps = Inf,
+    seed = 10,
+    label.size = NA,
+    label.padding = 0.1,
+    size = 14 / 3
   ) +
-  geom_tile() +
-  scale_fill_viridis_c(begin = 0.1, end = 0.9, breaks = c(0, 0.5, 1)) +
-  facet_wrap(~park_ticket_season) +
-  labs(
-    y = "Historic High Temperature (F)",
-    x = "Magic Kingdom Park Close Time",
-    fill = "Proportion of\nDays Exposed"
-  ) +
-  theme(panel.grid = element_blank())
-```
-
-Nine combinations were never exposed, and one was always exposed
-
-. . .
-
-The only cold peak days in Florida are over Christmas and New Year, when there
-historically were always Extra Magic Hours
-
-## Overlap and balance
-
-We look for two things: overlap and balance
-
-```{r}
-#| echo: false
-#| fig-width: 9
-#| fig-asp: 0.45
-
-set.seed(2025)
-
-make_model <- function(n = 1000, intercept, slope) {
-  df <- tibble(
-    z = rnorm(n),
-    exposure = rbinom(n, 1, plogis(intercept + slope * z))
+  theme_dag(base_size = 14) +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_color_okabe_ito(na.value = "grey90") +
+  expand_plot(
+    expand_x = expansion(c(0.45, 0.2)),
+    expand_y = expansion(c(0.1, 0.1))
   )
-  glm(exposure ~ z, data = df, family = binomial)
-}
-
-models_overlap <- list(
-  good = make_model(intercept = 0, slope = 0.5),
-  moderate = make_model(intercept = 0, slope = 1.5),
-  poor = make_model(intercept = 0, slope = 3.0)
-)
-
-plot_ps <- function(.x, .y, title = "Overlap") {
-  .x |>
-    augment(type.predict = "response") |>
-    ggplot(aes(.fitted, fill = factor(exposure))) +
-    geom_mirror_histogram(bins = 50) +
-    scale_y_continuous(labels = abs) +
-    labs(
-      x = "propensity score",
-      fill = "exposure",
-      title = paste(str_to_title(.y), title)
-    ) +
-    theme(legend.position = "none")
-}
-
-plots_overlap <- imap(models_overlap, plot_ps)
-
-models_balance <- list(
-  good = make_model(intercept = 0.0, slope = 1.5),
-  moderate = make_model(intercept = log(0.25 / 0.75), slope = 1.5),
-  poor = make_model(intercept = log(0.10 / 0.90), slope = 1.5)
-)
-
-plots_balance <- imap(models_balance, plot_ps, title = "Balance")
-
-plots_balance$moderate <- plots_balance$moderate +
-  theme(legend.position = "bottom")
-
-(plots_overlap$good + plots_overlap$moderate + plots_overlap$poor) /
-  (plots_balance$good + plots_balance$moderate + plots_balance$poor)
 ```
-
-Overlap, or common support, relates to positivity
-
-. . .
-
-Balance relates to exchangeability: we should be able to reassign the two groups
-and still get the right answer
-
-. . .
-
-The x-axis is the probability of exposure given the covariates: the propensity
-score, which we take up next
 
 ## *Your Turn*
 
