@@ -326,7 +326,7 @@ a constant effect across covariate values
 
 ### Use `avg_comparisons()` to get the ATE, then the ATT and the ATC with `newdata`
 
-### *Stretch*: refit without the interaction and watch the three collapse
+### *Stretch*: refit without the interaction and recalculate all three
 
 `r countdown::countdown(minutes = 10)`
 
