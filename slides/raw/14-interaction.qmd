@@ -5,7 +5,7 @@ institute: "Stanford University"
 format: "kakashi-revealjs"
 ---
 
-# Treatment effects by exposure status
+# Treatment effects by exposure status {background-color="#23373B"}
 
 ## {background-color="#23373B"}
 
@@ -400,7 +400,7 @@ The weighted estimates recover the same truths as g-computation
 - The modifier separates the exposure groups strongly here, so the spread
   between the ATT and the ATC is visible
 
-# Treatment effects by a covariate
+# Treatment effects by a covariate {background-color="#23373B"}
 
 ## {.center background-color="#23373B"}
 
@@ -444,7 +444,7 @@ These are often used interchangeably, but they answer different questions
 
 The effect of one exposure under two settings of the other
 
-# Effect Modification
+# Effect Modification {background-color="#23373B"}
 
 ## {.center background-color="#23373B"}
 
@@ -538,7 +538,7 @@ ipw(propensity_model, outcome_model_stab, .by = z) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
 
-# Causal Interaction
+# Causal Interaction {background-color="#23373B"}
 
 ## {.center background-color="#23373B"}
 
