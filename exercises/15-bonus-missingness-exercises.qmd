@@ -138,15 +138,18 @@ ggmice(imp, aes(x = wait_minutes_posted_avg, y = wait_minutes_actual_avg)) +
 3. Fit the propensity score model, the ATE weights, the weighted outcome model, and `ipw()` within each imputation.
 
 ```{r}
-fits <- with(imp, {
-  ps <- glm(
-    ___ ~ park_ticket_season + park_close + park_temperature_high,
-    family = binomial()
-  )
-  w <- ___(fitted(ps), park_extra_magic_morning, exposure_type = "binary")
-  om <- lm(___ ~ ___, weights = w)
-  ipw(___, ___)
-})
+# mice masks tidyr::complete(), so name the package explicitly
+fits <- mice::complete(imp, action = "all") |>
+  map(\(.df) {
+    ps <- glm(
+      ___ ~ park_ticket_season + park_close + park_temperature_high,
+      family = binomial(),
+      data = .df
+    )
+    w <- ___(fitted(ps), .df$park_extra_magic_morning, exposure_type = "binary")
+    om <- lm(___ ~ ___, data = .df, weights = w)
+    ipw(___, ___)
+  })
 ```
 
 4. Pool the results.
@@ -169,7 +172,7 @@ plot_trace(imp, ___)
 **Stretch goal**: Apply Rubin's rules by hand and confirm that the estimate and standard error match `pool_ipw()`'s.
 
 ```{r}
-estimates <- map_dfr(fits$analyses, tidy)
+estimates <- map_dfr(fits, tidy)
 
 estimates |>
   summarize(

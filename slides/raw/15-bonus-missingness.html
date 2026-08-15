@@ -923,190 +923,25 @@ Malcolm Barrett
 <li class="fragment">The data look much the same under both mechanisms; only the structure tells them apart</li>
 </ul>
 </section>
-<section id="section-9" class="slide level2 center" data-background-color="#23373B">
-<h2></h2>
-<h3 id="the-real-thing-is-worse"><strong>The real thing is worse</strong></h3>
-</section>
-<section id="actual-wait-times" class="slide level2">
-<h2>Actual wait times</h2>
-<ul>
-<li class="fragment">In the malaria data we knew the answer; in these data we do not</li>
-<li class="fragment">The question: the effect of Extra Magic Mornings on the <em>actual</em> wait time at 9 AM</li>
-</ul>
-</section>
-<section id="actual-wait-times-1" class="slide level2">
-<h2>Actual wait times</h2>
-<ul>
-<li class="fragment">The 6.2 minutes from the outcome model exercises was the effect on <em>posted</em> wait times, a different outcome</li>
-</ul>
-<div class="fragment">
-<p>207 of 354 days are missing the actual wait time, and there is no benchmark to check against</p>
-</div>
-</section>
-<section id="the-pipeline-for-actual-wait-times" class="slide level2 small">
-<h2>The pipeline for actual wait times</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>fit_ipw_actual <span class="ot">&lt;-</span> <span class="cf">function</span>(.data) {</span>
-<span id="cb28-2"><a href=""></a>  propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb28-3"><a href=""></a>    park_extra_magic_morning <span class="sc">~</span></span>
-<span id="cb28-4"><a href=""></a>      park_ticket_season <span class="sc">+</span> park_close <span class="sc">+</span> park_temperature_high,</span>
-<span id="cb28-5"><a href=""></a>    <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
-<span id="cb28-6"><a href=""></a>    <span class="at">data =</span> .data</span>
-<span id="cb28-7"><a href=""></a>  )</span>
-<span id="cb28-8"><a href=""></a>  weighted_data <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
-<span id="cb28-9"><a href=""></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .data) <span class="sc">|&gt;</span></span>
-<span id="cb28-10"><a href=""></a>    <span class="fu">mutate</span>(</span>
-<span id="cb28-11"><a href=""></a>      <span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, park_extra_magic_morning, <span class="at">exposure_type =</span> <span class="st">"binary"</span>)</span>
-<span id="cb28-12"><a href=""></a>    )</span>
-<span id="cb28-13"><a href=""></a>  ipw_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb28-14"><a href=""></a>    wait_minutes_actual_avg <span class="sc">~</span> park_extra_magic_morning,</span>
-<span id="cb28-15"><a href=""></a>    <span class="at">data =</span> weighted_data,</span>
-<span id="cb28-16"><a href=""></a>    <span class="at">weights =</span> wts</span>
-<span id="cb28-17"><a href=""></a>  )</span>
-<span id="cb28-18"><a href=""></a>  <span class="fu">ipw</span>(propensity_model, ipw_model)</span>
-<span id="cb28-19"><a href=""></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="complete-cases-147-days" class="slide level2">
-<h2>Complete cases: 147 days</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>seven_dwarfs_complete <span class="ot">&lt;-</span> seven_dwarfs_train_2018 <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href=""></a>  <span class="fu">filter</span>(wait_hour <span class="sc">==</span> <span class="dv">9</span>, <span class="sc">!</span><span class="fu">is.na</span>(wait_minutes_actual_avg))</span>
-<span id="cb29-3"><a href=""></a></span>
-<span id="cb29-4"><a href=""></a><span class="fu">fit_ipw_actual</span>(seven_dwarfs_complete) <span class="sc">|&gt;</span></span>
-<span id="cb29-5"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 7
-  term  estimate std.error statistic p.value conf.low
-  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-1 diff      5.11      8.13     0.629   0.530    -10.8
-# ℹ 1 more variable: conf.high &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<div class="fragment">
-<p>5.1 minutes (95% CI -10.8, 21.0): an interval four times wider than the one from the posted wait times</p>
-</div>
-</section>
-<section id="impute-the-full-data" class="slide level2">
-<h2>Impute the full data</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>seven_dwarfs_to_impute <span class="ot">&lt;-</span> seven_dwarfs_train_2018 <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">park_ticket_season =</span> <span class="fu">as.factor</span>(park_ticket_season)) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href=""></a>  <span class="fu">select</span>(</span>
-<span id="cb31-4"><a href=""></a>    park_date,</span>
-<span id="cb31-5"><a href=""></a>    wait_minutes_actual_avg,</span>
-<span id="cb31-6"><a href=""></a>    wait_minutes_posted_avg,</span>
-<span id="cb31-7"><a href=""></a>    wait_hour,</span>
-<span id="cb31-8"><a href=""></a>    park_temperature_high,</span>
-<span id="cb31-9"><a href=""></a>    park_close,</span>
-<span id="cb31-10"><a href=""></a>    park_ticket_season,</span>
-<span id="cb31-11"><a href=""></a>    park_extra_magic_morning</span>
-<span id="cb31-12"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="impute-the-full-data-1" class="slide level2">
-<h2>Impute the full data</h2>
-<ul>
-<li class="fragment">Every variable in the propensity score and outcome models, the outcome itself, and one strong auxiliary predictor: the posted wait time</li>
-<li class="fragment">The frame also carries <code>wait_hour</code>, a structural auxiliary that lets the imputation borrow across hours, and <code>park_date</code>, which the predictor matrix will exclude</li>
-</ul>
-</section>
-<section id="ten-imputations" class="slide level2">
-<h2>Ten imputations</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>predictor_matrix <span class="ot">&lt;-</span> <span class="fu">make.predictorMatrix</span>(seven_dwarfs_to_impute)</span>
-<span id="cb32-2"><a href=""></a><span class="co"># park_date identifies rows, so it must not predict imputed values</span></span>
-<span id="cb32-3"><a href=""></a>predictor_matrix[, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb32-4"><a href=""></a></span>
-<span id="cb32-5"><a href=""></a>imp_disney <span class="ot">&lt;-</span> <span class="fu">mice</span>(</span>
-<span id="cb32-6"><a href=""></a>  seven_dwarfs_to_impute,</span>
-<span id="cb32-7"><a href=""></a>  <span class="at">m =</span> <span class="dv">10</span>,</span>
-<span id="cb32-8"><a href=""></a>  <span class="at">predictorMatrix =</span> predictor_matrix,</span>
-<span id="cb32-9"><a href=""></a>  <span class="at">method =</span> <span class="st">"pmm"</span>,</span>
-<span id="cb32-10"><a href=""></a>  <span class="at">seed =</span> <span class="dv">1</span>,</span>
-<span id="cb32-11"><a href=""></a>  <span class="at">print =</span> <span class="cn">FALSE</span></span>
-<span id="cb32-12"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<p>Ten imputations against 88.7% missing: well below the rule of thumb</p>
-</div>
-</section>
-<section id="fit-the-pipeline-in-each-imputation" class="slide level2">
-<h2>Fit the pipeline in each imputation</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="co"># mice masks tidyr::complete(), so name the package explicitly</span></span>
-<span id="cb33-2"><a href=""></a>disney_fits <span class="ot">&lt;-</span> mice<span class="sc">::</span><span class="fu">complete</span>(imp_disney, <span class="at">action =</span> <span class="st">"all"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb33-3"><a href=""></a>  <span class="fu">map</span>(\(.df) <span class="fu">fit_ipw_actual</span>(<span class="fu">filter</span>(.df, wait_hour <span class="sc">==</span> <span class="dv">9</span>)))</span>
-<span id="cb33-4"><a href=""></a></span>
-<span id="cb33-5"><a href=""></a>disney_estimates <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(disney_fits, tidy)</span>
-<span id="cb33-6"><a href=""></a></span>
-<span id="cb33-7"><a href=""></a><span class="fu">round</span>(disney_estimates<span class="sc">$</span>estimate, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  6.24 -1.43 11.51 10.61 -1.96  1.36 -2.30  7.20  7.92  2.98</code></pre>
-</div>
-</div>
-<div class="fragment">
-<p>Ten completed datasets, ten answers: from -2.3 to 11.5 minutes</p>
-</div>
-</section>
-<section id="pooling-the-estimates" class="slide level2">
-<h2>Pooling the estimates</h2>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">pool_ipw</span>(disney_fits) <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell fragment" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 8
-  term  estimate std.error statistic    df p.value conf.low
-  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-1 diff      4.21      7.13     0.591  22.2   0.561    -10.6
-# ℹ 1 more variable: conf.high &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<div class="fragment">
-<p>4.2 minutes (95% CI -10.6, 19.0): the interval is still nearly as wide as the complete-case one</p>
-</div>
-</section>
-<section id="what-we-can-say" class="slide level2">
-<h2>What we can say</h2>
-<ul>
-<li class="fragment">Ten imputations against 88.7% incompleteness violates the rule of thumb; with more imputations, the pooled estimate varies far less from run to run</li>
-<li class="fragment">No number of imputations makes the interval informative: 207 of the 354 outcome values are missing</li>
-</ul>
-</section>
-<section id="what-we-can-say-1" class="slide level2">
-<h2>What we can say</h2>
-<ul>
-<li class="fragment">Multiple imputation reflects that in the interval, where deterministic imputation would have hidden it</li>
-</ul>
-<div class="fragment">
-<p>In the exercises, you will impute the analysis subset directly, with <code>m</code> matched to the rule of thumb</p>
-</div>
-</section>
 <section id="your-turn-1" class="slide level2">
 <h2><em>Your Turn 1</em></h2>
 <h3 id="open-15-bonus-missingness-exercises.qmd">Open <strong><code>15-bonus-missingness-exercises.qmd</code></strong></h3>
 <h3 id="count-the-days-missing-the-actual-wait-time-and-visualize-the-missingness-pattern">Count the days missing the actual wait time and visualize the missingness pattern</h3>
 <h3 id="decide-which-missingness-dag-you-believe-and-what-it-implies">Decide which missingness DAG you believe, and what it implies</h3>
-<p><countdown-timer class="countdown" id="timer_cdc55af1" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_f5e8b1e2" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="impute-the-missing-actual-wait-times-with-a-regression-model-that-keeps-the-exposure-and-confounders-in-their-analysis-forms">Impute the missing actual wait times with a regression model that keeps the exposure and confounders in their analysis forms</h3>
 <h3 id="estimate-the-effect-of-an-extra-magic-morning-on-the-actual-wait-time-with-the-ipw-pipeline">Estimate the effect of an Extra Magic Morning on the actual wait time with the IPW pipeline</h3>
-<p><countdown-timer class="countdown" id="timer_7d711ae4" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_77a00643" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="multiply-impute-the-hour-9-data-with-mice-choosing-m-by-the-rule-of-thumb">Multiply impute the hour 9 data with <code>mice()</code>, choosing <code>m</code> by the rule of thumb</h3>
 <h3 id="fit-the-full-ipw-pipeline-within-each-imputation-and-pool-with-pool_ipw">Fit the full IPW pipeline within each imputation and pool with <code>pool_ipw()</code></h3>
 <h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_436eeef3" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_0a452d09" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>
