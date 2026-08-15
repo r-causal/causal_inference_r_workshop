@@ -636,19 +636,18 @@ Type: response</code></pre>
 <section id="condition-the-numerator-on-z" class="slide level2">
 <h2>Condition the numerator on <code>z</code></h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" data-code-line-numbers="|1-2|6|11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>numerator_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(a <span class="sc">~</span> z, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">data =</span> sim_data)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" data-code-line-numbers="|1-2|10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>numerator_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(a <span class="sc">~</span> z, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">data =</span> sim_data)</span>
 <span id="cb26-2"><a href=""></a>p_z <span class="ot">&lt;-</span> <span class="fu">fitted</span>(numerator_model)</span>
 <span id="cb26-3"><a href=""></a></span>
 <span id="cb26-4"><a href=""></a>sim_data_wts <span class="ot">&lt;-</span> sim_data_wts <span class="sc">|&gt;</span></span>
 <span id="cb26-5"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb26-6"><a href=""></a>    <span class="at">sw_ate =</span> <span class="fu">wt_ate</span>(.fitted, a, <span class="at">stabilize =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb26-7"><a href=""></a>    <span class="at">sw_ate_z =</span> <span class="fu">wt_ate</span>(</span>
-<span id="cb26-8"><a href=""></a>      .fitted,</span>
-<span id="cb26-9"><a href=""></a>      a,</span>
-<span id="cb26-10"><a href=""></a>      <span class="at">stabilize =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb26-11"><a href=""></a>      <span class="at">stabilization_score =</span> <span class="fu">if_else</span>(a <span class="sc">==</span> <span class="dv">1</span>, p_z, <span class="dv">1</span> <span class="sc">-</span> p_z)</span>
-<span id="cb26-12"><a href=""></a>    )</span>
-<span id="cb26-13"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-6"><a href=""></a>    <span class="at">sw_ate =</span> <span class="fu">wt_ate</span>(</span>
+<span id="cb26-7"><a href=""></a>      .fitted,</span>
+<span id="cb26-8"><a href=""></a>      a,</span>
+<span id="cb26-9"><a href=""></a>      <span class="at">stabilize =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-10"><a href=""></a>      <span class="at">stabilization_score =</span> <span class="fu">if_else</span>(a <span class="sc">==</span> <span class="dv">1</span>, p_z, <span class="dv">1</span> <span class="sc">-</span> p_z)</span>
+<span id="cb26-11"><a href=""></a>    )</span>
+<span id="cb26-12"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>fitted()</code> alone gives the probability of exposure for every unit, which is not the probability of the exposure an unexposed unit took</p>
 </section>
@@ -666,30 +665,29 @@ Type: response</code></pre>
 <h2>The weights tighten</h2>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>sim_data_wts <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href=""></a>  <span class="fu">select</span>(w_ate, sw_ate, sw_ate_z) <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href=""></a>  <span class="co"># the three weight types stack only as plain numbers</span></span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">select</span>(w_ate, sw_ate) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href=""></a>  <span class="co"># the weights stack only as plain numbers</span></span>
 <span id="cb27-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric)) <span class="sc">|&gt;</span></span>
 <span id="cb27-5"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"weights"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb27-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">sd =</span> <span class="fu">sd</span>(value), <span class="at">max =</span> <span class="fu">max</span>(value), <span class="at">.by =</span> weights)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  weights     sd   max
-  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-1 w_ate    1.50  15.0 
-2 sw_ate   0.750  7.50
-3 sw_ate_z 0.221  3.53</code></pre>
+<pre><code># A tibble: 2 × 3
+  weights    sd   max
+  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 w_ate   1.50  15.0 
+2 sw_ate  0.221  3.53</code></pre>
 </div>
 </div>
 <div class="fragment">
-<p>The exposure is nearly balanced, so the default numerator is close to a constant one half; conditioning on <code>z</code> is what reshapes the weights</p>
+<p>Conditioning the numerator on <code>z</code> cuts the spread of the weights and pulls in the largest ones</p>
 </div>
 </section>
 <section id="the-same-fit-stabilized" class="slide level2">
 <h2>The same fit, stabilized</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>outcome_model_stab <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> a <span class="sc">*</span> z, <span class="at">data =</span> sim_data_wts, <span class="at">weights =</span> sw_ate_z)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>outcome_model_stab <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> a <span class="sc">*</span> z, <span class="at">data =</span> sim_data_wts, <span class="at">weights =</span> sw_ate)</span>
 <span id="cb29-2"><a href=""></a></span>
 <span id="cb29-3"><a href=""></a><span class="fu">ipw</span>(propensity_model, outcome_model_stab, <span class="at">.by =</span> z) <span class="sc">|&gt;</span></span>
 <span id="cb29-4"><a href=""></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
@@ -706,17 +704,6 @@ Type: response</code></pre>
 4 z = high vs z = low     3.84    0.116      3.61      4.06</code></pre>
 </div>
 </div>
-</section>
-<section id="what-stabilizing-changed-here" class="slide level2">
-<h2>What stabilizing changed here</h2>
-<ul>
-<li class="fragment">The estimates and their standard errors are unchanged: the numerator is constant within each exposure-by-modifier cell, and the reported effects are averages within those cells</li>
-<li class="fragment">The weights themselves are far less variable, which is where stabilizing pays</li>
-</ul>
-</section>
-<section id="one-caveat-on-the-variance" class="slide level2">
-<h2>One caveat on the variance</h2>
-<p>A supplied stabilization score is treated as known in the variance, while the default stabilizer is estimated within the stacked system</p>
 </section>
 <section id="section-7" class="slide level2 center" data-background-color="#23373B">
 <h2></h2>
@@ -985,27 +972,27 @@ Type: response</code></pre>
 <h2><em>Your Turn 1</em> (<strong><code>14-interaction-exercises.qmd</code></strong>)</h2>
 <h3 id="fit-an-outcome-model-for-posted-wait-times-that-lets-the-effect-of-an-extra-magic-morning-vary-by-ticket-season">Fit an outcome model for posted wait times that lets the effect of an Extra Magic Morning vary by ticket season</h3>
 <h3 id="read-the-conditional-effects-off-the-coefficients">Read the conditional effects off the coefficients</h3>
-<p><countdown-timer class="countdown" id="timer_c8b82c4d" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_a87322f3" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-2" class="slide level2">
 <h2><em>Your Turn 2</em></h2>
 <h3 id="use-avg_comparisons-to-get-the-ate-then-the-att-and-the-atc-with-newdata">Use <code>avg_comparisons()</code> to get the ATE, then the ATT and the ATC with <code>newdata</code></h3>
 <h3 id="compare-the-three-estimates-and-explain-why-they-differ">Compare the three estimates and explain why they differ</h3>
 <h3 id="stretch-refit-without-the-interaction-and-watch-the-three-collapse"><em>Stretch</em>: refit without the interaction and watch the three collapse</h3>
-<p><countdown-timer class="countdown" id="timer_c1b8dfe9" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_3b8b1a8c" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-3" class="slide level2">
 <h2><em>Your Turn 3</em></h2>
 <h3 id="ask-whether-the-effect-of-an-extra-magic-morning-is-modified-by-calendar-quarter">Ask whether the effect of an Extra Magic Morning is modified by calendar quarter</h3>
 <h3 id="fit-the-propensity-score-model-build-ate-weights-and-pass-a-weighted-outcome-model-with-the-interaction-to-ipw-with-.by">Fit the propensity score model, build ATE weights, and pass a weighted outcome model with the interaction to <code>ipw()</code> with <code>.by</code></h3>
-<p><countdown-timer class="countdown" id="timer_3e8b407a" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_13f5ae1b" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 </section>
 <section id="your-turn-4" class="slide level2 small">
 <h2><em>Your Turn 4</em></h2>
 <h3 id="ask-the-joint-question-what-if-the-park-set-both-the-extra-magic-morning-policy-and-the-ticket-season">Ask the joint question: what if the park set both the Extra Magic Morning policy and the ticket season?</h3>
 <h3 id="cross-the-two-with-joint_exposure-fit-one-propensity-model-over-the-cells-and-read-the-cell-means-simple-effects-and-interaction">Cross the two with <code>joint_exposure()</code>, fit one propensity model over the cells, and read the cell means, simple effects, and interaction</h3>
 <h3 id="finish-early-try-the-stretch-goals">Finish early? Try the <em>stretch goals</em></h3>
-<p><countdown-timer class="countdown" id="timer_664fb903" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
+<p><countdown-timer class="countdown" id="timer_d1677e18" minutes="10" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer></p>
 
 </section>
     </div>

@@ -430,15 +430,14 @@ ipw(propensity_model, outcome_model_int, .by = z) |>
 ## Condition the numerator on `z`
 
 ```{r}
-#| code-line-numbers: "|1-2|6|11"
+#| code-line-numbers: "|1-2|10"
 
 numerator_model <- glm(a ~ z, family = binomial(), data = sim_data)
 p_z <- fitted(numerator_model)
 
 sim_data_wts <- sim_data_wts |>
   mutate(
-    sw_ate = wt_ate(.fitted, a, stabilize = TRUE),
-    sw_ate_z = wt_ate(
+    sw_ate = wt_ate(
       .fitted,
       a,
       stabilize = TRUE,
@@ -467,8 +466,8 @@ Only condition the numerator on variables that are already in the outcome model
 #| output-location: fragment
 
 sim_data_wts |>
-  select(w_ate, sw_ate, sw_ate_z) |>
-  # the three weight types stack only as plain numbers
+  select(w_ate, sw_ate) |>
+  # the weights stack only as plain numbers
   mutate(across(everything(), as.numeric)) |>
   pivot_longer(everything(), names_to = "weights") |>
   summarize(sd = sd(value), max = max(value), .by = weights)
@@ -476,32 +475,20 @@ sim_data_wts |>
 
 . . .
 
-The exposure is nearly balanced, so the default numerator is close to a constant
-one half; conditioning on `z` is what reshapes the weights
+Conditioning the numerator on `z` cuts the spread of the weights and pulls in
+the largest ones
 
 ## The same fit, stabilized
 
 ```{r}
 #| output-location: fragment
 
-outcome_model_stab <- lm(y ~ a * z, data = sim_data_wts, weights = sw_ate_z)
+outcome_model_stab <- lm(y ~ a * z, data = sim_data_wts, weights = sw_ate)
 
 ipw(propensity_model, outcome_model_stab, .by = z) |>
   tidy(conf.int = TRUE) |>
   select(group, estimate, std.error, conf.low, conf.high)
 ```
-
-## What stabilizing changed here
-
-- The estimates and their standard errors are unchanged: the numerator is
-  constant within each exposure-by-modifier cell, and the reported effects are
-  averages within those cells
-- The weights themselves are far less variable, which is where stabilizing pays
-
-## One caveat on the variance
-
-A supplied stabilization score is treated as known in the variance, while the
-default stabilizer is estimated within the stacked system
 
 ## {.center background-color="#23373B"}
 
